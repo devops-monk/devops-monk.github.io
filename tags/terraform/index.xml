@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Terraform on Devops Monk</title>
+    <link>https://devops-monk.com/tags/terraform/</link>
+    <description>Recent content in Terraform on Devops Monk</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 19 Jul 2020 02:05:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://devops-monk.com/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HashiCorp Certified Terraform Associate</title>
+      <link>https://devops-monk.com/2020/07/hashicorp-certified-terraform-associate/</link>
+      <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/07/hashicorp-certified-terraform-associate/</guid>
+      <description>Finally, Terraform has announced the general availability of some of their Cloud Certifications like Terraform and Vault (and others to come like Consul).The exam is taken online with a live proctor. Its a mix of multiple-choices and “fill in the blanks” test with 57 questions for 1 hour.
+Terraform associate is a foundational level of certification that evaluates your understanding of basic concepts and skills on Terraform OSS and the features exist on Terraform Cloud &amp;amp; Terraform Enterprise packages.</description>
+    </item>
+    
+  </channel>
+</rss>

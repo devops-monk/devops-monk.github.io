@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CKAD on Devops Monk</title>
+    <link>https://devops-monk.com/tags/ckad/</link>
+    <description>Recent content in CKAD on Devops Monk</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 19 Jul 2020 02:05:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://devops-monk.com/tags/ckad/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kubernetes practice questions for CKAD exam ?</title>
+      <link>https://devops-monk.com/2020/07/kubernetes-practice-ckad-exam/</link>
+      <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/07/kubernetes-practice-ckad-exam/</guid>
+      <description>Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications. The CNCF/Linux Foundation offers this performance-based exam which targets the developer aspect of kubernetes skills such as deploying apps, configuring apps, rolling out the application, creating persistent volumes, etc.
+Since this exam is performance-based rather than just multiple choice questions just knowing the concepts are not enough, we need a lot of practice before the exam. This article helps you understand, practice and get you ready for the exam.</description>
+    </item>
+    
+  </channel>
+</rss>

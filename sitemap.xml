@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://devops-monk.com/categories/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/ckad/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/devops/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/categories/devops/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/2020/07/hashicorp-certified-terraform-associate/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/iac/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/2020/07/kubernetes-practice-ckad-exam/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/orchestration/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/terraform/</loc>
+    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/2020/07/how-to-enable-ssh-on-ubuntu/</loc>
+    <lastmod>2020-07-18T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/</loc>
+    <lastmod>2020-07-18T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/categories/linux/</loc>
+    <lastmod>2020-07-18T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/ssh/</loc>
+    <lastmod>2020-07-18T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/contact/</loc>
+    <lastmod>2020-07-12T13:06:31+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/pages/</loc>
+    <lastmod>2020-07-12T13:06:31+00:00</lastmod>
+  </url>
+  
+</urlset>

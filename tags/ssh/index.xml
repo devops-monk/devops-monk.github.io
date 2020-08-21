@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SSH on Devops Monk</title>
+    <link>https://devops-monk.com/tags/ssh/</link>
+    <description>Recent content in SSH on Devops Monk</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 18 Jul 2020 02:05:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://devops-monk.com/tags/ssh/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How to Enable SSH on Ubuntu ?</title>
+      <link>https://devops-monk.com/2020/07/how-to-enable-ssh-on-ubuntu/</link>
+      <pubDate>Sat, 18 Jul 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/07/how-to-enable-ssh-on-ubuntu/</guid>
+      <description>Secure Shell (SSH) is a protocol used to securely log onto remote machines. It is the most common way to access remote Linux servers.
+1. Enabling SSH on Ubuntu The SSH server is not installed by default on Ubuntu desktop systems but it can be easily installed from the standard Ubuntu repositories.
+To install and enable SSH on your Ubuntu system complete the following steps:
+sudo apt-get install openssh-server
+Once the installation is completed, the SSH service will start automatically.</description>
+    </item>
+    
+  </channel>
+</rss>

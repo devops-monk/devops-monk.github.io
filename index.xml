@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>How to Enable SSH on Ubuntu ? on Devops Monk</title>
+    <link>https://devops-monk.com/</link>
+    <description>Recent content in How to Enable SSH on Ubuntu ? on Devops Monk</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 18 Jul 2020 02:05:05 +0000</lastBuildDate>
+    
+	<atom:link href="https://devops-monk.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HashiCorp Certified Terraform Associate</title>
+      <link>https://devops-monk.com/2020/07/hashicorp-certified-terraform-associate/</link>
+      <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/07/hashicorp-certified-terraform-associate/</guid>
+      <description>Finally, Terraform has announced the general availability of some of their Cloud Certifications like Terraform and Vault (and others to come like Consul).The exam is taken online with a live proctor. Its a mix of multiple-choices and “fill in the blanks” test with 57 questions for 1 hour.
+Terraform associate is a foundational level of certification that evaluates your understanding of basic concepts and skills on Terraform OSS and the features exist on Terraform Cloud &amp;amp; Terraform Enterprise packages.</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes practice questions for CKAD exam ?</title>
+      <link>https://devops-monk.com/2020/07/kubernetes-practice-ckad-exam/</link>
+      <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/07/kubernetes-practice-ckad-exam/</guid>
+      <description>Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications. The CNCF/Linux Foundation offers this performance-based exam which targets the developer aspect of kubernetes skills such as deploying apps, configuring apps, rolling out the application, creating persistent volumes, etc.
+Since this exam is performance-based rather than just multiple choice questions just knowing the concepts are not enough, we need a lot of practice before the exam. This article helps you understand, practice and get you ready for the exam.</description>
+    </item>
+    
+    <item>
+      <title>How to Enable SSH on Ubuntu ?</title>
+      <link>https://devops-monk.com/2020/07/how-to-enable-ssh-on-ubuntu/</link>
+      <pubDate>Sat, 18 Jul 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/07/how-to-enable-ssh-on-ubuntu/</guid>
+      <description>Secure Shell (SSH) is a protocol used to securely log onto remote machines. It is the most common way to access remote Linux servers.
+1. Enabling SSH on Ubuntu The SSH server is not installed by default on Ubuntu desktop systems but it can be easily installed from the standard Ubuntu repositories.
+To install and enable SSH on your Ubuntu system complete the following steps:
+sudo apt-get install openssh-server
+Once the installation is completed, the SSH service will start automatically.</description>
+    </item>
+    
+  </channel>
+</rss>
