@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Devops Monk</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 19 Jul 2020 02:05:05 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2020 02:05:05 +0000</lastBuildDate>
     
 	<atom:link href="https://devops-monk.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Devops</title>
+      <link>https://devops-monk.com/tags/devops/</link>
+      <pubDate>Sat, 05 Sep 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Helm</title>
+      <link>https://devops-monk.com/tags/helm/</link>
+      <pubDate>Sat, 05 Sep 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/tags/helm/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>CKAD</title>
@@ -17,15 +35,6 @@
       <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
       
       <guid>https://devops-monk.com/tags/ckad/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Devops</title>
-      <link>https://devops-monk.com/tags/devops/</link>
-      <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
-      
-      <guid>https://devops-monk.com/tags/devops/</guid>
       <description></description>
     </item>
     

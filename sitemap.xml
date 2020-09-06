@@ -4,26 +4,41 @@
   
   <url>
     <loc>https://devops-monk.com/categories/</loc>
-    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://devops-monk.com/tags/ckad/</loc>
-    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://devops-monk.com/tags/devops/</loc>
-    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://devops-monk.com/categories/devops/</loc>
-    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://devops-monk.com/</loc>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/2020/09/getting-started-with-helm3/</loc>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/helm/</loc>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/</loc>
+    <lastmod>2020-09-05T02:05:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://devops-monk.com/tags/ckad/</loc>
     <lastmod>2020-07-19T02:05:05+00:00</lastmod>
   </url>
   
@@ -44,11 +59,6 @@
   
   <url>
     <loc>https://devops-monk.com/tags/orchestration/</loc>
-    <lastmod>2020-07-19T02:05:05+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://devops-monk.com/tags/</loc>
     <lastmod>2020-07-19T02:05:05+00:00</lastmod>
   </url>
   

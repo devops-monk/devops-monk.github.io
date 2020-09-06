@@ -6,10 +6,21 @@
     <description>Recent content in Devops on Devops Monk</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 19 Jul 2020 02:05:05 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2020 02:05:05 +0000</lastBuildDate>
     
 	<atom:link href="https://devops-monk.com/categories/devops/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Getting Started With Helm 3</title>
+      <link>https://devops-monk.com/2020/09/getting-started-with-helm3/</link>
+      <pubDate>Sat, 05 Sep 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/09/getting-started-with-helm3/</guid>
+      <description>1.What is Helm ? Helm is a package manager for Kubernetes like yum, apt, npm.
+ &amp;ldquo;Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application.Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.&amp;rdquo; -Source: helm.sh
+ Kubernetes Package and Deployment Manager  Like apt or yum in Linux world. Automated version handling during upgrade/rollback.</description>
+    </item>
     
     <item>
       <title>HashiCorp Certified Terraform Associate</title>
@@ -17,7 +28,7 @@
       <pubDate>Sun, 19 Jul 2020 02:05:05 +0000</pubDate>
       
       <guid>https://devops-monk.com/2020/07/hashicorp-certified-terraform-associate/</guid>
-      <description>Finally, Terraform has announced the general availability of some of their Cloud Certifications like Terraform and Vault (and others to come like Consul).The exam is taken online with a live proctor. Its a mix of multiple-choices and “fill in the blanks” test with 57 questions for 1 hour.
+      <description>Finally, HashiCorp has announced the general availability of some of their Cloud Certifications like Terraform and Vault (and others to come like Consul).The exam is taken online with a live proctor. Its a mix of multiple-choices and “fill in the blanks” test with 57 questions for 1 hour.
 Terraform associate is a foundational level of certification that evaluates your understanding of basic concepts and skills on Terraform OSS and the features exist on Terraform Cloud &amp;amp; Terraform Enterprise packages.</description>
     </item>
     
