@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Getting Started With ChartMuseusm</title>
+      <link>https://devops-monk.com/2020/09/getting-started-with-chartmuseusm/</link>
+      <pubDate>Sat, 05 Sep 2020 02:05:05 +0000</pubDate>
+      
+      <guid>https://devops-monk.com/2020/09/getting-started-with-chartmuseusm/</guid>
+      <description>1.Chart Repositories:  An HTTP server hosting index.yaml file along with chart packages. - Indented item When charts are ready, can be uploaded to server and shared. Multiple charts with dependency and version can be managed Can be managed like source control system in a common location. Can be hosted as part of:  Google compute cloud bucket AWS S3 bucket Github pages Own webserver (chartmuseum)    2.Why ChartMuseum ?</description>
+    </item>
+    
+    <item>
       <title>Getting Started With Helm 3</title>
       <link>https://devops-monk.com/2020/09/getting-started-with-helm3/</link>
       <pubDate>Sat, 05 Sep 2020 02:05:05 +0000</pubDate>
