@@ -1197,3 +1197,39 @@ a.cert-card:hover .cert-verify { opacity: 1; }
 .post-card-img-link { display: block; margin: -1.75em -2em 1.25em; overflow: hidden; border-radius: var(--radius) var(--radius) 0 0; }
 .post-card-img { width: 100%; height: 120px; object-fit: cover; object-position: center 30%; display: block; transition: transform 0.3s; }
 .type-post:hover .post-card-img { transform: scale(1.03); }
+
+/* ---- Experience list ---- */
+.experience-list { margin: 1em 0; }
+
+.experience-item {
+  padding: 1em 1.25em;
+  border-left: 3px solid var(--border);
+  margin-bottom: 0.75em;
+  background: var(--surface);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s;
+}
+
+.experience-item:hover { border-left-color: var(--primary); }
+
+.exp-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--dark);
+}
+
+.exp-company {
+  font-size: 0.85rem;
+  color: var(--primary);
+  margin-top: 0.15em;
+}
+
+.exp-period {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.1em;
+}
+
+[data-theme="dark"] .experience-item { background: #1e293b !important; border-color: #334155 !important; }
+[data-theme="dark"] .exp-title { color: #f0f9ff !important; }
