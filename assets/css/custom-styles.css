@@ -1124,3 +1124,27 @@ pre:hover .copy-btn { opacity: 1; }
 [data-theme="dark"] .related-card-title { color: #f0f9ff !important; }
 [data-theme="dark"] .cert-card { background: #1e293b !important; border-color: #334155 !important; }
 [data-theme="dark"] .cert-name { color: #f0f9ff !important; }
+
+/* ---- Cert card as link ---- */
+a.cert-card {
+  text-decoration: none !important;
+  color: inherit !important;
+  cursor: pointer;
+}
+
+a.cert-card:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.12), var(--shadow-md) !important;
+  transform: translateY(-2px) !important;
+}
+
+.cert-verify {
+  font-size: 0.72rem;
+  color: var(--primary);
+  font-weight: 500;
+  margin-top: 0.35em;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+a.cert-card:hover .cert-verify { opacity: 1; }
