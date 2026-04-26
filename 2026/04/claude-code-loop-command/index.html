@@ -20,7 +20,7 @@
 </span></span></code></pre></div><p>This runs the prompt immediately, then repeats it every 5 minutes for the duration of your session. The interval can be in seconds (<code>30s</code>), minutes (<code>5m</code>), or hours (<code>2h</code>).</p><p><strong>Hard limits:</strong></p><ul><li>Maximum 50 iterations per loop</li><li>Auto-expires after 3 days of session inactivity</li><li><strong>Dies when you close the Claude Code session</strong></li></ul><p>That last point is the most important one. <code>/loop</code> is session-scoped. The moment you close the terminal or the session times out, the loop stops. It is not a daemon. It is not a cron job. It is a within-session automation tool.</p><pre class=mermaid>
 flowchart LR
     subgraph Session[Active Claude Code Session]
-        Loop[/loop command] -->|every N minutes| Prompt[Runs prompt]
+        Loop[loop command] -->|every N minutes| Prompt[Runs prompt]
         Prompt --> Result[Produces result]
     end
     Close[Session closes] -->|loop dies| End[Automation stops]
