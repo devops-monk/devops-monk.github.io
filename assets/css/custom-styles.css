@@ -1148,3 +1148,47 @@ a.cert-card:hover {
 }
 
 a.cert-card:hover .cert-verify { opacity: 1; }
+
+/* ---- Nav post count badge ---- */
+.nav-count {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0.05em 0.45em;
+  background: rgba(255,255,255,0.15);
+  color: #94a3b8;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+.current-menu-item .nav-count { background: rgba(56,189,248,0.2); color: var(--primary-light); }
+
+/* ---- Category / Tag list page header ---- */
+.content-archive .archive-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 1.25em 1.5em;
+  margin-bottom: 1.75em;
+  box-shadow: var(--shadow-sm);
+}
+
+.content-archive .archive-header h1,
+.content-archive .page-title {
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  color: var(--dark) !important;
+  margin: 0 0 0.2em !important;
+}
+
+.content-archive .archive-header .archive-description,
+.content-archive .taxonomy-description {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+[data-theme="dark"] .archive-header { background: #1e293b !important; border-color: #334155 !important; }
