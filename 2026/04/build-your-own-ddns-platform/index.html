@@ -1,5 +1,5 @@
 <!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><title>Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React | Devops Monk</title>
-<meta name=twitter:card content="summary"><meta name=twitter:title content="Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React"><meta name=twitter:description content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><meta property="og:url" content="https://devops-monk.com/2026/04/build-your-own-ddns-platform/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React"><meta property="og:description" content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-04-25T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-25T00:00:00+00:00"><meta property="article:tag" content="DNS"><meta property="article:tag" content="DevOps"><meta property="article:tag" content="Self-Hosted"><meta property="article:tag" content="Node.js"><meta property="article:tag" content="Electron"><meta itemprop=name content="Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React"><meta itemprop=description content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><meta itemprop=datePublished content="2026-04-25T00:00:00+00:00"><meta itemprop=dateModified content="2026-04-25T00:00:00+00:00"><meta itemprop=wordCount content="1764"><meta itemprop=keywords content="DNS,DevOps,Self-Hosted,Node.js,Electron"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel="shortcut icon" href=/favicon.png type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React","headline":"Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React","inLanguage":"en-US","url":"https://devops-monk.com/2026/04/build-your-own-ddns-platform/","description":"If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture.","wordCount":"1764","keywords":["DNS","DevOps","Self-hosted","Node.js","Electron"],"datePublished":"2026-04-25T00:00:00Z","dateModified":"2026-04-25T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/2026/04/build-your-own-ddns-platform/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/2026/04/build-your-own-ddns-platform/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=module>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React"><meta name=twitter:description content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><meta property="og:url" content="https://devops-monk.com/2026/04/build-your-own-ddns-platform/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React"><meta property="og:description" content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-04-25T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-25T00:00:00+00:00"><meta property="article:tag" content="DNS"><meta property="article:tag" content="DevOps"><meta property="article:tag" content="Self-Hosted"><meta property="article:tag" content="Node.js"><meta property="article:tag" content="Electron"><meta itemprop=name content="Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React"><meta itemprop=description content="If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture."><meta itemprop=datePublished content="2026-04-25T00:00:00+00:00"><meta itemprop=dateModified content="2026-04-25T00:00:00+00:00"><meta itemprop=wordCount content="1687"><meta itemprop=keywords content="DNS,DevOps,Self-Hosted,Node.js,Electron"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel="shortcut icon" href=/favicon.png type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React","headline":"Build Your Own DDNS Platform: Self-Hosted Dynamic DNS with PowerDNS, Node.js, and React","inLanguage":"en-US","url":"https://devops-monk.com/2026/04/build-your-own-ddns-platform/","description":"If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building ddns.devops-monk.com, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture.","wordCount":"1687","keywords":["DNS","DevOps","Self-hosted","Node.js","Electron"],"datePublished":"2026-04-25T00:00:00Z","dateModified":"2026-04-25T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/2026/04/build-your-own-ddns-platform/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/2026/04/build-your-own-ddns-platform/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=module>
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
       mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
     </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
@@ -14,137 +14,149 @@ current-menu-item current_page_item menu-item-home"><a href=/>Home</a></li></ul>
 &nbsp;
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/>Node.js</a>
 &nbsp;
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/>Electron</a></span></div></header><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class=sd-title>Share this:</h3><div class=sd-content><ul><li class=share-twitter><a rel=nofollow data-shared=sharing-twitter-1144 class="share-twitter sd-button share-icon no-text" href="https://twitter.com/intent/tweet?status=Build%20Your%20Own%20DDNS%20Platform%3a%20Self-Hosted%20Dynamic%20DNS%20with%20PowerDNS%2c%20Node.js%2c%20and%20React-https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f" target=_blank title="Click to share on Twitter"><span></span><span class=sharing-screen-reader-text>Click to share on Twitter (Opens in new window)</span></a></li><li class=share-facebook><a rel=nofollow data-shared=sharing-facebook-1144 class="share-facebook sd-button share-icon no-text" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f" target=_blank title="Click to share on Facebook"><span></span><span class=sharing-screen-reader-text>Click to share on Facebook (Opens in new window)</span></a></li><li class=share-google-plus-1><a rel=nofollow data-shared=sharing-google-1144 class="share-google-plus-1 sd-button share-icon no-text" href="https://plus.google.com/share?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f" target=_blank title="Click to share on Google+"><span></span><span class=sharing-screen-reader-text>Click to share on Google+ (Opens in new window)</span></a></li><li class=share-reddit><a rel=nofollow data-shared class="share-reddit sd-button share-icon no-text" href="http://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f&title=Build%20Your%20Own%20DDNS%20Platform%3a%20Self-Hosted%20Dynamic%20DNS%20with%20PowerDNS%2c%20Node.js%2c%20and%20React" target=_blank title="Click to share on Reddit"><span></span><span class=sharing-screen-reader-text>Click to share on Reddit (Opens in new window)</span></a></li><li class=share-linkedin><a rel=nofollow data-shared=sharing-linkedin-1144 class="share-linkedin sd-button share-icon no-text" href="http://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f&title=Build%20Your%20Own%20DDNS%20Platform%3a%20Self-Hosted%20Dynamic%20DNS%20with%20PowerDNS%2c%20Node.js%2c%20and%20React" target=_blank title="Click to share on LinkedIn"><span></span><span class=sharing-screen-reader-text>Click to share on LinkedIn (Opens in new window)</span></a></li><li class=share-end></li></ul></div></div></div><div class=entry-content><p>If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building <a href=https://ddns.devops-monk.com>ddns.devops-monk.com</a>, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture.</p><hr><h2 id=start-here-what-problem-are-we-solving>Start Here: What Problem Are We Solving?</h2><p>Think of a <strong>domain name</strong> like a contact name in your phone. When someone wants to call you, they look up your name and your phone shows the number. DNS does the same thing for servers — someone types <code>homelab.ddns.devops-monk.com</code> and DNS tells their computer which IP address to connect to.</p><p>The problem is that most home internet connections have a <strong>dynamic IP address</strong> — your router gets a new public IP every time it reconnects or every few days. It is like if your phone number changed randomly and nobody updated their contacts.</p><p><strong>Dynamic DNS (DDNS)</strong> is the solution: a small program runs on your machine, watches for IP changes, and automatically updates the DNS record the moment your IP rotates. Everyone who visits your hostname always gets the current address.</p><div class=mermaid>flowchart LR
-A["Your Home Server\ndynamic IP changes"] -->|"Step 1: IP changes"| B["DDNS Client\nnotices the change"]
-B -->|"Step 2: sends new IP"| C["DDNS API\nupdates the record"]
-C -->|"Step 3: DNS record updated"| D["homelab.ddns.devops-monk.com\npoints to new IP"]
-D -->|"Step 4: visitors connect"| A</div><hr><h2 id=the-big-picture-all-four-pieces>The Big Picture: All Four Pieces</h2><p>The platform is made of four pieces that work together. Here is how they relate before we go into each one:</p><div class=mermaid>flowchart TD
-subgraph YOUR_MACHINE["Your Machine"]
-CLIENT["Desktop Client\nSystem Tray App"]
-CRON["Cron Job\nheadless servers"]
-end<pre><code>subgraph VPS[&quot;Your VPS (Static IP)&quot;]
-    DASHBOARD[&quot;React Dashboard\nWeb UI&quot;]
-    API[&quot;Node.js API\nExpress&quot;]
-    PDNS[&quot;PowerDNS\nAuthoritative Nameserver&quot;]
-    PGDB[(&quot;PostgreSQL\nusers, tokens, history&quot;)]
-    MYDB[(&quot;MySQL\nDNS zone records&quot;)]
-end
-
-subgraph INTERNET[&quot;Internet&quot;]
-    RESOLVER[&quot;DNS Resolvers\nISP, Google, Cloudflare&quot;]
-    WEBHOOK[&quot;Webhook Targets\nDiscord, Slack, Telegram&quot;]
-end
-
-CLIENT --&gt;|&quot;PUT /update Bearer TOKEN&quot;| API
-CRON --&gt;|&quot;PUT /update Bearer TOKEN&quot;| API
-DASHBOARD --&gt;|&quot;REST API&quot;| API
-API --&gt; PGDB
-API --&gt;|&quot;PATCH rrsets&quot;| PDNS
-API --&gt; WEBHOOK
-PDNS --&gt; MYDB
-RESOLVER --&gt;|&quot;DNS query port 53&quot;| PDNS
-</code></pre></div><table><thead><tr><th>Piece</th><th>What it is</th><th>What it does</th></tr></thead><tbody><tr><td>Desktop Client</td><td>Electron app in your system tray</td><td>Watches your public IP and calls the API when it changes</td></tr><tr><td>Node.js API</td><td>Express server on your VPS</td><td>Validates your token, tells PowerDNS to update the record, logs history</td></tr><tr><td>PowerDNS</td><td>Authoritative DNS server on your VPS</td><td>Answers DNS queries from the internet with the current IP</td></tr><tr><td>React Dashboard</td><td>Web UI on your VPS</td><td>Shows all your domains, IP history charts, and uptime</td></tr></tbody></table><hr><h2 id=understanding-dns-delegation-the-part-everyone-gets-wrong>Understanding DNS Delegation (The Part Everyone Gets Wrong)</h2><p>Before diving deeper, we need to understand one concept: <strong>delegation</strong>. This is how the internet knows to ask <em>your</em> PowerDNS server about <code>ddns.devops-monk.com</code> instead of some random server.</p><h3 id=a-postal-analogy>A postal analogy</h3><p>Imagine the global DNS system as a network of post offices:</p><ul><li>The <strong>Root post office</strong> knows which country handles <code>.com</code> addresses</li><li>The <strong><code>.com</code> post office</strong> knows which registrar handles <code>devops-monk.com</code></li><li>The <strong>registrar</strong> (Porkbun) handles <code>devops-monk.com</code> — but you tell it: <em>&ldquo;For anything under <code>ddns.devops-monk.com</code>, ask my VPS&rdquo;</em></li><li>Your <strong>VPS (PowerDNS)</strong> then has the final answer</li></ul><p>This hand-off is called <strong>delegation</strong>, and it is set up with two DNS records at your registrar:</p><pre tabindex=0><code>ddns   NS   ns1.devops-monk.com      ← &#34;for ddns.*, ask this nameserver&#34;
-ns1    A    YOUR_VPS_IP              ← &#34;here is where that nameserver lives&#34; (glue record)
-</code></pre><p>Once these two records exist, the entire <code>ddns.devops-monk.com</code> zone is under your control.</p><div class=mermaid>flowchart TD
-ROOT["Root DNS\n(.)"]
-COM[".com TLD\nNameserver"]
-REG["Porkbun Registrar\ndevops-monk.com zone"]
-VPS["Your VPS\nPowerDNS\nddns.devops-monk.com zone"]
-USER["homelab.ddns.devops-monk.com\nA record in MySQL"]<pre><code>ROOT --&gt;|&quot;delegate .com to&quot;| COM
-COM --&gt;|&quot;delegate devops-monk.com to&quot;| REG
-REG --&gt;|&quot;NS record: delegate ddns.* to&quot;| VPS
-VPS --&gt;|&quot;SQL lookup&quot;| USER
-</code></pre></div><hr><h2 id=how-a-dns-lookup-works-step-by-step>How a DNS Lookup Works Step by Step</h2><p>Here is the full sequence when someone types <code>homelab.ddns.devops-monk.com</code> in their browser for the first time. Each arrow is a real network request:</p><div class=mermaid>sequenceDiagram
-participant Browser as Browser
-participant Resolver as ISP DNS Resolver
-participant Root as Root Nameserver
-participant TLD as .com TLD
-participant Reg as Registrar NS
-participant PDNS as PowerDNS on VPS<pre><code>Browser-&gt;&gt;Resolver: What is homelab.ddns.devops-monk.com?
-Resolver-&gt;&gt;Root: Who handles .com?
-Root--&gt;&gt;Resolver: Ask the .com TLD nameservers
-Resolver-&gt;&gt;TLD: Who handles devops-monk.com?
-TLD--&gt;&gt;Resolver: Ask the registrar nameservers
-Resolver-&gt;&gt;Reg: Who handles ddns.devops-monk.com?
-Reg--&gt;&gt;Resolver: Delegated to ns1.devops-monk.com (your VPS)
-Resolver-&gt;&gt;PDNS: What is homelab.ddns.devops-monk.com?
-PDNS--&gt;&gt;Resolver: A record 203.0.113.42, TTL 60 seconds
-Resolver--&gt;&gt;Browser: 203.0.113.42
-Note over Resolver,PDNS: Result is cached for 60 seconds. After that, resolver asks PowerDNS again.
-</code></pre></div><p>The <strong>TTL of 60 seconds</strong> is the key setting. It tells resolvers: <em>&ldquo;do not cache this for long, the IP might change soon.&rdquo;</em> That is how users pick up your new IP within a minute of it rotating.</p><hr><h2 id=how-the-ip-update-works>How the IP Update Works</h2><p>This is what happens on your machine every five minutes. The desktop client runs silently in the background and only does real work when your IP actually changes:</p><div class=mermaid>sequenceDiagram
-participant Client as Desktop Client
-participant Ipify as ipify.org
-participant API as Node.js API
-participant PG as PostgreSQL
-participant PDNS as PowerDNS
-participant WH as Webhook<pre><code>loop Every 5 minutes
-    Client-&gt;&gt;Ipify: What is my public IP?
-    Ipify--&gt;&gt;Client: 203.0.113.42
-    Client-&gt;&gt;Client: Same as last time?
-
-    alt IP has not changed
-        Client-&gt;&gt;Client: Nothing to do, wait for next poll
-    else IP has changed
-        Client-&gt;&gt;API: PUT /api/domains/homelab/update with Bearer TOKEN
-        API-&gt;&gt;API: Look up token hash in PostgreSQL, verify it
-        API-&gt;&gt;PDNS: PATCH zone record to new IP, TTL 60
-        PDNS--&gt;&gt;API: Success (204)
-        API-&gt;&gt;PG: Save new IP to history log
-        API--&gt;&gt;Client: Confirmed, record is live
-        API-&gt;&gt;WH: Send IP changed notification
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/>Electron</a></span></div></header><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class=sd-title>Share this:</h3><div class=sd-content><ul><li class=share-twitter><a rel=nofollow data-shared=sharing-twitter-1144 class="share-twitter sd-button share-icon no-text" href="https://twitter.com/intent/tweet?status=Build%20Your%20Own%20DDNS%20Platform%3a%20Self-Hosted%20Dynamic%20DNS%20with%20PowerDNS%2c%20Node.js%2c%20and%20React-https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f" target=_blank title="Click to share on Twitter"><span></span><span class=sharing-screen-reader-text>Click to share on Twitter (Opens in new window)</span></a></li><li class=share-facebook><a rel=nofollow data-shared=sharing-facebook-1144 class="share-facebook sd-button share-icon no-text" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f" target=_blank title="Click to share on Facebook"><span></span><span class=sharing-screen-reader-text>Click to share on Facebook (Opens in new window)</span></a></li><li class=share-google-plus-1><a rel=nofollow data-shared=sharing-google-1144 class="share-google-plus-1 sd-button share-icon no-text" href="https://plus.google.com/share?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f" target=_blank title="Click to share on Google+"><span></span><span class=sharing-screen-reader-text>Click to share on Google+ (Opens in new window)</span></a></li><li class=share-reddit><a rel=nofollow data-shared class="share-reddit sd-button share-icon no-text" href="http://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f&title=Build%20Your%20Own%20DDNS%20Platform%3a%20Self-Hosted%20Dynamic%20DNS%20with%20PowerDNS%2c%20Node.js%2c%20and%20React" target=_blank title="Click to share on Reddit"><span></span><span class=sharing-screen-reader-text>Click to share on Reddit (Opens in new window)</span></a></li><li class=share-linkedin><a rel=nofollow data-shared=sharing-linkedin-1144 class="share-linkedin sd-button share-icon no-text" href="http://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-your-own-ddns-platform%2f&title=Build%20Your%20Own%20DDNS%20Platform%3a%20Self-Hosted%20Dynamic%20DNS%20with%20PowerDNS%2c%20Node.js%2c%20and%20React" target=_blank title="Click to share on LinkedIn"><span></span><span class=sharing-screen-reader-text>Click to share on LinkedIn (Opens in new window)</span></a></li><li class=share-end></li></ul></div></div></div><div class=entry-content><p>If you run a home server — a Raspberry Pi, a NAS, a Kubernetes cluster in your garage — you have probably hit the same annoying wall: your internet provider gives you a different public IP address every few days, and suddenly nobody can reach your server anymore. This post explains how I solved that problem by building <a href=https://ddns.devops-monk.com>ddns.devops-monk.com</a>, a fully self-hosted Dynamic DNS platform. I will walk through the idea from scratch, explain every moving part in plain English, and include full architecture diagrams for those who want the deep technical picture.</p><hr><h2 id=start-here-what-problem-are-we-solving>Start Here: What Problem Are We Solving?</h2><p>Think of a <strong>domain name</strong> like a contact name in your phone. When someone wants to call you, they look up your name and your phone shows the number. DNS does the same thing for servers — someone types <code>homelab.ddns.devops-monk.com</code> and DNS tells their computer which IP address to connect to.</p><p>The problem is that most home internet connections have a <strong>dynamic IP address</strong> — your router gets a new public IP every time it reconnects or every few days. It is like if your phone number changed randomly and nobody updated their contacts.</p><p><strong>Dynamic DNS (DDNS)</strong> is the solution: a small program runs on your machine, watches for IP changes, and automatically updates the DNS record the moment your IP rotates. Everyone who visits your hostname always gets the current address.</p><pre class=mermaid>
+flowchart LR
+    A[Your Home Server] -->|IP changes| B[DDNS Client]
+    B -->|sends new IP| C[DDNS API]
+    C -->|updates DNS record| D[Your Hostname]
+    D -->|visitors connect| A
+</pre><hr><h2 id=the-big-picture-all-four-pieces>The Big Picture: All Four Pieces</h2><p>The platform is made of four pieces that work together. Here is how they relate before we go into each one:</p><pre class=mermaid>
+flowchart TD
+    subgraph Machine[Your Machine]
+        CLIENT[Desktop Client]
+        CRON[Cron Job]
     end
-end
-</code></pre></div><p>Notice the <code>alt</code> branch — on most polls nothing happens at all. The client only contacts the API when the IP is different from the last time it checked. This keeps the system quiet and efficient.</p><hr><h2 id=component-deep-dive>Component Deep Dive</h2><p>Now that you have seen the flows, here is a closer look at how each component is built internally:</p><div class=mermaid>flowchart TD
-subgraph CLIENT_DETAIL["Desktop Client (Electron)"]
-TRAY["System Tray Icon"]
-POLL["5-minute poll loop"]
-CFG["Local config\ntoken + subdomain"]
-TRAY --> POLL
-POLL --> CFG
-end<pre><code>subgraph API_DETAIL[&quot;Node.js API (Express + TypeScript)&quot;]
-    ROUTER[&quot;PUT /api/domains/:sub/update&quot;]
-    AUTH[&quot;authenticate middleware\nbcrypt token check&quot;]
-    PDNS_CLIENT[&quot;PowerDNS REST client\nPATCH rrsets&quot;]
-    LOGGER[&quot;IP history logger&quot;]
-    WH_SVC[&quot;Webhook dispatcher&quot;]
-    ROUTER --&gt; AUTH
-    AUTH --&gt; PDNS_CLIENT
-    AUTH --&gt; LOGGER
-    AUTH --&gt; WH_SVC
-end
+    subgraph VPS[Your VPS]
+        DASHBOARD[React Dashboard]
+        API[Node.js API]
+        PDNS[PowerDNS]
+        PGDB[(PostgreSQL)]
+        MYDB[(MySQL)]
+    end
+    subgraph Net[Internet]
+        RESOLVER[DNS Resolvers]
+        WEBHOOK[Webhook Targets]
+    end
+    CLIENT -->|PUT /update| API
+    CRON -->|PUT /update| API
+    DASHBOARD -->|REST API| API
+    API --> PGDB
+    API -->|PATCH rrsets| PDNS
+    API --> WEBHOOK
+    PDNS --> MYDB
+    RESOLVER -->|DNS query port 53| PDNS
+</pre><table><thead><tr><th>Piece</th><th>What it is</th><th>What it does</th></tr></thead><tbody><tr><td>Desktop Client</td><td>Electron app in your system tray</td><td>Watches your public IP and calls the API when it changes</td></tr><tr><td>Node.js API</td><td>Express server on your VPS</td><td>Validates your token, tells PowerDNS to update the record, logs history</td></tr><tr><td>PowerDNS</td><td>Authoritative DNS server on your VPS</td><td>Answers DNS queries from the internet with the current IP</td></tr><tr><td>React Dashboard</td><td>Web UI on your VPS</td><td>Shows all your domains, IP history charts, and uptime</td></tr></tbody></table><hr><h2 id=understanding-dns-delegation-the-part-everyone-gets-wrong>Understanding DNS Delegation (The Part Everyone Gets Wrong)</h2><p>Before diving deeper, we need to understand one concept: <strong>delegation</strong>. This is how the internet knows to ask <em>your</em> PowerDNS server about <code>ddns.devops-monk.com</code> instead of some random server.</p><h3 id=a-postal-analogy>A postal analogy</h3><p>Imagine the global DNS system as a network of post offices:</p><ul><li>The <strong>Root post office</strong> knows which country handles <code>.com</code> addresses</li><li>The <strong><code>.com</code> post office</strong> knows which registrar handles <code>devops-monk.com</code></li><li>The <strong>registrar</strong> (Porkbun) handles <code>devops-monk.com</code> — but you tell it: <em>&ldquo;For anything under <code>ddns.devops-monk.com</code>, ask my VPS&rdquo;</em></li><li>Your <strong>VPS (PowerDNS)</strong> then has the final answer</li></ul><p>This hand-off is called <strong>delegation</strong>, and it is set up with two DNS records at your registrar:</p><pre tabindex=0><code>ddns   NS   ns1.devops-monk.com      ← &#34;for ddns.*, ask this nameserver&#34;
+ns1    A    YOUR_VPS_IP              ← &#34;here is where that nameserver lives&#34; (glue record)
+</code></pre><p>Once these two records exist, the entire <code>ddns.devops-monk.com</code> zone is under your control.</p><pre class=mermaid>
+flowchart TD
+    ROOT[Root DNS]
+    COM[dot-com TLD]
+    REG[Registrar - devops-monk.com]
+    VPS[Your VPS - PowerDNS]
+    RECORD[homelab A record in MySQL]
 
-subgraph PDNS_DETAIL[&quot;PowerDNS&quot;]
-    API_PORT[&quot;REST API port 8081\nlocalhost only&quot;]
-    GMYSQL[&quot;gmysql backend&quot;]
-    PORT53[&quot;DNS port 53\npublic&quot;]
-    API_PORT --&gt; GMYSQL
-    PORT53 --&gt; GMYSQL
-end
+    ROOT -->|delegates dot-com| COM
+    COM -->|delegates devops-monk.com| REG
+    REG -->|NS record delegates ddns zone| VPS
+    VPS -->|SQL lookup| RECORD
+</pre><hr><h2 id=how-a-dns-lookup-works-step-by-step>How a DNS Lookup Works Step by Step</h2><p>Here is the full sequence when someone types <code>homelab.ddns.devops-monk.com</code> in their browser for the first time. Each arrow is a real network request:</p><pre class=mermaid>
+sequenceDiagram
+    participant Browser
+    participant Resolver as ISP Resolver
+    participant Root as Root NS
+    participant TLD as TLD NS
+    participant Reg as Registrar NS
+    participant PDNS as PowerDNS
 
-subgraph DATA[&quot;Data Stores&quot;]
-    PG2[(&quot;PostgreSQL\nusers, domains\ntokens, ip_history&quot;)]
-    MY2[(&quot;MySQL\nDNS zones\nrecords&quot;)]
-end
+    Browser->>Resolver: resolve homelab.ddns.devops-monk.com
+    Resolver->>Root: who handles dot-com
+    Root-->>Resolver: ask TLD nameservers
+    Resolver->>TLD: who handles devops-monk.com
+    TLD-->>Resolver: ask registrar nameservers
+    Resolver->>Reg: who handles ddns.devops-monk.com
+    Reg-->>Resolver: delegated to ns1.devops-monk.com
+    Resolver->>PDNS: resolve homelab.ddns.devops-monk.com
+    PDNS-->>Resolver: A 203.0.113.42 TTL 60s
+    Resolver-->>Browser: 203.0.113.42
+    Note over Resolver,PDNS: Cached for 60s then re-queried directly from PowerDNS
+</pre><p>The <strong>TTL of 60 seconds</strong> is the key setting. It tells resolvers: <em>&ldquo;do not cache this for long, the IP might change soon.&rdquo;</em> That is how users pick up your new IP within a minute of it rotating.</p><hr><h2 id=how-the-ip-update-works>How the IP Update Works</h2><p>This is what happens on your machine every five minutes. The desktop client runs silently in the background and only does real work when your IP actually changes:</p><pre class=mermaid>
+sequenceDiagram
+    participant Client as Desktop Client
+    participant Ipify as ipify.org
+    participant API as Node.js API
+    participant PG as PostgreSQL
+    participant PDNS as PowerDNS
+    participant WH as Webhook
 
-CLIENT_DETAIL --&gt;|HTTPS| API_DETAIL
-API_DETAIL --&gt;|localhost HTTP| PDNS_DETAIL
-API_DETAIL --&gt; PG2
-PDNS_DETAIL --&gt; MY2
-</code></pre></div><p><strong>Key security note:</strong> PowerDNS port 8081 is bound to <code>127.0.0.1</code> only. The Node.js API is the only process that can reach it. The internet only ever sees port 53 (DNS) and port 443 (your API/dashboard over HTTPS).</p><hr><h2 id=the-token-authentication-model>The Token Authentication Model</h2><p>Every subdomain gets its own API token. Here is the full lifecycle:</p><ol><li>You register <code>homelab</code> on the dashboard — the API generates a random token and stores its <strong>bcrypt hash</strong> in PostgreSQL (never the raw token).</li><li>You paste the raw token into the desktop client. The client stores it in local config.</li><li>On every update call the client sends the token in <code>Authorization: Bearer TOKEN</code>.</li><li>The API looks up the domain record, runs <code>bcrypt.compare(token, storedHash)</code>, and rejects the request if it does not match.</li><li>If you ever need to revoke access, regenerate the token from the dashboard — the old token immediately stops working.</li></ol><div class=mermaid>sequenceDiagram
-participant User as You
-participant Dashboard as React Dashboard
-participant API as Node.js API
-participant PG as PostgreSQL
-participant Client as Desktop Client<pre><code>User-&gt;&gt;Dashboard: Register subdomain &quot;homelab&quot;
-Dashboard-&gt;&gt;API: POST /api/domains
-API-&gt;&gt;API: Generate random token
-API-&gt;&gt;API: bcrypt.hash(token)
-API-&gt;&gt;PG: Store domain + hashed token
-API--&gt;&gt;Dashboard: Return raw token (shown once)
-Dashboard--&gt;&gt;User: Copy this token, save it safely
-User-&gt;&gt;Client: Paste token into client config
-Note over Client,PG: From now on, client uses token on every update call
-</code></pre></div><hr><h2 id=setting-up-the-platform>Setting Up the Platform</h2><h3 id=what-you-need>What you need</h3><ul><li>A VPS with a <strong>static</strong> IP address (e.g. DigitalOcean, Hetzner, Linode — around $5/month)</li><li>A domain name where you can edit NS records at the registrar</li><li>Docker installed on the VPS</li></ul><h3 id=step-1--configure-dns-delegation-at-your-registrar>Step 1 — Configure DNS delegation at your registrar</h3><p>Log into your registrar (e.g. Porkbun) and add two records:</p><pre tabindex=0><code>ddns   NS    ns1.yourdomain.com
+    loop Every 5 minutes
+        Client->>Ipify: get public IP
+        Ipify-->>Client: 203.0.113.42
+        Client->>Client: compare with last known IP
+        alt IP not changed
+            Client->>Client: skip until next poll
+        else IP changed
+            Client->>API: PUT /api/domains/homelab/update
+            API->>API: verify Bearer token via bcrypt
+            API->>PDNS: PATCH zone A record TTL 60
+            PDNS-->>API: 204 success
+            API->>PG: log ip_history
+            API-->>Client: record updated
+            API->>WH: IP changed notification
+        end
+    end
+</pre><p>Notice the <code>alt</code> branch — on most polls nothing happens at all. The client only contacts the API when the IP is different from the last time it checked. This keeps the system quiet and efficient.</p><hr><h2 id=component-deep-dive>Component Deep Dive</h2><p>Now that you have seen the flows, here is a closer look at how each component is built internally:</p><pre class=mermaid>
+flowchart TD
+    subgraph ClientBox[Desktop Client - Electron]
+        TRAY[System Tray Icon]
+        POLL[5-minute poll loop]
+        CFG[Local config - token and subdomain]
+        TRAY --> POLL
+        POLL --> CFG
+    end
+    subgraph APIBox[Node.js API - Express]
+        ROUTER[PUT /update route]
+        AUTH[token auth middleware]
+        PDNS_C[PowerDNS REST client]
+        LOG[IP history logger]
+        WH_S[Webhook dispatcher]
+        ROUTER --> AUTH
+        AUTH --> PDNS_C
+        AUTH --> LOG
+        AUTH --> WH_S
+    end
+    subgraph PDNSBox[PowerDNS]
+        REST[REST API port 8081 localhost only]
+        GM[gmysql backend]
+        DNS53[DNS port 53 public]
+        REST --> GM
+        DNS53 --> GM
+    end
+    subgraph DataBox[Data Stores]
+        PG2[(PostgreSQL)]
+        MY2[(MySQL)]
+    end
+    ClientBox -->|HTTPS| APIBox
+    APIBox -->|localhost HTTP| PDNSBox
+    APIBox --> PG2
+    PDNSBox --> MY2
+</pre><p><strong>Key security note:</strong> PowerDNS port 8081 is bound to <code>127.0.0.1</code> only. The Node.js API is the only process that can reach it. The internet only ever sees port 53 (DNS) and port 443 (your API/dashboard over HTTPS).</p><hr><h2 id=the-token-authentication-model>The Token Authentication Model</h2><p>Every subdomain gets its own API token. Here is the full lifecycle:</p><ol><li>You register <code>homelab</code> on the dashboard — the API generates a random token and stores its <strong>bcrypt hash</strong> in PostgreSQL (never the raw token).</li><li>You paste the raw token into the desktop client. The client stores it in local config.</li><li>On every update call the client sends the token in <code>Authorization: Bearer TOKEN</code>.</li><li>The API looks up the domain record, runs <code>bcrypt.compare(token, storedHash)</code>, and rejects the request if it does not match.</li><li>If you ever need to revoke access, regenerate the token from the dashboard — the old token immediately stops working.</li></ol><pre class=mermaid>
+sequenceDiagram
+    participant User
+    participant Dashboard as React Dashboard
+    participant API as Node.js API
+    participant PG as PostgreSQL
+    participant Client as Desktop Client
+
+    User->>Dashboard: register subdomain homelab
+    Dashboard->>API: POST /api/domains
+    API->>API: generate random token
+    API->>API: bcrypt hash the token
+    API->>PG: store domain and hashed token
+    API-->>Dashboard: return raw token shown once
+    Dashboard-->>User: copy and save this token
+    User->>Client: paste token into client config
+    Note over Client,PG: client sends token on every update call
+</pre><hr><h2 id=setting-up-the-platform>Setting Up the Platform</h2><h3 id=what-you-need>What you need</h3><ul><li>A VPS with a <strong>static</strong> IP address (e.g. DigitalOcean, Hetzner, Linode — around $5/month)</li><li>A domain name where you can edit NS records at the registrar</li><li>Docker installed on the VPS</li></ul><h3 id=step-1--configure-dns-delegation-at-your-registrar>Step 1 — Configure DNS delegation at your registrar</h3><p>Log into your registrar (e.g. Porkbun) and add two records:</p><pre tabindex=0><code>ddns   NS    ns1.yourdomain.com
 ns1    A     YOUR_VPS_IP
 </code></pre><h3 id=step-2--deploy-the-platform>Step 2 — Deploy the platform</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git clone https://github.com/devops-monk/home_static_ip.git
 </span></span><span style=display:flex><span>cd home_static_ip
