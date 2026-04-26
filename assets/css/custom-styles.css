@@ -447,6 +447,37 @@ pre.mermaid {
   border-color: var(--primary) !important;
 }
 
+/* ---- RSS nav icon ---- */
+.nav-rss a {
+  color: #f97316 !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+}
+
+.nav-rss a:hover { color: #ea580c !important; background: rgba(249,115,22,0.1) !important; }
+
+/* ---- RSS sidebar widget ---- */
+.rss-subscribe-btn {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.55em 1em !important;
+  background: #fff7ed !important;
+  color: #f97316 !important;
+  border: 1.5px solid #fed7aa !important;
+  border-radius: 6px !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+
+.rss-subscribe-btn:hover {
+  background: #f97316 !important;
+  color: #fff !important;
+  border-color: #f97316 !important;
+}
+
 /* ---- Footer ---- */
 .site-footer {
   background: var(--dark) !important;
@@ -460,3 +491,6 @@ pre.mermaid {
 .site-footer a { color: var(--primary-light) !important; text-decoration: none !important; }
 .site-footer a:hover { text-decoration: underline !important; }
 .credit-link { font-size: 0.85rem !important; font-family: var(--font) !important; }
+.footer-rss { margin-left: 1.5em; font-size: 0.85rem; }
+.footer-rss a { color: #fb923c !important; }
+.site-info { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5em; }
