@@ -1,0 +1,274 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="How I built a fully automated stock analysis dashboard that scores 220+ UK and US stocks every hour using technical analysis, sentiment scoring, and AI — deployed entirely for free on GitHub Pages."><title>Building a Zero-Cost Stock Market Intelligence Platform | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Building a Zero-Cost Stock Market Intelligence Platform"><meta name=twitter:description content="How I built a fully automated stock analysis dashboard that scores 220+ UK and US stocks every hour using technical analysis, sentiment scoring, and AI — deployed entirely for free on GitHub Pages."><meta property="og:url" content="https://devops-monk.com/2026/04/stock-market-analysis-dashboard/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Building a Zero-Cost Stock Market Intelligence Platform"><meta property="og:description" content="How I built a fully automated stock analysis dashboard that scores 220+ UK and US stocks every hour using technical analysis, sentiment scoring, and AI — deployed entirely for free on GitHub Pages."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-04-26T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-26T00:00:00+00:00"><meta property="article:tag" content="Stock Market"><meta property="article:tag" content="React"><meta property="article:tag" content="TypeScript"><meta property="article:tag" content="GitHub Actions"><meta property="article:tag" content="DevOps"><meta property="article:tag" content="AI"><meta itemprop=name content="Building a Zero-Cost Stock Market Intelligence Platform"><meta itemprop=description content="How I built a fully automated stock analysis dashboard that scores 220+ UK and US stocks every hour using technical analysis, sentiment scoring, and AI — deployed entirely for free on GitHub Pages."><meta itemprop=datePublished content="2026-04-26T00:00:00+00:00"><meta itemprop=dateModified content="2026-04-26T00:00:00+00:00"><meta itemprop=wordCount content="2205"><meta itemprop=keywords content="Stock Market,React,TypeScript,GitHub Actions,DevOps,AI"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Building a Zero-Cost Stock Market Intelligence Platform","headline":"Building a Zero-Cost Stock Market Intelligence Platform","inLanguage":"en-US","url":"https://devops-monk.com/2026/04/stock-market-analysis-dashboard/","description":"How I built a fully automated stock analysis dashboard that scores 220+ UK and US stocks every hour using technical analysis, sentiment scoring, and AI — deployed entirely for free on GitHub Pages.","wordCount":"2205","keywords":["Stock Market","React","TypeScript","GitHub Actions","DevOps","AI"],"datePublished":"2026-04-26T00:00:00Z","dateModified":"2026-04-26T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/2026/04/stock-market-analysis-dashboard/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/2026/04/stock-market-analysis-dashboard/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Building a Zero-Cost Stock Market Intelligence Platform\"","datePublished":"2026-04-26T00:00:00Z","dateModified":"2026-04-26T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/2026\/04\/stock-market-analysis-dashboard\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/04/stock-market-analysis-dashboard/ rel=bookmark><time class="entry-date published" datetime=2026-04-26T00:00:00>April 26, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>11 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/04/stock-market-analysis-dashboard/ rel=bookmark>Building a Zero-Cost Stock Market Intelligence Platform</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stock-market/>Stock Market</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/>React</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/>TypeScript</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/>GitHub Actions</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/>DevOps</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/>AI</a></span></div></header><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fstock-market-analysis-dashboard%2f&title=Building&#43;a+Zero-Cost+Stock+Market+Intelligence+Platform" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fstock-market-analysis-dashboard%2f&text=Building&#43;a+Zero-Cost+Stock+Market+Intelligence+Platform" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fstock-market-analysis-dashboard%2f&title=Building&#43;a+Zero-Cost+Stock+Market+Intelligence+Platform" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#architecture-overview>Architecture Overview</a></li><li><a href=#part-1-the-etl-pipeline>Part 1: The ETL Pipeline</a><ul><li><a href=#github-actions-schedule>GitHub Actions Schedule</a></li><li><a href=#data-sources>Data Sources</a></li></ul></li><li><a href=#part-2-technical-indicators>Part 2: Technical Indicators</a><ul><li><a href=#trend-indicators>Trend Indicators</a></li><li><a href=#momentum-indicators>Momentum Indicators</a></li><li><a href=#volatility-and-volume>Volatility and Volume</a></li><li><a href=#candlestick-patterns>Candlestick Patterns</a></li></ul></li><li><a href=#part-3-signal-detection>Part 3: Signal Detection</a></li><li><a href=#part-4-the-composite-scoring-algorithm>Part 4: The Composite Scoring Algorithm</a></li><li><a href=#part-5-bearish-alerts-and-predictive-score>Part 5: Bearish Alerts and Predictive Score</a><ul><li><a href=#bearish-alert-threshold>Bearish Alert Threshold</a></li><li><a href=#predictive-score>Predictive Score</a></li></ul></li><li><a href=#part-6-the-dashboard>Part 6: The Dashboard</a><ul><li><a href=#page-structure>Page Structure</a></li><li><a href=#insider-trading-integration>Insider Trading Integration</a></li><li><a href=#ai-copilot>AI Copilot</a></li></ul></li><li><a href=#part-7-how-to-use-it>Part 7: How to Use It</a><ul><li><a href=#decision-framework>Decision Framework</a></li></ul></li><li><a href=#running-your-own-instance>Running Your Own Instance</a></li></ul></nav></div></nav><div class=entry-content><p>Most stock screeners cost $30–$200 per month. Bloomberg Terminal costs $24,000 per year. I built something that does a meaningful fraction of what those tools do — analysing 220+ UK and US stocks every hour, scoring them across six dimensions, detecting bearish warning signals, running insider trading checks via SEC EDGAR, and presenting everything in a React PWA — at <strong>zero ongoing cost</strong>.</p><p>The platform is live at <strong><a href=https://share.devops-monk.com>share.devops-monk.com</a></strong>. The full source is at <a href=https://github.com/devops-monk/share-market>github.com/devops-monk/share-market</a>.</p><p>This post is a deep technical walkthrough — how each layer works, why I made each design decision, and how you can run your own instance.</p><hr><h2 id=architecture-overview>Architecture Overview</h2><p>The system has three completely decoupled layers. They communicate only through JSON files committed to the GitHub repository.</p><pre class=mermaid>
+flowchart TD
+    subgraph Sources[Data Sources - Free APIs]
+        YF[Yahoo Finance v8\nOHLCV + fundamentals]
+        FV[FinViz scraping\nP/E beta earnings US stocks]
+        GN[Google News RSS\nHeadlines per stock]
+        EDGAR[SEC EDGAR API\nInsider trades US stocks]
+        HF[HuggingFace Inference\nFinBERT sentiment model]
+    end
+
+    subgraph ETL[ETL Pipeline - Node.js on GitHub Actions]
+        FETCH[Fetch and normalise\nall data sources]
+        TECH[Compute technical\nindicators]
+        SIGNALS[Detect bullish\nand bearish signals]
+        SCORE[Composite scorer\n0-100 per stock]
+        PRED[Predictive score\nlinear regression]
+        WRITE[Write JSON files\nto data/]
+        FETCH --> TECH
+        TECH --> SIGNALS
+        SIGNALS --> SCORE
+        SCORE --> PRED
+        PRED --> WRITE
+    end
+
+    subgraph DASH[Dashboard - React PWA on GitHub Pages]
+        OVERVIEW[Overview page]
+        SCREENER[Screener with filters]
+        BEARISH[Bearish alerts]
+        DETAIL[Stock detail page]
+        COPILOT[AI Copilot chat]
+        PAPER[Paper trading journal]
+        MACRO[Macro dashboard]
+    end
+
+    Sources --> FETCH
+    WRITE -->|JSON committed to repo| DASH
+    GH[GitHub Actions\nhourly schedule] --> ETL
+    GH -->|auto deploy| DASH
+</pre><p><strong>Why this architecture?</strong></p><p>Everything is static. No database, no server, no infrastructure to maintain. The ETL pipeline runs on GitHub Actions (free for public repos), writes JSON files back to the repo, which triggers a GitHub Pages deploy. The dashboard fetches those JSON files at page load. The only &ldquo;runtime&rdquo; cost is the GitHub Actions minutes — well within the free tier.</p><hr><h2 id=part-1-the-etl-pipeline>Part 1: The ETL Pipeline</h2><h3 id=github-actions-schedule>GitHub Actions Schedule</h3><p>The pipeline runs every hour on weekdays, timed to cover both UK (opens 8am BST) and US (opens 2:30pm BST) market hours:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#81a1c1>on</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>schedule</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    - <span style=color:#81a1c1>cron</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;0 7-21 * * 1-5&#39;</span>   <span style=color:#616e87;font-style:italic># Every hour, Mon-Fri, 7am-9pm UTC</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>workflow_dispatch</span><span style=color:#eceff4>:</span>             <span style=color:#616e87;font-style:italic># Also triggerable manually</span>
+</span></span></code></pre></div><p>Each run processes all 220 stocks in parallel with controlled concurrency — too many concurrent requests gets the IP rate-limited.</p><pre tabindex=0><code>Yahoo Finance: 25 concurrent requests  (tolerant, high throughput)
+FinViz:         8 concurrent requests  (aggressive rate limiting)
+News fetching: 10 concurrent requests
+EDGAR:          5 concurrent requests  (SEC requirement)
+</code></pre><h3 id=data-sources>Data Sources</h3><pre class=mermaid>
+flowchart LR
+    subgraph Free[Zero-Cost Data Sources]
+        YF["Yahoo Finance v8\n/v8/finance/chart/:ticker\nNo auth required\nOHLCV 5yr daily\n52w range, volume"]
+        FV["FinViz\nHTML scraping\nUS stocks only\nP/E forward P/E\nearnings growth\nrevenue growth beta"]
+        GN["Google News RSS\nPer-stock headlines\nLast 7 days\nFree no auth"]
+        ED["SEC EDGAR API\n/submissions/:cik\nInsider Form 4 filings\n90-day net buys/sells"]
+        HF["HuggingFace\nFinBERT model\nSentiment scoring\nFree tier"]
+    end
+</pre><p><strong>Why Yahoo Finance v8?</strong> It is the only truly free source for OHLCV data with 5 years of history. The v8 chart endpoint is the same one used by the Yahoo Finance website — it requires no authentication and returns JSON directly.</p><p><strong>Why scrape FinViz instead of an API?</strong> FinViz&rsquo;s API costs $40/month. Their website is public. I scrape it with respectful rate limits (8 concurrent, 50ms delays) and a descriptive User-Agent. This gives P/E, forward P/E, earnings growth, revenue growth, and beta for US stocks.</p><p><strong>Why SEC EDGAR for insider trades?</strong> The SEC requires all insider transactions (Form 4 filings) to be publicly disclosed within 2 business days. EDGAR provides a free JSON API to query these. When insiders buy their own stock, it is often a meaningful signal — they know the company better than anyone.</p><hr><h2 id=part-2-technical-indicators>Part 2: Technical Indicators</h2><p>The pipeline fetches 5 years of daily OHLCV data (approximately 1,260 trading days) and computes the following indicators for each stock:</p><h3 id=trend-indicators>Trend Indicators</h3><table><thead><tr><th>Indicator</th><th>Parameters</th><th>What it tells you</th></tr></thead><tbody><tr><td>SMA 20</td><td>20-day simple moving average</td><td>Short-term trend direction</td></tr><tr><td>SMA 50</td><td>50-day simple moving average</td><td>Medium-term trend direction</td></tr><tr><td>SMA 200</td><td>200-day simple moving average</td><td>Long-term trend direction</td></tr><tr><td>EMA 9</td><td>9-day exponential MA</td><td>Very short-term trend</td></tr><tr><td>EMA 21</td><td>21-day exponential MA</td><td>Short-term trend</td></tr><tr><td>Ichimoku Cloud</td><td>9/26/52 standard</td><td>Support/resistance zones, cloud direction</td></tr></tbody></table><h3 id=momentum-indicators>Momentum Indicators</h3><table><thead><tr><th>Indicator</th><th>Parameters</th><th>What it tells you</th></tr></thead><tbody><tr><td>RSI</td><td>14-period</td><td>Overbought (>70) or oversold (&lt;30)</td></tr><tr><td>MACD</td><td>12/26/9</td><td>Momentum direction and crossovers</td></tr><tr><td>Stochastic</td><td>%K 14, %D 3</td><td>Overbought/oversold with crossover signals</td></tr><tr><td>Williams %R</td><td>14-period</td><td>Similar to stochastic, momentum reversal</td></tr></tbody></table><h3 id=volatility-and-volume>Volatility and Volume</h3><table><thead><tr><th>Indicator</th><th>Parameters</th><th>What it tells you</th></tr></thead><tbody><tr><td>Bollinger Bands</td><td>20-period, 2 std dev</td><td>Volatility range, squeeze breakouts</td></tr><tr><td>ATR</td><td>14-period</td><td>Average true range — volatility magnitude</td></tr><tr><td>OBV</td><td>Cumulative</td><td>Volume confirms or diverges from price</td></tr><tr><td>ADX</td><td>14-period</td><td>Trend strength (>25 = strong trend)</td></tr><tr><td>Volume Ratio</td><td>20-day avg</td><td>Current volume vs recent average</td></tr><tr><td>Volume Profile</td><td>50 bins, 252 days</td><td>Where volume has concentrated by price level</td></tr></tbody></table><h3 id=candlestick-patterns>Candlestick Patterns</h3><p>The pipeline also detects 14 candlestick reversal patterns:</p><ul><li><strong>Bullish:</strong> Hammer, Bullish Engulfing, Morning Star, Bullish Harami, Bullish Marubozu, Doji (at support)</li><li><strong>Bearish:</strong> Shooting Star, Bearish Engulfing, Evening Star, Bearish Harami, Bearish Marubozu</li></ul><hr><h2 id=part-3-signal-detection>Part 3: Signal Detection</h2><p>Indicators are combined into discrete signals with direction (bullish/bearish), severity (1–3), and timeframe (short/medium/long):</p><pre class=mermaid>
+flowchart TD
+    subgraph Long[Long-term signals]
+        GC[Golden Cross\nSMA50 above SMA200\nbullish severity 2]
+        DC[Death Cross\nSMA50 below SMA200\nbearish severity 3]
+        MAA[MA Alignment\nPrice SMA50 SMA200 aligned\nbullish or bearish severity 1]
+    end
+    subgraph Medium[Medium-term signals]
+        MACDB[MACD Bullish\nhistogram positive]
+        MACDD[MACD Bearish\nhistogram negative]
+        ADXT[ADX Strong Trend\nADX above 25]
+        ICHI[Ichimoku Cloud\nabove or below cloud]
+    end
+    subgraph Short[Short-term signals]
+        RSIO[RSI Overbought\nRSI above 70]
+        RSIOV[RSI Oversold\nRSI below 30]
+        STOB[Stochastic Bearish\ncrossover in overbought]
+        STBU[Stochastic Bullish\ncrossover in oversold]
+        BBU[BB Upper plus RSI High\noverextended]
+        BBL[BB Lower plus RSI Low\npotential bounce]
+        BBS[BB Squeeze\nbreakout imminent]
+        OBVD[OBV Divergence\nvolume not confirming price]
+        CAND[Candlestick patterns\n14 reversal patterns]
+    end
+
+    Long --> Score[Signal Score\nbullish severity minus bearish severity]
+    Medium --> Score
+    Short --> Score
+</pre><p><strong>How signals become a score:</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>const</span> bullishWeight <span style=color:#81a1c1>=</span> signals
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>.</span>filter<span style=color:#eceff4>(</span>s <span style=color:#81a1c1>=&gt;</span> s<span style=color:#eceff4>.</span>direction <span style=color:#81a1c1>===</span> <span style=color:#a3be8c>&#39;bullish&#39;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>.</span>reduce<span style=color:#eceff4>((</span>sum<span style=color:#eceff4>,</span> s<span style=color:#eceff4>)</span> <span style=color:#81a1c1>=&gt;</span> sum <span style=color:#81a1c1>+</span> s<span style=color:#eceff4>.</span>severity<span style=color:#eceff4>,</span> <span style=color:#b48ead>0</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>const</span> bearishWeight <span style=color:#81a1c1>=</span> signals
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>.</span>filter<span style=color:#eceff4>(</span>s <span style=color:#81a1c1>=&gt;</span> s<span style=color:#eceff4>.</span>direction <span style=color:#81a1c1>===</span> <span style=color:#a3be8c>&#39;bearish&#39;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>.</span>reduce<span style=color:#eceff4>((</span>sum<span style=color:#eceff4>,</span> s<span style=color:#eceff4>)</span> <span style=color:#81a1c1>=&gt;</span> sum <span style=color:#81a1c1>+</span> s<span style=color:#eceff4>.</span>severity<span style=color:#eceff4>,</span> <span style=color:#b48ead>0</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>const</span> netSignal <span style=color:#81a1c1>=</span> bullishWeight <span style=color:#81a1c1>-</span> bearishWeight<span style=color:#eceff4>;</span> <span style=color:#616e87;font-style:italic>// typically -10 to +10
+</span></span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic></span><span style=color:#81a1c1;font-weight:700>const</span> technicalSignals <span style=color:#81a1c1>=</span> normalize<span style=color:#eceff4>(</span>netSignal<span style=color:#eceff4>,</span> <span style=color:#81a1c1>-</span><span style=color:#b48ead>8</span><span style=color:#eceff4>,</span> <span style=color:#b48ead>8</span><span style=color:#eceff4>);</span> <span style=color:#616e87;font-style:italic>// maps to 0-100
+</span></span></span></code></pre></div><p>Severity 3 signals (Death Cross, RSI + Stochastic confluence) carry three times the weight of severity 1 signals. This prevents a cluster of weak signals from outweighing one strong one.</p><hr><h2 id=part-4-the-composite-scoring-algorithm>Part 4: The Composite Scoring Algorithm</h2><p>Every stock gets a 0–100 composite score built from six normalised sub-scores:</p><pre class=mermaid>
+flowchart LR
+    subgraph Inputs[Raw Data]
+        R3[3-month return]
+        R6[6-month return]
+        SIG[Bullish minus bearish\nsignal weight]
+        SENT[FinBERT sentiment\n-1 to plus 1]
+        PE[P/E ratio]
+        EG[Earnings growth]
+        VR[Volume ratio\nvs 20-day avg]
+        BETA[Beta]
+        VOL[30-day volatility]
+    end
+
+    subgraph SubScores[Normalised Sub-scores 0-100]
+        PM[Price Momentum\navg of 3m and 6m returns\nnorm -50pct to plus 50pct]
+        TS[Technical Signals\nnet signal weight\nnorm -8 to plus 8]
+        NS[News Sentiment\nnorm -1 to plus 1]
+        FU[Fundamentals\ninverted P/E plus growth\nblended 50 50]
+        VT[Volume Trend\nnorm 0.3x to 3x avg]
+        RI[Risk Inverse\n100 minus blended beta and volatility]
+    end
+
+    subgraph Composite[Weighted Composite]
+        C[Score 0-100\nPM times 0.25 plus TS times 0.25 plus\nNS times 0.15 plus FU times 0.15 plus\nVT times 0.10 plus RI times 0.10]
+    end
+
+    R3 --> PM
+    R6 --> PM
+    SIG --> TS
+    SENT --> NS
+    PE --> FU
+    EG --> FU
+    VR --> VT
+    BETA --> RI
+    VOL --> RI
+
+    PM --> C
+    TS --> C
+    NS --> C
+    FU --> C
+    VT --> C
+    RI --> C
+</pre><p><strong>Key design decisions in the scoring:</strong></p><ul><li><strong>Fundamentals uses inverted P/E</strong> — a P/E of 10 scores higher than 50. But P/E alone is misleading, so it is blended 50/50 with earnings growth rate. A low P/E with shrinking earnings is not a bargain.</li><li><strong>Risk is inverse</strong> — lower beta and volatility produce a higher risk sub-score. This means a score of 80 for a defensive utility stock means something different than 80 for a speculative small-cap.</li><li><strong>Normalisation bounds are chosen empirically</strong> — 3-month returns outside -50%/+50% are clamped, net signal weight outside -8/+8 is clamped. These bounds cover normal market conditions without extreme events dominating.</li></ul><hr><h2 id=part-5-bearish-alerts-and-predictive-score>Part 5: Bearish Alerts and Predictive Score</h2><h3 id=bearish-alert-threshold>Bearish Alert Threshold</h3><p>A stock appears on the Bearish Alerts page when it accumulates 4 or more of these specific signals simultaneously:</p><table><thead><tr><th>Signal</th><th>Severity</th><th>Logic</th></tr></thead><tbody><tr><td>Death Cross</td><td>High</td><td>SMA50 &lt; SMA200</td></tr><tr><td>RSI Overbought</td><td>Medium</td><td>RSI > 70</td></tr><tr><td>MACD Bearish</td><td>Medium</td><td>Histogram negative</td></tr><tr><td>Volume Spike Decline</td><td>High</td><td>Volume 2x avg + price down</td></tr><tr><td>Weak 3-month Momentum</td><td>Medium</td><td>3m return &lt; -15%</td></tr><tr><td>Near 52-Week Low</td><td>Medium</td><td>Price within 10% of 52w low</td></tr><tr><td>Bearish Candlestick</td><td>Low-Medium</td><td>Evening star, shooting star, engulfing</td></tr></tbody></table><p>The threshold of 4 exists because individual signals are noisy. A single Death Cross without other confirmation has a high false positive rate — markets recover from death crosses regularly. Four concurrent signals firing is a much stronger warning.</p><h3 id=predictive-score>Predictive Score</h3><p>Beyond the current composite score, the pipeline computes a <strong>forward-looking prediction</strong> using linear regression on each stock&rsquo;s score history:</p><pre class=mermaid>
+flowchart TD
+    SH[Score history\nlast 30 trading days] --> LR[Linear regression\nslope and R-squared]
+    LR --> SLOPE{Slope direction}
+    SLOPE -->|Positive slope\nR2 above 0.3| IMP[Improving\nScore likely rising]
+    SLOPE -->|Negative slope\nR2 above 0.3| DEC[Declining\nScore likely falling]
+    SLOPE -->|Low R2 or\nnear zero slope| STA[Stable\nNo clear trend]
+
+    IMP --> CONF[Confidence rating\nbased on R-squared]
+    DEC --> CONF
+    STA --> CONF
+
+    CONF -->|R2 above 0.6| HIGH[High confidence]
+    CONF -->|R2 0.3 to 0.6| MED[Medium confidence]
+    CONF -->|R2 below 0.3| LOW[Low confidence]
+</pre><p>R² (coefficient of determination) measures how well the linear trend fits the data. An R² of 0.7 means 70% of the score variation is explained by the linear trend — a meaningful signal. R² near 0 means the score has been erratic with no clear direction.</p><p>This is not a price prediction. It predicts whether the <strong>composite score</strong> (which aggregates momentum, technicals, and sentiment) is likely to improve or deteriorate — a useful signal for timing entries and exits.</p><hr><h2 id=part-6-the-dashboard>Part 6: The Dashboard</h2><p>The React PWA is built with Vite and Tailwind, deployed to GitHub Pages. It installs on mobile like a native app and caches data for offline use via a service worker.</p><h3 id=page-structure>Page Structure</h3><pre class=mermaid>
+flowchart TD
+    App[App.tsx] --> OV[Overview\nMarket health\nTop and bottom performers]
+    App --> SC[Screener\nAll 220 stocks\nSortable filterable table]
+    App --> BA[Bearish Alerts\nStocks with 4 plus signals]
+    App --> NF[News and Sentiment\nHeadlines scored by FinBERT]
+    App --> SD[Stock Detail\nFull analysis per stock]
+    App --> PT[Paper Trading\nSimulated portfolio journal]
+    App --> MD[Macro Dashboard\nEconomic indicators]
+
+    SD --> SG[Score Gauge\n0-100 visual]
+    SD --> SB[Score Breakdown\n6 factor bars]
+    SD --> CC[Candlestick Chart\nOHLCV with volume]
+    SD --> VP[Volume Profile\nVPOC value area]
+    SD --> SI[Signals list\nbullish and bearish]
+    SD --> IN[Insider trades\nSEC EDGAR 90-day]
+    SD --> FI[Financials chart\nrevenue earnings margins]
+    SD --> NEWS[Recent headlines\nsentiment scored]
+</pre><h3 id=insider-trading-integration>Insider Trading Integration</h3><p>For US stocks, the dashboard shows SEC EDGAR Form 4 insider trading data. This is powerful context — when a CEO buys $500,000 of their own company stock on the open market, it is a strong signal they believe the stock is undervalued.</p><p>The ETL:</p><ol><li>Maps each ticker to its SEC CIK number using EDGAR&rsquo;s company index</li><li>Fetches recent Form 4 filings (90-day window)</li><li>Classifies each transaction: Purchase (P), Sale (S), Award (A), Disposition (D)</li><li>Calculates net shares bought vs sold in the period</li><li>Assigns a sentiment: bullish (net buyer), bearish (net seller), neutral</li></ol><h3 id=ai-copilot>AI Copilot</h3><p>The dashboard includes a chat assistant that works without any API key using a local rule-based engine:</p><pre tabindex=0><code>&#34;What is AAPL score?&#34;         → Score 73/100 breakdown with all 6 factors
+&#34;Top 5 stocks this week&#34;      → Ranked list with scores and changes
+&#34;Show bearish alerts&#34;         → Filtered list with signal counts
+&#34;Compare MSFT and GOOGL&#34;      → Side-by-side score comparison
+</code></pre><p>With an optional LLM API key (Groq free tier supports 14,000 requests/day), it handles open-ended questions using a 70B model with the full stock data as context. Keys are AES-encrypted in localStorage — never sent to any server other than the LLM provider directly.</p><hr><h2 id=part-7-how-to-use-it>Part 7: How to Use It</h2><p>Go to <strong><a href=https://share.devops-monk.com>share.devops-monk.com</a></strong> — no account, no subscription.</p><h3 id=decision-framework>Decision Framework</h3><pre class=mermaid>
+flowchart TD
+    Start[Open dashboard] --> BA{Check Bearish\nAlert count}
+    BA -->|High count\nMarket stress| CAU[Be selective\nRaise quality bar to 70 plus]
+    BA -->|Low count\nMarket healthy| NORM[Normal screening\nScore 65 plus is fine]
+
+    CAU --> SCR[Open Screener\nSort by score descending]
+    NORM --> SCR
+
+    SCR --> CAND[Find candidate\nScore meets threshold]
+    CAND --> CHECK{Check Stock\nDetail page}
+
+    CHECK --> SIG{Any bearish\nsignals active?}
+    SIG -->|4 plus signals| AVOID[Avoid - on bearish alert list]
+    SIG -->|1 to 3 signals| WATCH[Watch list - wait for improvement]
+    SIG -->|0 to 1 signals| SENT2{Sentiment?}
+
+    SENT2 -->|Negative| WAIT[Wait for sentiment to improve]
+    SENT2 -->|Neutral or positive| INS{Insider activity?}
+    INS -->|Net seller| CAUTION[Proceed with caution]
+    INS -->|Neutral or buyer| BUY[Strong candidate]
+</pre><p><strong>Score thresholds:</strong></p><table><thead><tr><th>Score</th><th>Signal</th></tr></thead><tbody><tr><td>70+ and no bearish alerts</td><td>Strong buy candidate</td></tr><tr><td>55–70 with positive sentiment</td><td>Watch and accumulate</td></tr><tr><td>40–55</td><td>Hold, neutral</td></tr><tr><td>Below 40</td><td>Avoid</td></tr><tr><td>Any score + 4 bearish signals</td><td>Do not buy</td></tr></tbody></table><hr><h2 id=running-your-own-instance>Running Your Own Instance</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git clone https://github.com/devops-monk/share-market.git
+</span></span><span style=display:flex><span><span style=color:#81a1c1>cd</span> share-market
+</span></span><span style=display:flex><span>npm install
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Run the full ETL pipeline (fetches live data, writes to /data)</span>
+</span></span><span style=display:flex><span>npm run etl
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Start the dashboard dev server</span>
+</span></span><span style=display:flex><span>npm run dev
+</span></span></code></pre></div><p>To deploy your own instance on GitHub Pages:</p><ol><li>Fork the repository</li><li>Enable GitHub Pages on the <code>gh-pages</code> branch</li><li>Add optional secrets for the AI research feature: <code>GROQ_API_KEY</code>, <code>HUGGINGFACE_API_KEY</code></li><li>The GitHub Actions workflow runs automatically every hour</li></ol><p>The entire stack runs on GitHub&rsquo;s free tier — zero infrastructure cost for a public repository.</p><hr><p><strong>Disclaimer:</strong> This dashboard is for educational and informational purposes only. It is not financial advice. Always do your own research and consult a qualified financial advisor before making any investment decisions. Past performance does not guarantee future results.</p></div><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fstock-market-analysis-dashboard%2f&title=Building&#43;a+Zero-Cost+Stock+Market+Intelligence+Platform" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fstock-market-analysis-dashboard%2f&text=Building&#43;a+Zero-Cost+Stock+Market+Intelligence+Platform" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fstock-market-analysis-dashboard%2f&title=Building&#43;a+Zero-Cost+Stock+Market+Intelligence+Platform" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div></div></article><div class=author-bio><img src=/images/abhay.jpeg alt=Abhay class=author-bio-avatar><div class=author-bio-content><h3 class=author-bio-name>Abhay Pratap Singh</h3><p class=author-bio-desc>DevOps Engineer passionate about automation, cloud infrastructure, and self-hosted tools. I write about Kubernetes, Terraform, DNS, and everything in between.</p><div class=author-bio-links><a href=https://github.com/devops-monk target=_blank rel=noopener><i class="fa-brands fa-github"></i> GitHub</a>
+<a href=https://www.linkedin.com/in/abhay-singh-831997b5 target=_blank rel=noopener><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+<a href=/index.xml target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></div></div></div><div class=newsletter-box><div class=newsletter-icon><i class="fa-solid fa-envelope-open-text"></i></div><h3 class=newsletter-title>Enjoyed this post?</h3><p class=newsletter-desc>Get new articles on DevOps, Kubernetes, Terraform, and self-hosted tools delivered straight to your inbox. No spam, unsubscribe any time.</p><a href="mailto:abhaypratap3536@gmail.com?subject=Subscribe to Devops Monk" class=newsletter-btn><i class="fa-solid fa-paper-plane"></i> Subscribe via Email</a></div><nav class="navigation post-navigation" role=navigation><h2 class=screen-reader-text>Post navigation</h2><div class=nav-links><div class=nav-previous><a href=/2026/04/building-personal-ai-assistant-claude/ rel=next><i class="fa fa-chevron-left"></i>
+<span class=post-title>Building a Personal AI Assistant with Claude Agent SDK and Bun</span></a></div><div class=nav-next><a href=/2026/04/claude-code-security-scanner/ rel=prev><span class=post-title>Claude Code as a Security Scanner: Beyond Pattern Matching
+<i class="fa fa-chevron-right"></i></span></a></div></div></nav><div class=related-posts><h3 class=related-title><i class="fa-solid fa-layer-group"></i> You might also like</h3><div class=related-grid><a class=related-card href=/2026/04/mastering-claude-code-cli/><span class=related-card-meta>Apr 2026 · 12 min read</span>
+<span class=related-card-title>Mastering Claude Code CLI: The Complete Guide for DevOps Engineers</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/04/building-personal-ai-assistant-claude/><span class=related-card-meta>Apr 2026 · 5 min read</span>
+<span class=related-card-title>Building a Personal AI Assistant with Claude Agent SDK and Bun</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/04/claude-code-hooks-subagents-piping/><span class=related-card-meta>Apr 2026 · 5 min read</span>
+<span class=related-card-title>Claude Code Hooks, Subagents, and Piping: Advanced Automation for Teams</span>
+<span class=related-card-cat>Claude</span></a></div></div></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
+<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/04/building-personal-ai-assistant-claude/>Building a Personal AI Assistant with Claude Agent SDK and Bun</a></li><li class=widget__item><a class=widget__link href=/2026/04/stock-market-analysis-dashboard/>Building a Zero-Cost Stock Market Intelligence Platform</a></li><li class=widget__item><a class=widget__link href=/2026/04/claude-code-security-scanner/>Claude Code as a Security Scanner: Beyond Pattern Matching</a></li><li class=widget__item><a class=widget__link href=/2026/04/claude-code-hooks-subagents-piping/>Claude Code Hooks, Subagents, and Piping: Advanced Automation for Teams</a></li><li class=widget__item><a class=widget__link href=/2026/04/claude-computer-use-devops-workflows/>Claude Computer Use for DevOps: When to Use It and When to Use an API</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/ title=ai>ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/ title=automation>automation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/best-practices/ title="best practices">best practices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bun/ title=bun>bun
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ckad/ title=ckad>ckad
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/ title=claude>claude
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude.md/ title=claude.md>claude.md
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/ title=cli>cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/code-review/ title="code review">code review
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/computer-use/ title="computer use">computer use
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cost-optimization/ title="cost optimization">cost optimization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/ title=devops>devops
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dns/ title=dns>dns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/ title=electron>electron
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/ title="github actions">github actions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/helm/ title=helm>helm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hooks/ title=hooks>hooks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/iac/ title=iac>iac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/ title=node.js>node.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/ title=react>react
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/ title=shell>shell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stock-market/ title="stock market">stock market
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/terraform/ title=terraform>terraform
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/ title=typescript>typescript</a></div></div></aside></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
