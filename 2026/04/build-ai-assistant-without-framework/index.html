@@ -1,0 +1,224 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="200 lines of shell scripts, a cron job, and Claude Code headless mode are all you need for a powerful personal AI assistant. No frameworks, no servers, no complexity."><title>You Don't Need a Framework to Build an AI Assistant | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="You Don't Need a Framework to Build an AI Assistant"><meta name=twitter:description content="200 lines of shell scripts, a cron job, and Claude Code headless mode are all you need for a powerful personal AI assistant. No frameworks, no servers, no complexity."><meta property="og:url" content="https://devops-monk.com/2026/04/build-ai-assistant-without-framework/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="You Don't Need a Framework to Build an AI Assistant"><meta property="og:description" content="200 lines of shell scripts, a cron job, and Claude Code headless mode are all you need for a powerful personal AI assistant. No frameworks, no servers, no complexity."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-04-26T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-26T00:00:00+00:00"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Automation"><meta property="article:tag" content="Shell"><meta property="article:tag" content="DevOps"><meta property="article:tag" content="CLI"><meta itemprop=name content="You Don't Need a Framework to Build an AI Assistant"><meta itemprop=description content="200 lines of shell scripts, a cron job, and Claude Code headless mode are all you need for a powerful personal AI assistant. No frameworks, no servers, no complexity."><meta itemprop=datePublished content="2026-04-26T00:00:00+00:00"><meta itemprop=dateModified content="2026-04-26T00:00:00+00:00"><meta itemprop=wordCount content="1082"><meta itemprop=keywords content="Claude,Automation,Shell,DevOps,CLI"><meta property="og:image" content="https://devops-monk.com/images/articles/build-without-framework.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/articles/build-without-framework.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"You Don\u0027t Need a Framework to Build an AI Assistant","headline":"You Don\u0027t Need a Framework to Build an AI Assistant","inLanguage":"en-US","url":"https://devops-monk.com/2026/04/build-ai-assistant-without-framework/","description":"200 lines of shell scripts, a cron job, and Claude Code headless mode are all you need for a powerful personal AI assistant. No frameworks, no servers, no complexity.","wordCount":"1082","keywords":["Claude","Automation","Shell","DevOps","CLI"],"datePublished":"2026-04-26T00:00:00Z","dateModified":"2026-04-26T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/2026/04/build-ai-assistant-without-framework/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/2026/04/build-ai-assistant-without-framework/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"You Don't Need a Framework to Build an AI Assistant\"","datePublished":"2026-04-26T00:00:00Z","dateModified":"2026-04-26T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/2026\/04\/build-ai-assistant-without-framework\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/04/build-ai-assistant-without-framework/ rel=bookmark><time class="entry-date published" datetime=2026-04-26T00:00:00>April 26, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>6 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/04/build-ai-assistant-without-framework/ rel=bookmark>You Don't Need a Framework to Build an AI Assistant</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/>Claude</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/>Automation</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/>Shell</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/>DevOps</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/>CLI</a></span></div></header><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-ai-assistant-without-framework%2f&title=You&#43;Don%27t+Need+a+Framework+to+Build+an+AI+Assistant" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-ai-assistant-without-framework%2f&text=You&#43;Don%27t+Need+a+Framework+to+Build+an+AI+Assistant" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-ai-assistant-without-framework%2f&title=You&#43;Don%27t+Need+a+Framework+to+Build+an+AI+Assistant" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#the-architecture>The Architecture</a></li><li><a href=#the-soulmd-file>The SOUL.md File</a></li><li><a href=#the-memory-system>The Memory System</a></li><li><a href=#prompt-templates>Prompt Templates</a></li><li><a href=#the-shell-script>The Shell Script</a></li><li><a href=#scheduling>Scheduling</a></li><li><a href=#why-this-beats-a-framework>Why This Beats a Framework</a></li><li><a href=#extending-it>Extending It</a></li></ul></nav></div></nav><div class=entry-content><p>There is a tendency in the AI tooling space to reach for frameworks — LangChain, AutoGen, CrewAI, OpenClaw — the moment you want an AI that does more than answer one question at a time. Most of the time, that is the wrong move. The framework adds complexity, dependencies, and debugging surface area for problems that a few shell scripts and cron jobs solve perfectly well.</p><p>Claude Code&rsquo;s headless mode (<code>-p</code> flag) plus a markdown file for personality plus cron scheduling is a complete AI assistant stack. Here is how to build it.</p><hr><h2 id=the-architecture>The Architecture</h2><pre class=mermaid>
+flowchart TD
+    Cron[Cron schedule] --> Script[Bash script]
+    Script --> Template[Load prompt template\nfrom prompts/]
+    Script --> Memory[Read memory files\nfrom memories/]
+    Script --> Claude[claude -p with combined prompt]
+    Claude --> Output[Write output to file]
+    Output --> Notify[Send to Telegram or Slack]
+
+    subgraph Assistant Directory
+        SOUL[SOUL.md\nPersonality and principles]
+        Memories[memories/\nPersistent context files]
+        Prompts[prompts/\nTask templates]
+        Scripts[scripts/\nCron-invoked shell scripts]
+    end
+</pre><p>No server. No message queue. No framework. The entire system is files and shell scripts.</p><hr><h2 id=the-soulmd-file>The SOUL.md File</h2><p>The first thing to create is a personality file. This defines how the assistant approaches its work — its tone, its priorities, its operating principles. Without this, outputs feel generic.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Assistant: Devika
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Role
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>You are Devika, a research and briefing assistant for a DevOps engineering team.
+</span></span><span style=display:flex><span>Your job is to save engineers time by surfacing relevant information before they know they need it.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Operating Principles
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span><span style=color:#81a1c1;font-weight:700>-</span> Be specific and technical — this audience is senior engineers, not beginners
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Cite sources — do not make claims without a URL or reference
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Be concise — a tight 200-word section beats a rambling 500-word one
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Surface actionable insights — &#34;here is something you can try today&#34; is more valuable than &#34;here is an interesting trend&#34;
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Do not repeat yourself across runs — check what was covered last time
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Tone
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>Professional but conversational. Not corporate. Not casual.
+</span></span><span style=display:flex><span>Write like a knowledgeable colleague who is good at summarising.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Output Format
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span><span style=color:#81a1c1;font-weight:700>-</span> Use Markdown headings
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Include a TL;DR at the top (3 bullet points maximum)
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Keep total length under 800 words
+</span></span></code></pre></div><hr><h2 id=the-memory-system>The Memory System</h2><p>Memory is just markdown files in a directory. Each file captures a category of persistent context:</p><pre tabindex=0><code>memories/
+├── last_weekly.md          ← previous weekly briefing (auto-updated)
+├── topics_covered.md       ← running list of covered topics
+├── team_context.md         ← what this team works on (static)
+└── feedback.md             ← lessons from past runs (manually updated)
+</code></pre><p>The team_context.md is static — write it once:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Team Context
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>This team runs a platform engineering function at a mid-size SaaS company.
+</span></span><span style=display:flex><span>Current focus areas: Kubernetes migration, Terraform module standardisation,
+</span></span><span style=display:flex><span>developer experience improvements.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Tools in use: AWS, Kubernetes (EKS), Terraform, GitHub Actions, PagerDuty, Datadog.
+</span></span><span style=display:flex><span>Stack: Node.js microservices, PostgreSQL, Redis.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Do not brief on topics already in regular team discussions.
+</span></span></code></pre></div><hr><h2 id=prompt-templates>Prompt Templates</h2><p>Templates are markdown files with <code>{{VARIABLE}}</code> placeholders. Each task gets its own template:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Weekly Engineering Briefing - {{DATE}}
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>Read the following context files before starting:
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Team context: {{TEAM_CONTEXT}}
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Last briefing: {{LAST_BRIEFING}}
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Topics already covered: {{TOPICS_COVERED}}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Your Task
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>Research and write a briefing for the platform engineering team covering:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>1.</span> New releases in our toolchain (Kubernetes, Terraform, AWS services we use)
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>2.</span> One notable incident post-mortem published this week — what happened and what we can learn
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>3.</span> One practical technique or tool worth trying — include a concrete example
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>4.</span> One community discussion worth reading — with a brief summary and why it matters
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Constraints:
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Do not cover topics listed in {{TOPICS_COVERED}}
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Maximum 800 words total
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> All claims must have sources
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Save a summary of topics covered to memories/topics_covered.md before finishing
+</span></span></code></pre></div><hr><h2 id=the-shell-script>The Shell Script</h2><p>The script loads the soul, memory, and template — assembles them into a complete prompt — and runs <code>claude -p</code>:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#5e81ac;font-style:italic>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#5e81ac;font-style:italic></span><span style=color:#616e87;font-style:italic># scripts/weekly-brief.sh</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>set</span> -e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>BASE_DIR<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span><span style=color:#81a1c1;font-weight:700>$(</span><span style=color:#81a1c1>cd</span> <span style=color:#a3be8c>&#34;</span><span style=color:#81a1c1;font-weight:700>$(</span>dirname <span style=color:#a3be8c>&#34;</span>$0<span style=color:#a3be8c>&#34;</span><span style=color:#81a1c1;font-weight:700>)</span><span style=color:#a3be8c>/..&#34;</span> <span style=color:#81a1c1>&amp;&amp;</span> <span style=color:#81a1c1>pwd</span><span style=color:#81a1c1;font-weight:700>)</span><span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span>DATE<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>date +%Y-%m-%d<span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>LOG<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/logs/</span><span style=color:#81a1c1;font-weight:700>$(</span>date +%Y-%m-%d<span style=color:#81a1c1;font-weight:700>)</span><span style=color:#a3be8c>.log&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>log<span style=color:#81a1c1>()</span> <span style=color:#81a1c1>{</span> <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;[</span><span style=color:#81a1c1;font-weight:700>$(</span>date +%H:%M:%S<span style=color:#81a1c1;font-weight:700>)</span><span style=color:#a3be8c>] </span>$1<span style=color:#a3be8c>&#34;</span> <span style=color:#eceff4>|</span> tee -a <span style=color:#a3be8c>&#34;</span>$LOG<span style=color:#a3be8c>&#34;</span><span style=color:#eceff4>;</span> <span style=color:#81a1c1>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>log <span style=color:#a3be8c>&#34;Starting weekly briefing&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Load memory files</span>
+</span></span><span style=display:flex><span>TEAM_CONTEXT<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>cat <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/memories/team_context.md&#34;</span> 2&gt;/dev/null <span style=color:#81a1c1>||</span> <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;&#34;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>LAST_BRIEFING<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>cat <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/memories/last_weekly.md&#34;</span> 2&gt;/dev/null <span style=color:#81a1c1>||</span> <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;No previous briefing.&#34;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>TOPICS_COVERED<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>cat <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/memories/topics_covered.md&#34;</span> 2&gt;/dev/null <span style=color:#81a1c1>||</span> <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;None yet.&#34;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Assemble prompt from template</span>
+</span></span><span style=display:flex><span>PROMPT<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>cat <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/prompts/weekly-brief.md&#34;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>PROMPT<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span><span style=color:#a3be8c>${</span>PROMPT<span style=color:#eceff4>//</span><span style=color:#ebcb8b>\{\{</span>DATE<span style=color:#ebcb8b>\}\}</span><span style=color:#eceff4>/</span>$DATE<span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span>PROMPT<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span><span style=color:#a3be8c>${</span>PROMPT<span style=color:#eceff4>//</span><span style=color:#ebcb8b>\{\{</span>TEAM_CONTEXT<span style=color:#ebcb8b>\}\}</span><span style=color:#eceff4>/</span>$TEAM_CONTEXT<span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span>PROMPT<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span><span style=color:#a3be8c>${</span>PROMPT<span style=color:#eceff4>//</span><span style=color:#ebcb8b>\{\{</span>LAST_BRIEFING<span style=color:#ebcb8b>\}\}</span><span style=color:#eceff4>/</span>$LAST_BRIEFING<span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span>PROMPT<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span><span style=color:#a3be8c>${</span>PROMPT<span style=color:#eceff4>//</span><span style=color:#ebcb8b>\{\{</span>TOPICS_COVERED<span style=color:#ebcb8b>\}\}</span><span style=color:#eceff4>/</span>$TOPICS_COVERED<span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Add the soul</span>
+</span></span><span style=display:flex><span>FULL_PROMPT<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;</span><span style=color:#81a1c1;font-weight:700>$(</span>cat <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/SOUL.md&#34;</span><span style=color:#81a1c1;font-weight:700>)</span><span style=color:#a3be8c>\n\n---\n\n</span>$PROMPT<span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Run Claude</span>
+</span></span><span style=display:flex><span>log <span style=color:#a3be8c>&#34;Running Claude&#34;</span>
+</span></span><span style=display:flex><span>RESULT<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>claude -p <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --dangerously-skip-permissions <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  -d <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>&#34;</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  <span style=color:#a3be8c>&#34;</span>$FULL_PROMPT<span style=color:#a3be8c>&#34;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Save as this week&#39;s memory</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;</span>$RESULT<span style=color:#a3be8c>&#34;</span> &gt; <span style=color:#a3be8c>&#34;</span>$BASE_DIR<span style=color:#a3be8c>/memories/last_weekly.md&#34;</span>
+</span></span><span style=display:flex><span>log <span style=color:#a3be8c>&#34;Report saved to memories/last_weekly.md&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Send to Telegram</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>if</span> <span style=color:#81a1c1>[</span> -n <span style=color:#a3be8c>&#34;</span>$TELEGRAM_TOKEN<span style=color:#a3be8c>&#34;</span> <span style=color:#81a1c1>]</span> <span style=color:#81a1c1>&amp;&amp;</span> <span style=color:#81a1c1>[</span> -n <span style=color:#a3be8c>&#34;</span>$TELEGRAM_CHAT_ID<span style=color:#a3be8c>&#34;</span> <span style=color:#81a1c1>]</span><span style=color:#eceff4>;</span> <span style=color:#81a1c1;font-weight:700>then</span>
+</span></span><span style=display:flex><span>  curl -s -X POST <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    <span style=color:#a3be8c>&#34;https://api.telegram.org/bot</span><span style=color:#a3be8c>${</span>TELEGRAM_TOKEN<span style=color:#a3be8c>}</span><span style=color:#a3be8c>/sendMessage&#34;</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    -d <span style=color:#a3be8c>&#34;chat_id=</span><span style=color:#a3be8c>${</span>TELEGRAM_CHAT_ID<span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    -d <span style=color:#a3be8c>&#34;text=</span><span style=color:#a3be8c>${</span>RESULT<span style=color:#eceff4>:</span>0<span style=color:#eceff4>:</span>4000<span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    -d <span style=color:#a3be8c>&#34;parse_mode=Markdown&#34;</span>
+</span></span><span style=display:flex><span>  log <span style=color:#a3be8c>&#34;Delivered to Telegram&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>log <span style=color:#a3be8c>&#34;Done&#34;</span>
+</span></span></code></pre></div><hr><h2 id=scheduling>Scheduling</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Create the log directory</span>
+</span></span><span style=display:flex><span>mkdir -p /home/user/assistant/logs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Edit crontab</span>
+</span></span><span style=display:flex><span>crontab -e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Weekly on Sunday at 8 AM</span>
+</span></span><span style=display:flex><span><span style=color:#b48ead>0</span> <span style=color:#b48ead>8</span> * * <span style=color:#b48ead>0</span>   /home/user/assistant/scripts/weekly-brief.sh
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Daily standup at 9 AM weekdays</span>
+</span></span><span style=display:flex><span><span style=color:#b48ead>0</span> <span style=color:#b48ead>9</span> * * 1-5 /home/user/assistant/scripts/daily-standup.sh
+</span></span></code></pre></div><hr><h2 id=why-this-beats-a-framework>Why This Beats a Framework</h2><pre class=mermaid>
+flowchart LR
+    subgraph Framework[Framework approach]
+        F1[Install 50 dependencies]
+        F2[Learn framework API]
+        F3[Debug framework behaviour]
+        F4[Handle framework updates]
+        F5[Vendor lock-in]
+    end
+    subgraph Shell[Shell approach]
+        S1[3 shell scripts]
+        S2[Standard Unix tools]
+        S3[Transparent and auditable]
+        S4[No dependencies to update]
+        S5[Runs anywhere with bash]
+    end
+</pre><p><strong>Security advantage:</strong> Frameworks that accept inbound messages (Slack DM, email) are vulnerable to prompt injection — someone sends a message that tricks the assistant into doing something harmful. The shell script approach is outbound-only: cron triggers the script, which reads local files, which you control. No external input reaches the assistant during a run.</p><p><strong>Transparency:</strong> Every step is a file you can read. The prompt is a markdown file. The memory is a markdown file. The output is a markdown file. There is nothing hidden in a framework&rsquo;s internal state.</p><p><strong>Portability:</strong> These scripts run on any machine with Claude Code installed. No Docker image, no framework version pinning, no cloud dependency.</p><hr><h2 id=extending-it>Extending It</h2><p>Once the weekly briefing works, the pattern extends to any scheduled task:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Daily: What merged yesterday?</span>
+</span></span><span style=display:flex><span><span style=color:#b48ead>0</span> <span style=color:#b48ead>9</span> * * 1-5 scripts/daily-git-summary.sh
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># After deploys: Write a deploy summary</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Triggered by CI webhook</span>
+</span></span><span style=display:flex><span>scripts/deploy-summary.sh
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Monthly: Infrastructure cost report</span>
+</span></span><span style=display:flex><span><span style=color:#b48ead>0</span> <span style=color:#b48ead>8</span> <span style=color:#b48ead>1</span> * *   scripts/monthly-costs.sh
+</span></span></code></pre></div><p>Each script follows the same pattern: load context, build prompt, run <code>claude -p</code>, save output, notify. The soul and memory system stay shared across all scripts.</p><p>The most powerful thing about this approach is that you start with something that works in an afternoon and grow it incrementally. No framework design decisions to make upfront, no architecture to commit to. Just scripts that do one thing well.</p></div><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-ai-assistant-without-framework%2f&title=You&#43;Don%27t+Need+a+Framework+to+Build+an+AI+Assistant" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-ai-assistant-without-framework%2f&text=You&#43;Don%27t+Need+a+Framework+to+Build+an+AI+Assistant" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f04%2fbuild-ai-assistant-without-framework%2f&title=You&#43;Don%27t+Need+a+Framework+to+Build+an+AI+Assistant" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div></div></article><div class=author-bio><img src=/images/abhay.jpeg alt=Abhay class=author-bio-avatar><div class=author-bio-content><h3 class=author-bio-name>Abhay Pratap Singh</h3><p class=author-bio-desc>DevOps Engineer passionate about automation, cloud infrastructure, and self-hosted tools. I write about Kubernetes, Terraform, DNS, and everything in between.</p><div class=author-bio-links><a href=https://github.com/devops-monk target=_blank rel=noopener><i class="fa-brands fa-github"></i> GitHub</a>
+<a href=https://www.linkedin.com/in/abhay-singh-831997b5 target=_blank rel=noopener><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+<a href=/index.xml target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></div></div></div><div class=newsletter-box><div class=newsletter-icon><i class="fa-solid fa-envelope-open-text"></i></div><h3 class=newsletter-title>Enjoyed this post?</h3><p class=newsletter-desc>Get new articles on DevOps, Kubernetes, Terraform, and self-hosted tools delivered straight to your inbox. No spam, unsubscribe any time.</p><a href="mailto:abhaypratap3536@gmail.com?subject=Subscribe to Devops Monk" class=newsletter-btn><i class="fa-solid fa-paper-plane"></i> Subscribe via Email</a></div><nav class="navigation post-navigation" role=navigation><h2 class=screen-reader-text>Post navigation</h2><div class=nav-links><div class=nav-previous><a href=/2026/04/writing-claude-md-that-works/ rel=next><i class="fa fa-chevron-left"></i>
+<span class=post-title>Writing a CLAUDE.md That Actually Works</span></a></div><div class=nav-next><a href=/2026/04/build-your-own-ddns-platform/ rel=prev><span class=post-title>Build Your Own DDNS Platform
+<i class="fa fa-chevron-right"></i></span></a></div></div></nav><div class=related-posts><h3 class=related-title><i class="fa-solid fa-layer-group"></i> You might also like</h3><div class=related-grid><a class=related-card href=/2026/04/claude-code-hooks-subagents-piping/><span class=related-card-meta>Apr 2026 · 5 min read</span>
+<span class=related-card-title>Claude Code Hooks, Subagents, and Piping: Advanced Automation for Teams</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/04/claude-computer-use-devops-workflows/><span class=related-card-meta>Apr 2026 · 5 min read</span>
+<span class=related-card-title>Claude Computer Use for DevOps: When to Use It and When to Use an API</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/04/mastering-claude-code-cli/><span class=related-card-meta>Apr 2026 · 12 min read</span>
+<span class=related-card-title>Mastering Claude Code CLI: The Complete Guide for DevOps Engineers</span>
+<span class=related-card-cat>Claude</span></a></div></div></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
+<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/04/building-personal-ai-assistant-claude/>Building a Personal AI Assistant with Claude Agent SDK and Bun</a></li><li class=widget__item><a class=widget__link href=/2026/04/claude-code-security-scanner/>Claude Code as a Security Scanner: Beyond Pattern Matching</a></li><li class=widget__item><a class=widget__link href=/2026/04/claude-code-hooks-subagents-piping/>Claude Code Hooks, Subagents, and Piping: Advanced Automation for Teams</a></li><li class=widget__item><a class=widget__link href=/2026/04/claude-computer-use-devops-workflows/>Claude Computer Use for DevOps: When to Use It and When to Use an API</a></li><li class=widget__item><a class=widget__link href=/2026/04/mastering-claude-code-cli/>Mastering Claude Code CLI: The Complete Guide for DevOps Engineers</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/ title=ai>ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/ title=automation>automation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/best-practices/ title="best practices">best practices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bun/ title=bun>bun
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ckad/ title=ckad>ckad
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/ title=claude>claude
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude.md/ title=claude.md>claude.md
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/ title=cli>cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/code-review/ title="code review">code review
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/computer-use/ title="computer use">computer use
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cost-optimization/ title="cost optimization">cost optimization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/ title=devops>devops
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dns/ title=dns>dns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/ title=electron>electron
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/helm/ title=helm>helm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hooks/ title=hooks>hooks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/iac/ title=iac>iac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/ title=node.js>node.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/ title=shell>shell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/terraform/ title=terraform>terraform
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/ title=typescript>typescript</a></div></div></aside></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
