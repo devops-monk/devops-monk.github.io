@@ -865,33 +865,73 @@ pre:hover .copy-btn { opacity: 1; }
 
 #dark-mode-toggle:hover { background: rgba(255,255,255,0.15); color: #f0f9ff; }
 
-[data-theme="dark"] {
-  --text:    #cbd5e1;
-  --dark:    #f0f9ff;
-  --dark-2:  #e2e8f0;
-  --dark-3:  #cbd5e1;
-  --bg:      #0f172a;
-  --surface: #1e293b;
-  --border:  #334155;
-  --text-muted: #64748b;
+/* ---- Dark mode (user-toggled only, never auto) ---- */
+[data-theme="dark"] body {
+  background: #0f172a !important;
+  color: #cbd5e1 !important;
 }
 
-[data-theme="dark"] body    { background: #0f172a !important; color: #cbd5e1 !important; }
+[data-theme="dark"] .site { background: #0f172a !important; }
+
 [data-theme="dark"] .type-post,
-[data-theme="dark"] .hentry { background: #1e293b !important; border-color: #334155 !important; }
+[data-theme="dark"] .hentry {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: none !important;
+}
+
 [data-theme="dark"] .entry-title a:link,
 [data-theme="dark"] .entry-title a:visited { color: #f0f9ff !important; }
+
 [data-theme="dark"] .entry-content { color: #cbd5e1 !important; }
+
 [data-theme="dark"] .entry-content h2,
 [data-theme="dark"] .entry-content h3,
 [data-theme="dark"] .entry-content h4 { color: #f0f9ff !important; }
+
 [data-theme="dark"] .entry-content h2 { border-color: #334155 !important; }
-[data-theme="dark"] code, [data-theme="dark"] kbd { background: #0f172a !important; color: #7dd3fc !important; }
-[data-theme="dark"] blockquote { background: #1e3a5f !important; }
-[data-theme="dark"] .widget { background: #1e293b !important; border-color: #334155 !important; }
-[data-theme="dark"] .author-bio { background: #1e293b !important; border-color: #334155 !important; }
-[data-theme="dark"] .toc-widget { background: #1e293b !important; border-color: #334155 !important; }
+
+[data-theme="dark"] .entry-content a { color: var(--primary-light) !important; }
+
+[data-theme="dark"] code,
+[data-theme="dark"] kbd { background: #0f172a !important; color: #7dd3fc !important; }
+
+[data-theme="dark"] blockquote { background: #1e3a5f !important; color: #bfdbfe !important; }
+
+[data-theme="dark"] .widget {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .widget ul li { border-color: #334155 !important; }
+[data-theme="dark"] .widget ul li a { color: #cbd5e1 !important; }
+
+[data-theme="dark"] .author-bio  { background: #1e293b !important; border-color: #334155 !important; }
+[data-theme="dark"] .author-bio-name { color: #f0f9ff !important; }
+[data-theme="dark"] .author-bio-desc { color: #94a3b8 !important; }
+
+[data-theme="dark"] .toc-widget  { background: #1e293b !important; border-color: var(--primary) !important; }
+[data-theme="dark"] .toc-links nav a { color: #94a3b8 !important; }
+
 [data-theme="dark"] .social-share-bar { background: #1e293b !important; border-color: #334155 !important; }
+
 [data-theme="dark"] .entry-content table th { background: #0f172a !important; }
-[data-theme="dark"] .entry-content table td { border-color: #334155 !important; }
-[data-theme="dark"] .entry-content table tr:nth-child(even) td { background: #1a2744 !important; }
+[data-theme="dark"] .entry-content table td { border-color: #334155 !important; color: #cbd5e1 !important; }
+[data-theme="dark"] .entry-content table tr:nth-child(even) td { background: #162032 !important; }
+[data-theme="dark"] .entry-content table tr:hover td { background: #1e3a5f !important; }
+
+[data-theme="dark"] .post-navigation .nav-links .nav-previous a,
+[data-theme="dark"] .post-navigation .nav-links .nav-next a { color: var(--primary-light) !important; }
+
+[data-theme="dark"] .newsletter-box { border: 1px solid #334155; }
+
+[data-theme="dark"] #search input[type="text"] {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] hr { border-color: #334155 !important; }
+[data-theme="dark"] .more-link,
+[data-theme="dark"] .more-link:link,
+[data-theme="dark"] .more-link:visited { color: var(--primary-light) !important; border-color: var(--primary-light) !important; }

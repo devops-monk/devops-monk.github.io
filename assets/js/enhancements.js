@@ -48,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   var saved = localStorage.getItem('dm-theme');
-  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved ? saved === 'dark' : prefersDark);
+  applyTheme(saved === 'dark');
 
   if (toggle) {
     toggle.addEventListener('click', function () {
