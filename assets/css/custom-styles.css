@@ -447,6 +447,47 @@ pre.mermaid {
   border-color: var(--primary) !important;
 }
 
+/* ---- Kill all theme red (#ee3333) across the board ---- */
+a:link, a:visited { color: var(--primary); }
+a:hover, a:active { color: var(--primary-dark); }
+
+.site-title a:hover,
+.site-title a:active { color: var(--primary-light) !important; }
+
+/* Post navigation prev/next */
+.post-navigation {
+  border-top: 1px solid var(--border) !important;
+  margin-top: 2em !important;
+  padding-top: 1.5em !important;
+}
+
+.post-navigation .nav-links .nav-previous a,
+.post-navigation .nav-links .nav-next a {
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  text-decoration: none !important;
+  transition: color 0.15s !important;
+}
+
+.post-navigation .nav-links .nav-previous a:hover,
+.post-navigation .nav-links .nav-next a:hover {
+  color: var(--primary-dark) !important;
+}
+
+/* Pagination */
+.pagination a:hover,
+.pagination a:active,
+.pagination .current {
+  background: var(--primary) !important;
+}
+
+/* Widget title links */
+.widget-title a:link,
+.widget-title a:visited { color: var(--text-muted) !important; }
+.widget-title a:hover,
+.widget-title a:active  { color: var(--primary) !important; }
+
 /* ---- Reading time ---- */
 .meta-reading-time {
   color: var(--text-muted);
