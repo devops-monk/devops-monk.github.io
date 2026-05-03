@@ -1,0 +1,526 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Build a complete GitHub Actions pipeline for Liquibase — PR validation gates, staging deployment, production deployment with mandatory tagging, rollback workflow, and the setup-liquibase action for Liquibase 5.x."><title>CI/CD Integration: GitHub Actions Pipeline for Database Deployments | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="CI/CD Integration: GitHub Actions Pipeline for Database Deployments"><meta name=twitter:description content="Build a complete GitHub Actions pipeline for Liquibase — PR validation gates, staging deployment, production deployment with mandatory tagging, rollback workflow, and the setup-liquibase action for Liquibase 5.x."><meta property="og:url" content="https://devops-monk.com/tutorials/liquibase/liquibase-cicd-github-actions/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="CI/CD Integration: GitHub Actions Pipeline for Database Deployments"><meta property="og:description" content="Build a complete GitHub Actions pipeline for Liquibase — PR validation gates, staging deployment, production deployment with mandatory tagging, rollback workflow, and the setup-liquibase action for Liquibase 5.x."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-03T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-03T00:00:00+00:00"><meta property="article:tag" content="Liquibase"><meta property="article:tag" content="Mysql"><meta property="article:tag" content="Database"><meta property="article:tag" content="Ci-Cd"><meta property="article:tag" content="Github-Actions"><meta property="article:tag" content="Tutorial"><meta itemprop=name content="CI/CD Integration: GitHub Actions Pipeline for Database Deployments"><meta itemprop=description content="Build a complete GitHub Actions pipeline for Liquibase — PR validation gates, staging deployment, production deployment with mandatory tagging, rollback workflow, and the setup-liquibase action for Liquibase 5.x."><meta itemprop=datePublished content="2026-05-03T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-03T00:00:00+00:00"><meta itemprop=wordCount content="2049"><meta itemprop=keywords content="Liquibase,Mysql,Database,Ci-Cd,Github-Actions,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"CI\/CD Integration: GitHub Actions Pipeline for Database Deployments","headline":"CI\/CD Integration: GitHub Actions Pipeline for Database Deployments","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/liquibase/liquibase-cicd-github-actions/","description":"Build a complete GitHub Actions pipeline for Liquibase — PR validation gates, staging deployment, production deployment with mandatory tagging, rollback workflow, and the setup-liquibase action for Liquibase 5.x.","wordCount":"2049","keywords":["liquibase","mysql","database","ci-cd","github-actions","tutorial"],"datePublished":"2026-05-03T00:00:00Z","dateModified":"2026-05-03T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/liquibase/liquibase-cicd-github-actions/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/liquibase/liquibase-cicd-github-actions/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"CI/CD Integration: GitHub Actions Pipeline for Database Deployments\"","datePublished":"2026-05-03T00:00:00Z","dateModified":"2026-05-03T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/liquibase\/liquibase-cicd-github-actions\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class="menu-item current-menu-item"><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Liquibase Tutorial</a></div><div class=series-progress><span class=series-part>Part 19 of 24</span><div class=series-progress-bar><div class=series-progress-fill style=width:79%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/liquibase/liquibase-cicd-github-actions/ rel=bookmark><time class="entry-date published" datetime=2026-05-03T00:00:00>May 03, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>10 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/liquibase/liquibase-cicd-github-actions/ rel=bookmark>CI/CD Integration: GitHub Actions Pipeline for Database Deployments</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/liquibase/>liquibase</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mysql/>mysql</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/database/>database</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ci-cd/>ci-cd</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/>github-actions</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#the-setup-liquibase-action>The setup-liquibase Action</a></li><li><a href=#workflow-1-pr-validation-gates>Workflow 1: PR Validation Gates</a></li><li><a href=#workflow-2-staging-deployment>Workflow 2: Staging Deployment</a></li><li><a href=#workflow-3-production-deployment>Workflow 3: Production Deployment</a></li><li><a href=#workflow-4-rollback-manual-trigger>Workflow 4: Rollback (Manual Trigger)</a></li><li><a href=#github-secrets-configuration>GitHub Secrets Configuration</a></li><li><a href=#branch-protection-rules>Branch Protection Rules</a></li><li><a href=#common-mistakes>Common Mistakes</a></li><li><a href=#best-practices>Best Practices</a></li><li><a href=#what-youve-learned>What You&rsquo;ve Learned</a></li></ul></nav></div></nav><div class=entry-content><p>The Liquibase commands covered in Articles 5 and 16 become reliable only when they run automatically on every change. A developer who remembers to run <code>futureRollbackSQL</code> before merging is better than one who doesn&rsquo;t — but a pipeline that enforces it is better than both.</p><p>This article builds a complete GitHub Actions pipeline: PR validation gates that block merges when rollback is missing, a staging deployment workflow, and a production deployment workflow with mandatory tagging and pre-generated rollback files.</p><hr><h2 id=the-setup-liquibase-action>The setup-liquibase Action</h2><p>Liquibase&rsquo;s current GitHub Actions approach is a single <code>setup-liquibase</code> action that installs Liquibase and adds it to <code>PATH</code>, then lets you run any Liquibase command as a standard <code>run</code> step. This replaced 50+ individual command actions in Liquibase 4.x and is the only supported approach for Liquibase 5.x.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>- <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>    <span style=color:#616e87;font-style:italic># Liquibase version</span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic># edition: &#34;pro&#34;     # Uncomment for Liquibase Pro</span>
+</span></span></code></pre></div><p>After this step, <code>liquibase</code> is available in all subsequent <code>run</code> steps.</p><hr><h2 id=workflow-1-pr-validation-gates>Workflow 1: PR Validation Gates</h2><p>This workflow runs on every PR that touches migration files. It enforces the gates from Article 16 before merge is allowed.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#616e87;font-style:italic># .github/workflows/db-pr-validation.yml</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Database Migration Validation
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>on</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>pull_request</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>paths</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#a3be8c>&#39;src/main/resources/db/changelog/**&#39;</span>
+</span></span><span style=display:flex><span>      - <span style=color:#a3be8c>&#39;liquibase.properties&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>concurrency</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>group</span><span style=color:#eceff4>:</span> db-pr-${{ github.head_ref }}
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>cancel-in-progress</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>jobs</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>validate-migrations</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Validate Migrations
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>runs-on</span><span style=color:#eceff4>:</span> ubuntu-latest
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>services</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>mysql</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>image</span><span style=color:#eceff4>:</span> mysql:8.0
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>MYSQL_ROOT_PASSWORD</span><span style=color:#eceff4>:</span> root
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>MYSQL_DATABASE</span><span style=color:#eceff4>:</span> ecommerce_ci
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>MYSQL_USER</span><span style=color:#eceff4>:</span> lb_user
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>MYSQL_PASSWORD</span><span style=color:#eceff4>:</span> lb_pass
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>ports</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          - <span style=color:#b48ead>3306</span><span style=color:#eceff4>:</span><span style=color:#b48ead>3306</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>options</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>&gt;-</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          --health-cmd=&#34;mysqladmin ping -h 127.0.0.1 -u root --password=root&#34;
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          --health-interval=10s
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          --health-timeout=5s
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          --health-retries=10</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> jdbc:mysql://127.0.0.1:3306/ecommerce_ci?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> lb_user
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> lb_pass
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>LB_CHANGELOG</span><span style=color:#eceff4>:</span> src/main/resources/db/changelog/db.changelog-master.yaml
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>steps</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/checkout@v4
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/setup-java@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>java-version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;21&#39;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>distribution</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;temurin&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 1: Syntax and checksum validation</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 1 — Validate changelog
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            validate</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 2: Show pending changesets</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 2 — Status check
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            status --verbose</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 3: Preview forward SQL (human-readable in PR logs)</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 3 — Preview forward SQL
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            update-sql | tee /tmp/forward.sql
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;### Forward SQL Preview&#34; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#39;```sql&#39; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          cat /tmp/forward.sql &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#39;```&#39; &gt;&gt; $GITHUB_STEP_SUMMARY</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 4: Validate rollback exists for ALL pending changesets</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 4 — Validate rollback (BLOCKING)
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            future-rollback-sql | tee /tmp/rollback.sql
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;### Rollback SQL Preview&#34; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#39;```sql&#39; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          cat /tmp/rollback.sql &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#39;```&#39; &gt;&gt; $GITHUB_STEP_SUMMARY</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 5: Round-trip test — apply, rollback, re-apply</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 5 — Rollback round-trip test (BLOCKING)
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            update-testing-rollback</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 6: Final clean apply</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 6 — Apply migrations cleanly
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            update</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 7: Verify 0 pending after apply</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 7 — Confirm 0 pending changesets
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          RESULT=$(liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=&#34;${LB_CHANGELOG}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            status 2&gt;&amp;1)
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;$RESULT&#34;
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          if echo &#34;$RESULT&#34; | grep -q &#34;changesets have not been applied&#34;; then
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            PENDING=$(echo &#34;$RESULT&#34; | grep &#34;changesets have not been applied&#34; | awk &#39;{print $1}&#39;)
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            echo &#34;ERROR: $PENDING changeset(s) still pending after update&#34;
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            exit 1
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          fi
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;✓ 0 pending changesets&#34;</span>          
+</span></span></code></pre></div><p><strong>Key points:</strong></p><ul><li>Gates 4 and 5 are <strong>blocking</strong> — they fail the PR if rollback is missing or broken</li><li>Gate 3 and 4 write SQL previews to the <strong>GitHub Step Summary</strong> — visible directly in the Actions UI without downloading artefacts</li><li>The MySQL service container uses <code>127.0.0.1</code> not <code>localhost</code> to avoid socket vs TCP connection issues</li><li><code>concurrency</code> cancels stale runs when new commits are pushed to the same PR branch</li></ul><hr><h2 id=workflow-2-staging-deployment>Workflow 2: Staging Deployment</h2><p>Triggers on merge to <code>main</code> (or your integration branch). Deploys to the staging database with automatic tagging.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#616e87;font-style:italic># .github/workflows/db-staging-deploy.yml</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Database — Deploy to Staging
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>on</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>push</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>branches</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span>main]
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>paths</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#a3be8c>&#39;src/main/resources/db/changelog/**&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>jobs</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>deploy-staging</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Deploy to Staging
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>runs-on</span><span style=color:#eceff4>:</span> ubuntu-latest
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>environment</span><span style=color:#eceff4>:</span> staging    <span style=color:#616e87;font-style:italic># Uses GitHub Environments for approval/secrets</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>APP_VERSION</span><span style=color:#eceff4>:</span> ${{ github.sha }}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>steps</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/checkout@v4
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/setup-java@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>java-version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;21&#39;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>distribution</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;temurin&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Validate changelog
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=staging,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            validate</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Check pending changesets
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=staging,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            status</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Generate rollback SQL (archive as artefact)
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=staging,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            future-rollback-sql &gt; rollback-staging-${APP_VERSION}.sql</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Archive rollback SQL
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/upload-artifact@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> rollback-staging-${{ github.sha }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>path</span><span style=color:#eceff4>:</span> rollback-staging-${{ github.sha }}.sql
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>retention-days</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>30</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Tag before deployment
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            tag staging-${APP_VERSION}</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Deploy migrations
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=staging,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            update</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Verify deployment
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            history
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;✓ Staging deployment complete: staging-${APP_VERSION}&#34;</span>          
+</span></span></code></pre></div><hr><h2 id=workflow-3-production-deployment>Workflow 3: Production Deployment</h2><p>Triggers on a release tag push (<code>v*.*.*</code>). Uses GitHub Environments with required reviewers for the production deployment approval gate.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#616e87;font-style:italic># .github/workflows/db-production-deploy.yml</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Database — Deploy to Production
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>on</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>push</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>tags</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#a3be8c>&#39;v[0-9]+.[0-9]+.[0-9]+&#39;</span>    <span style=color:#616e87;font-style:italic># Triggers on v1.2.0, v2.0.0, etc.</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>jobs</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>deploy-production</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Deploy to Production
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>runs-on</span><span style=color:#eceff4>:</span> ubuntu-latest
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>environment</span><span style=color:#eceff4>:</span> production          <span style=color:#616e87;font-style:italic># Requires human approval via GitHub Environments</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>APP_VERSION</span><span style=color:#eceff4>:</span> ${{ github.ref_name }}    <span style=color:#616e87;font-style:italic># e.g., v1.2.0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>steps</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/checkout@v4
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/setup-java@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>java-version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;21&#39;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>distribution</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;temurin&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Pre-deployment: validate + preview</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Validate changelog
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=prod,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            validate</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Preview forward SQL
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=prod,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            update-sql | tee forward-prod-${APP_VERSION}.sql</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Generate rollback SQL
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=prod,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            future-rollback-sql | tee rollback-prod-${APP_VERSION}.sql</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Archive SQL files
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/upload-artifact@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> db-deployment-${{ env.APP_VERSION }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>path</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            forward-prod-${{ env.APP_VERSION }}.sql
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            rollback-prod-${{ env.APP_VERSION }}.sql</span>            
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>retention-days</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>90</span>    <span style=color:#616e87;font-style:italic># Keep production deployment artefacts 90 days</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Take pre-deployment snapshot
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            snapshot \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --snapshot-format=json \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --output-file=snapshot-pre-${APP_VERSION}.json</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Archive pre-deployment snapshot
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/upload-artifact@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> db-snapshot-pre-${{ env.APP_VERSION }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>path</span><span style=color:#eceff4>:</span> snapshot-pre-${{ env.APP_VERSION }}.json
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>retention-days</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>90</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Deployment</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Tag before deployment (mandatory)
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            tag ${APP_VERSION}</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Deploy to production
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --contexts=prod,default \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            update</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Post-deployment</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Verify deployment
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ secrets.PROD_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            history
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;✓ Production deployment complete: ${APP_VERSION}&#34;</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Post deployment summary
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;## Production DB Deployment: ${APP_VERSION}&#34; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;- Tag: \`${APP_VERSION}\`&#34; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;- Rollback command: \`liquibase rollback --tag=${APP_VERSION}\`&#34; &gt;&gt; $GITHUB_STEP_SUMMARY
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;- Rollback SQL: download artefact \`db-deployment-${APP_VERSION}\`&#34; &gt;&gt; $GITHUB_STEP_SUMMARY</span>          
+</span></span></code></pre></div><hr><h2 id=workflow-4-rollback-manual-trigger>Workflow 4: Rollback (Manual Trigger)</h2><p>A workflow that performs rollback when triggered manually from the GitHub Actions UI:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#616e87;font-style:italic># .github/workflows/db-rollback.yml</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Database — Rollback
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>on</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>workflow_dispatch</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>inputs</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>environment</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>description</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;Target environment&#39;</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>required</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>true</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>type</span><span style=color:#eceff4>:</span> choice
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>options</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span>staging, production]
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>rollback_tag</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>description</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;Tag to roll back to (e.g., v1.1.0)&#39;</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>required</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>true</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>type</span><span style=color:#eceff4>:</span> string
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>jobs</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>rollback</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Rollback ${{ inputs.environment }} to ${{ inputs.rollback_tag }}
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>runs-on</span><span style=color:#eceff4>:</span> ubuntu-latest
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>environment</span><span style=color:#eceff4>:</span> ${{ inputs.environment }}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>steps</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/checkout@v4
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> actions/setup-java@v4
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>java-version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;21&#39;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>distribution</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#39;temurin&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Preview rollback SQL
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_URL || secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_MIGRATION_USER || secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_MIGRATION_PASSWORD || secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            rollback-sql --tag=${{ inputs.rollback_tag }}</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Execute rollback
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_URL || secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_MIGRATION_USER || secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_MIGRATION_PASSWORD || secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            rollback --tag=${{ inputs.rollback_tag }}</span>          
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Verify rollback
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_URL</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_URL || secrets.STAGING_DB_URL }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_USERNAME</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_MIGRATION_USER || secrets.STAGING_DB_MIGRATION_USER }}
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>LB_PASSWORD</span><span style=color:#eceff4>:</span> ${{ inputs.environment == &#39;production&#39; &amp;&amp; secrets.PROD_DB_MIGRATION_PASSWORD || secrets.STAGING_DB_MIGRATION_PASSWORD }}
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>run</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>|</span><span style=color:#616e87>
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          liquibase \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --url=&#34;${LB_URL}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --username=&#34;${LB_USERNAME}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --password=&#34;${LB_PASSWORD}&#34; \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            --changelog-file=src/main/resources/db/changelog/db.changelog-master.yaml \
+</span></span></span><span style=display:flex><span><span style=color:#616e87>            status
+</span></span></span><span style=display:flex><span><span style=color:#616e87>          echo &#34;✓ Rollback to ${{ inputs.rollback_tag }} complete&#34;</span>          
+</span></span></code></pre></div><hr><h2 id=github-secrets-configuration>GitHub Secrets Configuration</h2><pre tabindex=0><code>Repository Settings → Secrets and variables → Actions
+
+Staging:
+  STAGING_DB_URL                  jdbc:mysql://staging-host:3306/ecommerce?...
+  STAGING_DB_MIGRATION_USER       lb_migration_user
+  STAGING_DB_MIGRATION_PASSWORD   ***
+
+Production:
+  PROD_DB_URL                     jdbc:mysql://prod-host:3306/ecommerce?...
+  PROD_DB_MIGRATION_USER          lb_migration_user
+  PROD_DB_MIGRATION_PASSWORD      ***
+</code></pre><p>Use GitHub Environment secrets (not repository secrets) for staging and production — they are only accessible when the workflow targets that environment, and production environments can require human approval before the job runs.</p><hr><h2 id=branch-protection-rules>Branch Protection Rules</h2><p>Configure branch protection on <code>main</code> to require the PR validation workflow:</p><pre tabindex=0><code>Repository Settings → Branches → Branch protection rules → main
+
+✓ Require status checks to pass before merging
+  Required checks:
+    - validate-migrations / validate-migrations
+
+✓ Require branches to be up to date before merging
+✓ Dismiss stale pull request approvals when new commits are pushed
+</code></pre><p>With this configuration, a PR that adds a migration without rollback cannot be merged — the CI gate blocks it.</p><hr><h2 id=common-mistakes>Common Mistakes</h2><p><strong>Storing DB credentials in workflow files:</strong> Connection strings with embedded passwords are visible to anyone with repository access. Always use secrets (<code>${{ secrets.X }}</code>). For production, use GitHub Environment secrets with required reviewers.</p><p><strong>Not using <code>concurrency</code> on PR workflows:</strong> Without <code>concurrency</code>, pushing multiple commits to a PR branch can queue up many workflow runs that test against the same CI database simultaneously — causing race conditions and false failures. The <code>cancel-in-progress: true</code> setting cancels the stale run when a new commit arrives.</p><p><strong>Connecting to MySQL using <code>localhost</code> in service containers:</strong> GitHub Actions service containers run in Docker. The <code>localhost</code> hostname resolves to the runner, not the container. Use <code>127.0.0.1</code> (which the port-forwarding maps correctly) or the service container&rsquo;s hostname.</p><hr><h2 id=best-practices>Best Practices</h2><ul><li><strong>Four separate workflows</strong> — PR validation, staging deploy, production deploy, rollback — each with a single clear responsibility</li><li><strong>GitHub Environments for staging and production</strong> — enables required reviewer approval before production jobs run</li><li><strong>Archive rollback SQL as a workflow artefact</strong> — the pre-generated rollback file is available in the Actions UI for download during an incident</li><li><strong><code>update-sql</code> and <code>future-rollback-sql</code> output to GitHub Step Summary</strong> — SQL previews visible in the PR without downloading artefacts</li><li><strong>Branch protection requiring PR validation checks</strong> — enforces that no migration merges without passing all gates</li></ul><hr><h2 id=what-youve-learned>What You&rsquo;ve Learned</h2><ul><li><code>liquibase/setup-liquibase@v1</code> is the current GitHub Actions approach — installs Liquibase and adds to PATH</li><li>PR validation workflow enforces seven gates before merge: validate, status, forward SQL, rollback SQL, round-trip test, clean apply, 0 pending</li><li>Staging workflow tags, deploys, and archives rollback SQL automatically on every merge to <code>main</code></li><li>Production workflow requires human approval via GitHub Environments before running</li><li>Rollback workflow is a <code>workflow_dispatch</code> trigger — one click from the Actions UI during an incident</li><li>GitHub Environments scope secrets to specific environments and enforce approval gates</li></ul><p>Next: <strong>Article 20 — Testing Migrations: H2 vs Testcontainers vs Real MySQL</strong> — how to write integration tests that actually validate your migrations.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/liquibase/liquibase-team-collaboration/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>Team Collaboration: Naming Conventions, Conflict Prevention, Git Workflow</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/liquibase/liquibase-testing-migrations/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
+<span class=series-nav-title>Testing Migrations: H2 vs Testcontainers vs Real MySQL</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
