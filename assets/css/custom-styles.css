@@ -1233,3 +1233,189 @@ a.cert-card:hover .cert-verify { opacity: 1; }
 
 [data-theme="dark"] .experience-item { background: #1e293b !important; border-color: #334155 !important; }
 [data-theme="dark"] .exp-title { color: #f0f9ff !important; }
+
+/* ================================================================
+   TUTORIAL SERIES STYLES
+   ================================================================ */
+
+/* ---- Dropdown nav sub-menu polish ---- */
+.main-navigation-menu ul {
+  border-radius: 0 0 var(--radius) var(--radius) !important;
+  border-top: 2px solid var(--primary) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25) !important;
+}
+
+.main-navigation-menu ul a {
+  font-size: 0.855rem !important;
+  padding: 0.75em 1.25em !important;
+  color: #cbd5e1 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.main-navigation-menu ul a:hover {
+  color: #f0f9ff !important;
+  background: rgba(14,165,233,0.12) !important;
+}
+
+/* ---- Series header banner ---- */
+.series-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid #334155;
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 1em 1.5em;
+  margin-bottom: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+
+.series-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--primary-light);
+}
+
+.series-label a {
+  color: var(--primary-light) !important;
+  text-decoration: none !important;
+}
+
+.series-label a:hover { text-decoration: underline !important; }
+
+.series-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.series-part {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.series-progress-bar {
+  width: 120px;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.series-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* ---- Series navigation (prev/next) ---- */
+.series-navigation {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.75em;
+  align-items: stretch;
+  margin: 2.5em 0 1.5em;
+  border-top: 1px solid var(--border);
+  padding-top: 1.75em;
+}
+
+.series-nav-prev { justify-self: start; }
+.series-nav-next { justify-self: end; text-align: right; }
+.series-nav-toc  { justify-self: center; display: flex; align-items: center; }
+
+.series-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 0.75em 1em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none !important;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  max-width: 280px;
+}
+
+.series-nav-link:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.1) !important;
+}
+
+.series-nav-direction {
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.series-nav-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary) !important;
+  line-height: 1.35;
+}
+
+.series-nav-link--toc {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.6em 1em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted) !important;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.series-nav-link--toc:hover { color: var(--primary) !important; }
+
+/* ---- Tutorial index page ---- */
+.tutorial-index {
+  font-size: 0.95rem !important;
+}
+
+.tutorial-index h2 {
+  font-size: 1.1rem !important;
+  margin-top: 1.75em !important;
+  color: var(--dark) !important;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+
+.tutorial-index ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0 1em;
+}
+
+.tutorial-index ol li {
+  margin: 0.35em 0;
+  font-size: 0.9rem;
+}
+
+.tutorial-index ol li a {
+  color: var(--primary) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+}
+
+.tutorial-index ol li a:hover { text-decoration: underline !important; }
+
+.tutorial-description {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0.5em 0 1.5em;
+  line-height: 1.7;
+}
+
+/* ---- Dark mode: tutorial components ---- */
+[data-theme="dark"] .series-navigation { border-color: #334155 !important; }
+[data-theme="dark"] .series-nav-link { background: #1e293b !important; border-color: #334155 !important; }
+[data-theme="dark"] .series-nav-title { color: var(--primary-light) !important; }
+[data-theme="dark"] .tutorial-index h2 { color: #f0f9ff !important; border-color: #334155 !important; }
