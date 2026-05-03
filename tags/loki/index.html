@@ -19,7 +19,7 @@ Loki</h1><p class=archive-description>1 post in this section</p></div><main id=m
 &nbsp;
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/opentelemetry/>opentelemetry</a></span></div></header><div class="entry-content entry-excerpt clearfix"><p>Observability means you can answer &ldquo;what is wrong and why&rdquo; from your system&rsquo;s outputs alone — without adding new instrumentation after an incident. It requires three types of data: metrics (what happened), traces (why it happened), and logs (the details).
 Spring Boot 4 ships a single OpenTelemetry starter that covers all three. This guide shows how to wire up the complete observability stack: Prometheus + Grafana for metrics, Grafana Tempo for distributed tracing, and Grafana Loki for logs.</p><a href=https://devops-monk.com/2026/05/spring-boot-observability-stack/ class=more-link>Continue reading &#187;</a></div></article></div></div></main></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
-<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/05/claude-adaptive-thinking-guide/>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-managed-agents-guide/>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-models-guide-2026/>Claude Models in 2026: Opus, Sonnet, and Haiku Compared</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-prompt-caching-guide/>Claude Prompt Caching: Cut Your API Costs by 90%</a></li><li class=widget__item><a class=widget__link href=/2026/05/spring-boot-graalvm-native-images/>GraalVM Native Images with Spring Boot 4: From 8 Seconds to 37ms Startup</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/spring-boot/ title="spring boot">spring boot</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/actuator/ title=actuator>actuator
+<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/05/claude-adaptive-thinking-guide/>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-managed-agents-guide/>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-models-guide-2026/>Claude Models in 2026: Opus, Sonnet, and Haiku Compared</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-prompt-caching-guide/>Claude Prompt Caching: Cut Your API Costs by 90%</a></li><li class=widget__item><a class=widget__link href=/2026/05/spring-boot-kafka-transactional-outbox/>Event-Driven Spring Boot: Transactional Outbox Pattern with Kafka</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/spring-boot/ title="spring boot">spring boot</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/actuator/ title=actuator>actuator
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agents/ title=agents>agents
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/ title=ai>ai
@@ -32,6 +32,8 @@ Spring Boot 4 ships a single OpenTelemetry starter that covers all three. This g
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/best-practices/ title="best practices">best practices
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/buildpacks/ title=buildpacks>buildpacks
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bun/ title=bun>bun
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caching/ title=caching>caching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caffeine/ title=caffeine>caffeine
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ckad/ title=ckad>ckad
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/ title=claude>claude
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude.md/ title=claude.md>claude.md
@@ -49,6 +51,7 @@ Spring Boot 4 ships a single OpenTelemetry starter that covers all three. This g
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/docker/ title=docker>docker
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/ title=electron>electron
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/eureka/ title=eureka>eureka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-driven/ title=event-driven>event-driven
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/ title="github actions">github actions
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/graalvm/ title=graalvm>graalvm
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/grafana/ title=grafana>grafana
@@ -63,10 +66,12 @@ Spring Boot 4 ships a single OpenTelemetry starter that covers all three. This g
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpa/ title=jpa>jpa
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jwt/ title=jwt>jwt
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/k8s/ title=k8s>k8s
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/ title=kafka>kafka
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/llm/ title=llm>llm
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/loki/ title=loki>loki
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/messaging/ title=messaging>messaging
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/microservices/ title=microservices>microservices
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migration/ title=migration>migration
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modular-monolith/ title=modular-monolith>modular-monolith
@@ -78,12 +83,14 @@ Spring Boot 4 ships a single OpenTelemetry starter that covers all three. This g
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openai/ title=openai>openai
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/opentelemetry/ title=opentelemetry>opentelemetry
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/outbox-pattern/ title=outbox-pattern>outbox-pattern
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/performance/ title=performance>performance
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prometheus/ title=prometheus>prometheus
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quarkus/ title=quarkus>quarkus
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rag/ title=rag>rag
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/ title=react>react
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/redis/ title=redis>redis
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/resilience4j/ title=resilience4j>resilience4j
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
