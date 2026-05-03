@@ -1,0 +1,324 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Learn what Spring Data JPA is, how it sits on top of JPA and Hibernate, what it auto-generates for you, and how to set up your first data access layer with PostgreSQL."><title>Introduction to Spring Data JPA | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Introduction to Spring Data JPA"><meta name=twitter:description content="Learn what Spring Data JPA is, how it sits on top of JPA and Hibernate, what it auto-generates for you, and how to set up your first data access layer with PostgreSQL."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-introduction/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Introduction to Spring Data JPA"><meta property="og:description" content="Learn what Spring Data JPA is, how it sits on top of JPA and Hibernate, what it auto-generates for you, and how to set up your first data access layer with PostgreSQL."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-03T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-03T00:00:00+00:00"><meta property="article:tag" content="Spring-Boot"><meta property="article:tag" content="Spring-Data-Jpa"><meta property="article:tag" content="Tutorial"><meta itemprop=name content="Introduction to Spring Data JPA"><meta itemprop=description content="Learn what Spring Data JPA is, how it sits on top of JPA and Hibernate, what it auto-generates for you, and how to set up your first data access layer with PostgreSQL."><meta itemprop=datePublished content="2026-05-03T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-03T00:00:00+00:00"><meta itemprop=wordCount content="1192"><meta itemprop=keywords content="Spring-Boot,Spring-Data-Jpa,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Introduction to Spring Data JPA","headline":"Introduction to Spring Data JPA","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-introduction/","description":"Learn what Spring Data JPA is, how it sits on top of JPA and Hibernate, what it auto-generates for you, and how to set up your first data access layer with PostgreSQL.","wordCount":"1192","keywords":["spring-boot","spring-data-jpa","tutorial"],"datePublished":"2026-05-03T00:00:00Z","dateModified":"2026-05-03T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-introduction/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-introduction/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Introduction to Spring Data JPA\"","datePublished":"2026-05-03T00:00:00Z","dateModified":"2026-05-03T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-boot\/spring-data-jpa-introduction\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class="menu-item current-menu-item"><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></div><div class=series-progress><span class=series-part>Part 15 of 21</span><div class=series-progress-bar><div class=series-progress-fill style=width:71%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-introduction/ rel=bookmark><time class="entry-date published" datetime=2026-05-03T00:00:00>May 03, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>6 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-introduction/ rel=bookmark>Introduction to Spring Data JPA</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-data-jpa/>spring-data-jpa</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#the-stack-jpa-hibernate-and-spring-data-jpa>The Stack: JPA, Hibernate, and Spring Data JPA</a></li><li><a href=#dependencies>Dependencies</a></li><li><a href=#configuration>Configuration</a><ul><li><a href=#ddl-auto-options>ddl-auto options</a></li></ul></li><li><a href=#your-first-entity>Your First Entity</a></li><li><a href=#your-first-repository>Your First Repository</a></li><li><a href=#derived-query-methods>Derived Query Methods</a></li><li><a href=#the-entitymanager-under-the-hood>The EntityManager (Under the Hood)</a></li><li><a href=#the-persistence-context>The Persistence Context</a></li><li><a href=#auditing-with-createddate-and-lastmodifieddate>Auditing with @CreatedDate and @LastModifiedDate</a></li><li><a href=#a-complete-data-layer>A Complete Data Layer</a></li><li><a href=#what-youve-learned>What You&rsquo;ve Learned</a></li></ul></nav></div></nav><div class=entry-content><p>Most Spring Boot applications need to read and write data to a relational database. Spring Data JPA makes this dramatically simpler by generating the boilerplate data access code for you. This article explains what it is, how it fits together, and how to get started.</p><h2 id=the-stack-jpa-hibernate-and-spring-data-jpa>The Stack: JPA, Hibernate, and Spring Data JPA</h2><p>These three things work together — understanding the layering matters:</p><pre tabindex=0><code>Your Code (Repository interfaces, @Entity classes)
+           │
+           ▼
+  Spring Data JPA
+  (generates repository implementations, adds convenience methods)
+           │
+           ▼
+  JPA (Jakarta Persistence API)
+  (standard specification: @Entity, @Id, EntityManager, JPQL)
+           │
+           ▼
+  Hibernate (JPA implementation)
+  (translates JPA operations to SQL, manages sessions)
+           │
+           ▼
+  JDBC (Java Database Connectivity)
+  (sends SQL to the database)
+           │
+           ▼
+  PostgreSQL / MySQL / H2 / etc.
+</code></pre><p><strong>JPA</strong> is a specification — it defines the API (annotations, <code>EntityManager</code>, JPQL). <strong>Hibernate</strong> is the implementation of that spec. <strong>Spring Data JPA</strong> sits on top and generates repetitive repository code so you don&rsquo;t have to write it.</p><h2 id=dependencies>Dependencies</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#81a1c1>&lt;dependency&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;groupId&gt;</span>org.springframework.boot<span style=color:#81a1c1>&lt;/groupId&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;artifactId&gt;</span>spring-boot-starter-data-jpa<span style=color:#81a1c1>&lt;/artifactId&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>&lt;/dependency&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic>&lt;!-- PostgreSQL driver --&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>&lt;dependency&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;groupId&gt;</span>org.postgresql<span style=color:#81a1c1>&lt;/groupId&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;artifactId&gt;</span>postgresql<span style=color:#81a1c1>&lt;/artifactId&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;scope&gt;</span>runtime<span style=color:#81a1c1>&lt;/scope&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>&lt;/dependency&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic>&lt;!-- For development: H2 in-memory database --&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>&lt;dependency&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;groupId&gt;</span>com.h2database<span style=color:#81a1c1>&lt;/groupId&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;artifactId&gt;</span>h2<span style=color:#81a1c1>&lt;/artifactId&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&lt;scope&gt;</span>runtime<span style=color:#81a1c1>&lt;/scope&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h2 id=configuration>Configuration</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#616e87;font-style:italic># application-dev.yml (H2 in-memory for development)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>spring</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>datasource</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>url</span><span style=color:#eceff4>:</span> jdbc:h2:mem:orderdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>driver-class-name</span><span style=color:#eceff4>:</span> org.h2.Driver
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>username</span><span style=color:#eceff4>:</span> sa
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>password</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>h2</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>console</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>enabled</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>true</span>   <span style=color:#616e87;font-style:italic># access at http://localhost:8080/h2-console</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>jpa</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>hibernate</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>ddl-auto</span><span style=color:#eceff4>:</span> create-drop   <span style=color:#616e87;font-style:italic># recreate schema on each restart</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>show-sql</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>true</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>properties</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>hibernate</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>format_sql</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># application-prod.yml (PostgreSQL)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>spring</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>datasource</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>url</span><span style=color:#eceff4>:</span> ${DB_URL}
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>username</span><span style=color:#eceff4>:</span> ${DB_USERNAME}
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>password</span><span style=color:#eceff4>:</span> ${DB_PASSWORD}
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>hikari</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>maximum-pool-size</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>20</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>minimum-idle</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>5</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>jpa</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>hibernate</span><span style=color:#eceff4>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>ddl-auto</span><span style=color:#eceff4>:</span> validate  <span style=color:#616e87;font-style:italic># validate schema but don&#39;t change it (Flyway manages schema)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>show-sql</span><span style=color:#eceff4>:</span> <span style=color:#81a1c1;font-weight:700>false</span>
+</span></span></code></pre></div><h3 id=ddl-auto-options>ddl-auto options</h3><table><thead><tr><th>Value</th><th>Behavior</th><th>Use for</th></tr></thead><tbody><tr><td><code>create</code></td><td>Drop and create schema on startup</td><td>-</td></tr><tr><td><code>create-drop</code></td><td>Create on startup, drop on shutdown</td><td>Unit tests</td></tr><tr><td><code>validate</code></td><td>Validate schema matches entities, error if not</td><td>Production</td></tr><tr><td><code>update</code></td><td>Update schema to match entities (dangerous in prod)</td><td>Never in production</td></tr><tr><td><code>none</code></td><td>Do nothing</td><td>Production (Flyway manages schema)</td></tr></tbody></table><h2 id=your-first-entity>Your First Entity</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Entity</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@Table</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;orders&#34;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>Order</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Id</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@GeneratedValue</span><span style=color:#eceff4>(</span>strategy <span style=color:#81a1c1>=</span> GenerationType<span style=color:#eceff4>.</span><span style=color:#8fbcbb>UUID</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> UUID id<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;customer_id&#34;</span><span style=color:#eceff4>,</span> nullable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> UUID customerId<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;order_number&#34;</span><span style=color:#eceff4>,</span> unique <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>true</span><span style=color:#eceff4>,</span> nullable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>,</span> length <span style=color:#81a1c1>=</span> 20<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> String orderNumber<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Enumerated</span><span style=color:#eceff4>(</span>EnumType<span style=color:#eceff4>.</span><span style=color:#8fbcbb>STRING</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>nullable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> OrderStatus status<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;total_amount&#34;</span><span style=color:#eceff4>,</span> precision <span style=color:#81a1c1>=</span> 12<span style=color:#eceff4>,</span> scale <span style=color:#81a1c1>=</span> 2<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> BigDecimal totalAmount<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;created_at&#34;</span><span style=color:#eceff4>,</span> nullable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>,</span> updatable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> Instant createdAt<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;updated_at&#34;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> Instant updatedAt<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@PrePersist</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>protected</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>onCreate</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        createdAt <span style=color:#81a1c1>=</span> Instant<span style=color:#eceff4>.</span><span style=color:#8fbcbb>now</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>        updatedAt <span style=color:#81a1c1>=</span> Instant<span style=color:#eceff4>.</span><span style=color:#8fbcbb>now</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@PreUpdate</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>protected</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>onUpdate</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        updatedAt <span style=color:#81a1c1>=</span> Instant<span style=color:#eceff4>.</span><span style=color:#8fbcbb>now</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// getters, setters, constructors</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><h2 id=your-first-repository>Your First Repository</h2><p>The magic of Spring Data JPA: define an interface, get a full implementation for free.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>interface</span> <span style=color:#8fbcbb>OrderRepository</span> <span style=color:#81a1c1;font-weight:700>extends</span> JpaRepository<span style=color:#81a1c1>&lt;</span>Order<span style=color:#eceff4>,</span> UUID<span style=color:#81a1c1>&gt;</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// That&#39;s it. Spring generates the implementation.</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p><code>JpaRepository&lt;Order, UUID></code> gives you:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#616e87;font-style:italic>// From CrudRepository</span>
+</span></span><span style=display:flex><span>Order <span style=color:#88c0d0>save</span><span style=color:#eceff4>(</span>Order entity<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>Optional<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findById</span><span style=color:#eceff4>(</span>UUID id<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>boolean</span> <span style=color:#88c0d0>existsById</span><span style=color:#eceff4>(</span>UUID id<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>void</span> <span style=color:#88c0d0>deleteById</span><span style=color:#eceff4>(</span>UUID id<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findAll</span><span style=color:#eceff4>()</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>long</span> <span style=color:#88c0d0>count</span><span style=color:#eceff4>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic>// From JpaRepository</span>
+</span></span><span style=display:flex><span>List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findAll</span><span style=color:#eceff4>(</span>Sort sort<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>Page<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findAll</span><span style=color:#eceff4>(</span>Pageable pageable<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>saveAll</span><span style=color:#eceff4>(</span>Iterable<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> entities<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>void</span> <span style=color:#88c0d0>flush</span><span style=color:#eceff4>()</span>
+</span></span><span style=display:flex><span>Order <span style=color:#88c0d0>saveAndFlush</span><span style=color:#eceff4>(</span>Order entity<span style=color:#eceff4>)</span>
+</span></span></code></pre></div><p>Use it in a service:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Service</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@RequiredArgsConstructor</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>OrderService</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> <span style=color:#81a1c1;font-weight:700>final</span> OrderRepository orderRepository<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> Order <span style=color:#88c0d0>findById</span><span style=color:#eceff4>(</span>UUID id<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>return</span> orderRepository<span style=color:#eceff4>.</span><span style=color:#8fbcbb>findById</span><span style=color:#eceff4>(</span>id<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>orElseThrow</span><span style=color:#eceff4>(()</span> <span style=color:#81a1c1>-&gt;</span> <span style=color:#81a1c1;font-weight:700>new</span> OrderNotFoundException<span style=color:#eceff4>(</span>id<span style=color:#eceff4>));</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> Order <span style=color:#88c0d0>save</span><span style=color:#eceff4>(</span>Order order<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>return</span> orderRepository<span style=color:#eceff4>.</span><span style=color:#8fbcbb>save</span><span style=color:#eceff4>(</span>order<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>delete</span><span style=color:#eceff4>(</span>UUID id<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        orderRepository<span style=color:#eceff4>.</span><span style=color:#8fbcbb>deleteById</span><span style=color:#eceff4>(</span>id<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findAll</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>return</span> orderRepository<span style=color:#eceff4>.</span><span style=color:#8fbcbb>findAll</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><h2 id=derived-query-methods>Derived Query Methods</h2><p>Spring Data JPA generates queries from method names. The method name IS the query:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>interface</span> <span style=color:#8fbcbb>OrderRepository</span> <span style=color:#81a1c1;font-weight:700>extends</span> JpaRepository<span style=color:#81a1c1>&lt;</span>Order<span style=color:#eceff4>,</span> UUID<span style=color:#81a1c1>&gt;</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT * FROM orders WHERE customer_id = ?</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findByCustomerId</span><span style=color:#eceff4>(</span>UUID customerId<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT * FROM orders WHERE status = ?</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findByStatus</span><span style=color:#eceff4>(</span>OrderStatus status<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT * FROM orders WHERE customer_id = ? AND status = ?</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findByCustomerIdAndStatus</span><span style=color:#eceff4>(</span>UUID customerId<span style=color:#eceff4>,</span> OrderStatus status<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT * FROM orders WHERE total_amount &gt; ?</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findByTotalAmountGreaterThan</span><span style=color:#eceff4>(</span>BigDecimal amount<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT * FROM orders WHERE created_at BETWEEN ? AND ?</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findByCreatedAtBetween</span><span style=color:#eceff4>(</span>Instant from<span style=color:#eceff4>,</span> Instant to<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT COUNT(*) FROM orders WHERE status = ?</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>long</span> <span style=color:#88c0d0>countByStatus</span><span style=color:#eceff4>(</span>OrderStatus status<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// SELECT * FROM orders WHERE customer_id = ? ORDER BY created_at DESC</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findByCustomerIdOrderByCreatedAtDesc</span><span style=color:#eceff4>(</span>UUID customerId<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// LIMIT 10</span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findTop10ByStatusOrderByCreatedAtDesc</span><span style=color:#eceff4>(</span>OrderStatus status<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// EXISTS</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>boolean</span> <span style=color:#88c0d0>existsByOrderNumber</span><span style=color:#eceff4>(</span>String orderNumber<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// DELETE</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>deleteByStatus</span><span style=color:#eceff4>(</span>OrderStatus status<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p>Keywords you can use: <code>And</code>, <code>Or</code>, <code>Is</code>, <code>Not</code>, <code>Between</code>, <code>LessThan</code>, <code>GreaterThan</code>, <code>Like</code>, <code>Containing</code>, <code>StartingWith</code>, <code>EndingWith</code>, <code>OrderBy</code>, <code>Top</code>, <code>First</code>, <code>Distinct</code>, <code>Count</code>, <code>Exists</code>, <code>Delete</code>.</p><h2 id=the-entitymanager-under-the-hood>The EntityManager (Under the Hood)</h2><p>Spring Data repositories use <code>EntityManager</code> internally. You can access it directly when needed:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Repository</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>CustomOrderRepository</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@PersistenceContext</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> EntityManager em<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> List<span style=color:#81a1c1>&lt;</span>Order<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>findLargeRecentOrders</span><span style=color:#eceff4>(</span>BigDecimal minAmount<span style=color:#eceff4>,</span> <span style=color:#81a1c1>int</span> limit<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>return</span> em<span style=color:#eceff4>.</span><span style=color:#8fbcbb>createQuery</span><span style=color:#eceff4>(</span><span style=color:#a3be8c>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>                SELECT o FROM Order o
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>                WHERE o.totalAmount &gt;= :minAmount
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>                ORDER BY o.createdAt DESC
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>                &#34;&#34;&#34;</span><span style=color:#eceff4>,</span> Order<span style=color:#eceff4>.</span><span style=color:#8fbcbb>class</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>setParameter</span><span style=color:#eceff4>(</span><span style=color:#a3be8c>&#34;minAmount&#34;</span><span style=color:#eceff4>,</span> minAmount<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>setMaxResults</span><span style=color:#eceff4>(</span>limit<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>getResultList</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><h2 id=the-persistence-context>The Persistence Context</h2><p>The <code>EntityManager</code> maintains a <strong>persistence context</strong> — a first-level cache of all entities it has loaded in the current transaction. This has important implications:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Transactional</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>updateOrder</span><span style=color:#eceff4>(</span>UUID id<span style=color:#eceff4>,</span> OrderStatus newStatus<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    Order order <span style=color:#81a1c1>=</span> orderRepository<span style=color:#eceff4>.</span><span style=color:#8fbcbb>findById</span><span style=color:#eceff4>(</span>id<span style=color:#eceff4>).</span><span style=color:#8fbcbb>orElseThrow</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// Hibernate tracks this entity</span>
+</span></span><span style=display:flex><span>    order<span style=color:#eceff4>.</span><span style=color:#8fbcbb>setStatus</span><span style=color:#eceff4>(</span>newStatus<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// No explicit save needed — Hibernate detects the change and</span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// generates UPDATE SQL at the end of the transaction (dirty checking)</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p><strong>Dirty checking:</strong> Hibernate compares entity state at transaction end with the state when it was loaded. If anything changed, it generates UPDATE SQL automatically.</p><h2 id=auditing-with-createddate-and-lastmodifieddate>Auditing with @CreatedDate and @LastModifiedDate</h2><p>Instead of <code>@PrePersist</code>/<code>@PreUpdate</code>, use Spring Data&rsquo;s auditing support:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#616e87;font-style:italic>// Enable auditing</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@SpringBootApplication</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@EnableJpaAuditing</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>OrderServiceApplication</span> <span style=color:#eceff4>{</span> <span style=color:#eceff4>...</span> <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic>// In your entity</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@Entity</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@EntityListeners</span><span style=color:#eceff4>(</span>AuditingEntityListener<span style=color:#eceff4>.</span><span style=color:#8fbcbb>class</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>Order</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Id</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@GeneratedValue</span><span style=color:#eceff4>(</span>strategy <span style=color:#81a1c1>=</span> GenerationType<span style=color:#eceff4>.</span><span style=color:#8fbcbb>UUID</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> UUID id<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@CreatedDate</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>updatable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> Instant createdAt<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@LastModifiedDate</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> Instant updatedAt<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@CreatedBy</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>updatable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> String createdBy<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@LastModifiedBy</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> String lastModifiedBy<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p>For <code>@CreatedBy</code> / <code>@LastModifiedBy</code>, provide an <code>AuditorAware</code> bean:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Component</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>SecurityAuditorAware</span> <span style=color:#81a1c1;font-weight:700>implements</span> AuditorAware<span style=color:#81a1c1>&lt;</span>String<span style=color:#81a1c1>&gt;</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> Optional<span style=color:#81a1c1>&lt;</span>String<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>getCurrentAuditor</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>return</span> Optional<span style=color:#eceff4>.</span><span style=color:#8fbcbb>ofNullable</span><span style=color:#eceff4>(</span>SecurityContextHolder<span style=color:#eceff4>.</span><span style=color:#8fbcbb>getContext</span><span style=color:#eceff4>())</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>map</span><span style=color:#eceff4>(</span>SecurityContext<span style=color:#eceff4>::</span>getAuthentication<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>filter</span><span style=color:#eceff4>(</span>Authentication<span style=color:#eceff4>::</span>isAuthenticated<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>map</span><span style=color:#eceff4>(</span>Authentication<span style=color:#eceff4>::</span>getName<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><h2 id=a-complete-data-layer>A Complete Data Layer</h2><p>Here&rsquo;s the full picture for the <code>order-service</code>:</p><pre tabindex=0><code>com.devopsmonk.order
+├── domain
+│   ├── Order.java          @Entity
+│   ├── OrderItem.java      @Entity
+│   └── OrderStatus.java    enum
+├── repository
+│   ├── OrderRepository.java          extends JpaRepository
+│   └── OrderItemRepository.java      extends JpaRepository
+└── service
+    └── OrderService.java    uses repositories
+</code></pre><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Entity</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@Table</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;orders&#34;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#d08770>@EntityListeners</span><span style=color:#eceff4>(</span>AuditingEntityListener<span style=color:#eceff4>.</span><span style=color:#8fbcbb>class</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1;font-weight:700>class</span> <span style=color:#8fbcbb>Order</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Id</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@GeneratedValue</span><span style=color:#eceff4>(</span>strategy <span style=color:#81a1c1>=</span> GenerationType<span style=color:#eceff4>.</span><span style=color:#8fbcbb>UUID</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> UUID id<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;customer_id&#34;</span><span style=color:#eceff4>,</span> nullable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> UUID customerId<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@OneToMany</span><span style=color:#eceff4>(</span>mappedBy <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;order&#34;</span><span style=color:#eceff4>,</span> cascade <span style=color:#81a1c1>=</span> CascadeType<span style=color:#eceff4>.</span><span style=color:#8fbcbb>ALL</span><span style=color:#eceff4>,</span> orphanRemoval <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>true</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> List<span style=color:#81a1c1>&lt;</span>OrderItem<span style=color:#81a1c1>&gt;</span> items <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>new</span> ArrayList<span style=color:#81a1c1>&lt;&gt;</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Enumerated</span><span style=color:#eceff4>(</span>EnumType<span style=color:#eceff4>.</span><span style=color:#8fbcbb>STRING</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>nullable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> OrderStatus status <span style=color:#81a1c1>=</span> OrderStatus<span style=color:#eceff4>.</span><span style=color:#8fbcbb>PENDING</span><span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>name <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;total_amount&#34;</span><span style=color:#eceff4>,</span> precision <span style=color:#81a1c1>=</span> 12<span style=color:#eceff4>,</span> scale <span style=color:#81a1c1>=</span> 2<span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> BigDecimal totalAmount<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@CreatedDate</span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@Column</span><span style=color:#eceff4>(</span>updatable <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>false</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> Instant createdAt<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#d08770>@LastModifiedDate</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> Instant updatedAt<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic>// business methods</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>addItem</span><span style=color:#eceff4>(</span>OrderItem item<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        items<span style=color:#eceff4>.</span><span style=color:#8fbcbb>add</span><span style=color:#eceff4>(</span>item<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>        item<span style=color:#eceff4>.</span><span style=color:#8fbcbb>setOrder</span><span style=color:#eceff4>(</span><span style=color:#81a1c1;font-weight:700>this</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>        recalculateTotal<span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>confirm</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>if</span> <span style=color:#eceff4>(</span>status <span style=color:#81a1c1>!=</span> OrderStatus<span style=color:#eceff4>.</span><span style=color:#8fbcbb>PENDING</span><span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#81a1c1;font-weight:700>throw</span> <span style=color:#81a1c1;font-weight:700>new</span> IllegalStateException<span style=color:#eceff4>(</span><span style=color:#a3be8c>&#34;Can only confirm pending orders&#34;</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>        status <span style=color:#81a1c1>=</span> OrderStatus<span style=color:#eceff4>.</span><span style=color:#8fbcbb>CONFIRMED</span><span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>private</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>recalculateTotal</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        totalAmount <span style=color:#81a1c1>=</span> items<span style=color:#eceff4>.</span><span style=color:#8fbcbb>stream</span><span style=color:#eceff4>()</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>map</span><span style=color:#eceff4>(</span>item <span style=color:#81a1c1>-&gt;</span> item<span style=color:#eceff4>.</span><span style=color:#8fbcbb>getUnitPrice</span><span style=color:#eceff4>().</span><span style=color:#8fbcbb>multiply</span><span style=color:#eceff4>(</span>BigDecimal<span style=color:#eceff4>.</span><span style=color:#8fbcbb>valueOf</span><span style=color:#eceff4>(</span>item<span style=color:#eceff4>.</span><span style=color:#8fbcbb>getQuantity</span><span style=color:#eceff4>())))</span>
+</span></span><span style=display:flex><span>            <span style=color:#eceff4>.</span><span style=color:#8fbcbb>reduce</span><span style=color:#eceff4>(</span>BigDecimal<span style=color:#eceff4>.</span><span style=color:#8fbcbb>ZERO</span><span style=color:#eceff4>,</span> BigDecimal<span style=color:#eceff4>::</span>add<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><h2 id=what-youve-learned>What You&rsquo;ve Learned</h2><ul><li>Spring Data JPA sits on top of JPA (spec) → Hibernate (implementation) → JDBC → database</li><li>Define an interface extending <code>JpaRepository&lt;Entity, ID></code> — Spring generates the implementation</li><li>Derived query methods generate SQL from method names — <code>findByCustomerIdAndStatus(...)</code> etc.</li><li><code>ddl-auto: validate</code> in production, <code>create-drop</code> in tests; use Flyway for schema management</li><li>Hibernate dirty checking: modify an entity in a <code>@Transactional</code> method and it&rsquo;s saved automatically</li><li><code>@EnableJpaAuditing</code> with <code>@CreatedDate</code>/<code>@LastModifiedDate</code> handles timestamps automatically</li></ul><p>Next: <strong>Article 16 — JPA Entity Mapping</strong> — <code>@Entity</code>, <code>@Column</code>, <code>@Id</code> strategies, embedded objects, and inheritance.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-boot/spring-boot-openapi-springdoc/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>API Documentation with OpenAPI and Springdoc</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/spring-boot/spring-data-jpa-entity-mapping/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
+<span class=series-nav-title>JPA Entity Mapping: @Entity, @Id, @Column, and More</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
