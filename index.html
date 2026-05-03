@@ -66,7 +66,24 @@ This guide covers everything: what Spring AOT does, how to build your first nati
 &nbsp;
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/auto-configuration/>Auto-Configuration</a></span></div></header><div class="entry-content clearfix"><p>&ldquo;Spring Boot is magic&rdquo; is something you hear a lot. Add spring-boot-starter-data-jpa and suddenly you have a working DataSource, a JpaTransactionManager, and a LocalContainerEntityManagerFactoryBean — without writing a single @Bean method. Understanding how this actually works turns the magic into a tool you can control, debug, and extend.
 The Entry Point: @EnableAutoConfiguration @SpringBootApplication is a shorthand for three annotations:
-@Configuration @EnableAutoConfiguration // this is the one that matters here @ComponentScan public class MyApplication { public static void main(String[] args) { SpringApplication.</p></div></article><article class="post type-post"><a class=wp-post-image-link href=https://devops-monk.com/2026/05/spring-boot-migration-guide/ rel=bookmark title="Click to view Spring Boot 2.x → 3.x → 4.x Migration: The Definitive Checklist post"></a><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/05/spring-boot-migration-guide/ rel=bookmark><time class="entry-date published" datetime=2026-05-03T00:00:00>May 03, 2026
+@Configuration @EnableAutoConfiguration // this is the one that matters here @ComponentScan public class MyApplication { public static void main(String[] args) { SpringApplication.</p></div></article><article class="post type-post"><a class=wp-post-image-link href=https://devops-monk.com/2026/05/spring-ai-rag-application/ rel=bookmark title="Click to view Spring AI 2.0: Build a RAG Application with Spring Boot post"></a><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/05/spring-ai-rag-application/ rel=bookmark><time class="entry-date published" datetime=2026-05-03T00:00:00>May 03, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>7 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/05/spring-ai-rag-application/ rel=bookmark>Spring AI 2.0: Build a RAG Application with Spring Boot</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-ai/>spring-ai</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/>ai</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rag/>rag</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/llm/>llm</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/>claude</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openai/>openai</a></span></div></header><div class="entry-content clearfix"><p>Spring AI 1.0 GA shipped in May 2025. It brings the Spring programming model to AI development: a unified ChatClient API that works across Claude, OpenAI, Gemini, Ollama, and Azure OpenAI — switching AI providers is changing one dependency.
+This guide builds a complete RAG (Retrieval-Augmented Generation) application that answers questions about your documentation using any AI provider.
+What Is RAG? A large language model (LLM) knows everything in its training data but nothing about your specific documents, code, or business data.</p></div></article><article class="post type-post"><a class=wp-post-image-link href=https://devops-monk.com/2026/05/spring-boot-migration-guide/ rel=bookmark title="Click to view Spring Boot 2.x → 3.x → 4.x Migration: The Definitive Checklist post"></a><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/05/spring-boot-migration-guide/ rel=bookmark><time class="entry-date published" datetime=2026-05-03T00:00:00>May 03, 2026
 </time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
 </span><span class=meta-reading-time>8 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/05/spring-boot-migration-guide/ rel=bookmark>Spring Boot 2.x → 3.x → 4.x Migration: The Definitive Checklist</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>Spring Boot</a>
@@ -101,20 +118,7 @@ This guide covers every change that matters, what breaks on upgrade, and what is
 &nbsp;
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/>kubernetes</a></span></div></header><div class="entry-content clearfix"><p>Spring Boot Actuator exposes production-ready operational endpoints — health checks, metrics, environment info, thread dumps — out of the box. Combined with Prometheus and Grafana, you get a full monitoring stack with minimal configuration.
 This guide covers everything from initial setup to Kubernetes health probes, custom metrics, and securing your management endpoints.
-Setup Dependencies &lt;dependencies> &lt;!-- Actuator --> &lt;dependency> &lt;groupId>org.springframework.boot&lt;/groupId> &lt;artifactId>spring-boot-starter-actuator&lt;/artifactId> &lt;/dependency> &lt;!-- Micrometer Prometheus registry --> &lt;dependency> &lt;groupId>io.micrometer&lt;/groupId> &lt;artifactId>micrometer-registry-prometheus&lt;/artifactId> &lt;scope>runtime&lt;/scope> &lt;/dependency> &lt;/dependencies> Basic configuration # application.</p></div></article><article class="post type-post"><a class=wp-post-image-link href=https://devops-monk.com/2026/05/spring-boot-docker-guide/ rel=bookmark title="Click to view Spring Boot Docker: Multi-Stage Builds, Layered JARs, and Buildpacks post"></a><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/05/spring-boot-docker-guide/ rel=bookmark><time class="entry-date published" datetime=2026-05-03T00:00:00>May 03, 2026
-</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
-</span><span class=meta-reading-time>6 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/05/spring-boot-docker-guide/ rel=bookmark>Spring Boot Docker: Multi-Stage Builds, Layered JARs, and Buildpacks</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
-&nbsp;
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/docker/>docker</a>
-&nbsp;
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/containers/>containers</a>
-&nbsp;
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/>devops</a>
-&nbsp;
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/buildpacks/>buildpacks</a></span></div></header><div class="entry-content clearfix"><p>There are three ways to containerise a Spring Boot application: a naive single-stage Dockerfile, a proper multi-stage Dockerfile with layered JARs, and Cloud Native Buildpacks. Each has different tradeoffs in build speed, image size, and maintenance overhead.
-This guide covers all three approaches, explains why layered JARs matter for CI/CD speed, and shows how to produce small, secure, production-ready images.
-The Problem with the Naive Dockerfile Most tutorials show this:</p></div></article></div></div><nav class="navigation pagination" role=navigation><h2 class=screen-reader-text>Posts navigation</h2><div class=nav-links><a class="next page-numbers" href=/page/2/>Older posts <i class="fa fa-chevron-right"></i></a></div></nav></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
+Setup Dependencies &lt;dependencies> &lt;!-- Actuator --> &lt;dependency> &lt;groupId>org.springframework.boot&lt;/groupId> &lt;artifactId>spring-boot-starter-actuator&lt;/artifactId> &lt;/dependency> &lt;!-- Micrometer Prometheus registry --> &lt;dependency> &lt;groupId>io.micrometer&lt;/groupId> &lt;artifactId>micrometer-registry-prometheus&lt;/artifactId> &lt;scope>runtime&lt;/scope> &lt;/dependency> &lt;/dependencies> Basic configuration # application.</p></div></article></div></div><nav class="navigation pagination" role=navigation><h2 class=screen-reader-text>Posts navigation</h2><div class=nav-links><a class="next page-numbers" href=/page/2/>Older posts <i class="fa fa-chevron-right"></i></a></div></nav></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
 <button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/05/claude-adaptive-thinking-guide/>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-managed-agents-guide/>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-models-guide-2026/>Claude Models in 2026: Opus, Sonnet, and Haiku Compared</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-prompt-caching-guide/>Claude Prompt Caching: Cut Your API Costs by 90%</a></li><li class=widget__item><a class=widget__link href=/2026/05/spring-boot-graalvm-native-images/>GraalVM Native Images with Spring Boot 4: From 8 Seconds to 37ms Startup</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/spring-boot/ title="spring boot">spring boot</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/actuator/ title=actuator>actuator
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agents/ title=agents>agents
@@ -159,6 +163,7 @@ The Problem with the Naive Dockerfile Most tutorials show this:</p></div></artic
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jwt/ title=jwt>jwt
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/k8s/ title=k8s>k8s
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/llm/ title=llm>llm
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/loki/ title=loki>loki
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/microservices/ title=microservices>microservices
@@ -168,17 +173,20 @@ The Problem with the Naive Dockerfile Most tutorials show this:</p></div></artic
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/ title=node.js>node.js
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2/ title=oauth2>oauth2
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/observability/ title=observability>observability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openai/ title=openai>openai
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/opentelemetry/ title=opentelemetry>opentelemetry
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/performance/ title=performance>performance
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prometheus/ title=prometheus>prometheus
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quarkus/ title=quarkus>quarkus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rag/ title=rag>rag
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/ title=react>react
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/resilience4j/ title=resilience4j>resilience4j
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/ title=shell>shell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-ai/ title=spring-ai>spring-ai
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/ title=spring-boot>spring-boot
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-cloud/ title=spring-cloud>spring-cloud
 </a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stock-market/ title="stock market">stock market
