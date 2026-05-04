@@ -1,0 +1,176 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Master Kafka offset management in Spring Boot — understand auto-commit risks, all five AckMode options (RECORD, BATCH, TIME, COUNT, MANUAL), and how to choose the right strategy for your delivery guarantee requirements."><title>Offset Management: Auto-Commit vs Manual Acknowledgment | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Offset Management: Auto-Commit vs Manual Acknowledgment"><meta name=twitter:description content="Master Kafka offset management in Spring Boot — understand auto-commit risks, all five AckMode options (RECORD, BATCH, TIME, COUNT, MANUAL), and how to choose the right strategy for your delivery guarantee requirements."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-kafka/offset-management/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Offset Management: Auto-Commit vs Manual Acknowledgment"><meta property="og:description" content="Master Kafka offset management in Spring Boot — understand auto-commit risks, all five AckMode options (RECORD, BATCH, TIME, COUNT, MANUAL), and how to choose the right strategy for your delivery guarantee requirements."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-04T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-04T00:00:00+00:00"><meta property="article:tag" content="Kafka"><meta property="article:tag" content="Spring-Kafka"><meta property="article:tag" content="Spring-Boot"><meta property="article:tag" content="Java"><meta property="article:tag" content="Offsets"><meta property="article:tag" content="Acknowledgment"><meta itemprop=name content="Offset Management: Auto-Commit vs Manual Acknowledgment"><meta itemprop=description content="Master Kafka offset management in Spring Boot — understand auto-commit risks, all five AckMode options (RECORD, BATCH, TIME, COUNT, MANUAL), and how to choose the right strategy for your delivery guarantee requirements."><meta itemprop=datePublished content="2026-05-04T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-04T00:00:00+00:00"><meta itemprop=wordCount content="991"><meta itemprop=keywords content="Kafka,Spring-Kafka,Spring-Boot,Java,Offsets,Acknowledgment,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Offset Management: Auto-Commit vs Manual Acknowledgment","headline":"Offset Management: Auto-Commit vs Manual Acknowledgment","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-kafka/offset-management/","description":"Master Kafka offset management in Spring Boot — understand auto-commit risks, all five AckMode options (RECORD, BATCH, TIME, COUNT, MANUAL), and how to choose the right strategy for your delivery guarantee requirements.","wordCount":"991","keywords":["kafka","spring-kafka","spring-boot","java","offsets","acknowledgment","tutorial"],"datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-kafka/offset-management/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-kafka/offset-management/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Offset Management: Auto-Commit vs Manual Acknowledgment\"","datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-kafka\/offset-management\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      document.addEventListener('DOMContentLoaded', () => mermaid.run());
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li><li class="menu-item current-menu-item"><a href=/tutorials/spring-kafka/>Spring Kafka Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Kafka Tutorial</a></div><div class=series-progress><span class=series-part>Part 15 of 19</span><div class=series-progress-bar><div class=series-progress-fill style=width:78%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-kafka/offset-management/ rel=bookmark><time class="entry-date published" datetime=2026-05-04T00:00:00>May 04, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>5 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/spring-kafka/offset-management/ rel=bookmark>Offset Management: Auto-Commit vs Manual Acknowledgment</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/>kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/>spring-kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/>java</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/offsets/>offsets</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgment/>acknowledgment</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#why-offset-management-matters>Why Offset Management Matters</a></li><li><a href=#auto-commit-default>Auto-Commit (Default)</a></li><li><a href=#spring-kafka-ackmode>Spring Kafka AckMode</a></li><li><a href=#ackmoderecord--after-each-record>AckMode.RECORD — After Each Record</a></li><li><a href=#ackmodebatch--after-each-poll-batch>AckMode.BATCH — After Each Poll Batch</a></li><li><a href=#ackmodemanual--you-control-every-commit>AckMode.MANUAL — You Control Every Commit</a><ul><li><a href=#manual-commit-with-manual_immediate>Manual Commit with MANUAL_IMMEDIATE</a></li></ul></li><li><a href=#manual-batch-acknowledgment>Manual Batch Acknowledgment</a></li><li><a href=#choosing-the-right-ackmode>Choosing the Right AckMode</a></li><li><a href=#ackmode-configuration-in-bean>AckMode Configuration in @Bean</a></li><li><a href=#commit-semantics-summary>Commit Semantics Summary</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=why-offset-management-matters>Why Offset Management Matters</h2><p>The committed offset determines what happens when a consumer restarts. If the offset is committed too early, a crash before processing completes means events are lost. If it is committed too late, a crash after processing but before committing means events are re-processed.</p><pre class=mermaid>flowchart TD
+    subgraph TooEarly["Commit too early → Data Loss"]
+        E1["Commit offset 43"] --> E2["Process record 42"] --> E3["Crash!"]
+        E4["Restart: resume from 43"] --> E5["Record 42 NEVER processed ❌"]
+    end
+
+    subgraph TooLate["Commit after processing → At-Least-Once"]
+        L1["Process record 42 ✓"] --> L2["Commit offset 43"] --> L3["Crash before commit!"]
+        L4["Restart: resume from 42"] --> L5["Record 42 processed AGAIN ✓\n(acceptable with idempotent logic)"]
+    end
+</pre><p>Most production systems accept <strong>at-least-once</strong> delivery: process first, commit after. Make your processing logic idempotent to handle re-delivery safely.</p><hr><h2 id=auto-commit-default>Auto-Commit (Default)</h2><p>With <code>enable.auto.commit=true</code> (Spring Kafka default when no <code>AckMode</code> is set), the consumer commits the highest fetched offset on a timer.</p><pre class=mermaid>sequenceDiagram
+    participant Consumer
+    participant Broker
+
+    Consumer->>Broker: poll() → records [40, 41, 42, 43, 44]
+    Consumer->>Consumer: Process record 40 ✓
+    Consumer->>Consumer: Process record 41 ✓
+    Note over Consumer: auto.commit.interval.ms = 5000ms elapses
+    Consumer->>Broker: commitOffset(44+1=45) ← auto
+    Consumer->>Consumer: Process record 42 ✓
+    Consumer->>Consumer: Process record 43 — CRASH 💥
+
+    Consumer->>Broker: Restart → fetch committed offset
+    Broker-->>Consumer: offset = 45
+    Note over Consumer: Records 43 and 44 are LOST\n(committed before processing)
+</pre><p>Auto-commit is <strong>dangerous</strong> for any data that matters. It provides <strong>at-most-once</strong> semantics: the offset is committed regardless of processing success.</p><p>Disable auto-commit:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.consumer.enable-auto-commit</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>false</span>
+</span></span></code></pre></div><p>When you set a Spring Kafka <code>AckMode</code>, auto-commit is automatically disabled — Spring Kafka takes over offset management.</p><hr><h2 id=spring-kafka-ackmode>Spring Kafka AckMode</h2><p>Spring Kafka&rsquo;s <code>AckMode</code> replaces auto-commit with explicit, controlled offset commits:</p><pre class=mermaid>flowchart TD
+    AckMode["spring.kafka.listener.ack-mode"]
+    RECORD["RECORD\nCommit after each record"]
+    BATCH["BATCH\nCommit after each poll batch"]
+    TIME["TIME\nCommit every N milliseconds"]
+    COUNT["COUNT\nCommit every N records"]
+    COUNT_TIME["COUNT_TIME\nCommit on whichever\ncomes first: count or time"]
+    MANUAL["MANUAL\nCommit when you call\nAcknowledgment.acknowledge()"]
+    MANUAL_IMMEDIATE["MANUAL_IMMEDIATE\nCommit immediately\n(synchronously) on acknowledge()"]
+
+    AckMode --> RECORD
+    AckMode --> BATCH
+    AckMode --> TIME
+    AckMode --> COUNT
+    AckMode --> COUNT_TIME
+    AckMode --> MANUAL
+    AckMode --> MANUAL_IMMEDIATE
+</pre><hr><h2 id=ackmoderecord--after-each-record>AckMode.RECORD — After Each Record</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.listener.ack-mode</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>record</span>
+</span></span></code></pre></div><pre class=mermaid>sequenceDiagram
+    participant Consumer
+    participant Broker
+
+    Consumer->>Broker: poll() → [40, 41, 42]
+    Consumer->>Consumer: Process 40 ✓
+    Consumer->>Broker: commitOffset(41)
+    Consumer->>Consumer: Process 41 ✓
+    Consumer->>Broker: commitOffset(42)
+    Consumer->>Consumer: Process 42 ✓
+    Consumer->>Broker: commitOffset(43)
+    Note over Consumer: Safe but slow — 3 commits per poll
+</pre><p>Safest option (one record at a time) but generates the most commit traffic. Good for low-volume, high-value events.</p><hr><h2 id=ackmodebatch--after-each-poll-batch>AckMode.BATCH — After Each Poll Batch</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.listener.ack-mode</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>batch</span>
+</span></span></code></pre></div><pre class=mermaid>sequenceDiagram
+    participant Consumer
+    participant Broker
+
+    Consumer->>Broker: poll() → [40, 41, 42, 43, 44]
+    Consumer->>Consumer: Process 40 ✓
+    Consumer->>Consumer: Process 41 ✓
+    Consumer->>Consumer: Process 42 ✓
+    Consumer->>Consumer: Process 43 ✓
+    Consumer->>Consumer: Process 44 ✓
+    Consumer->>Broker: commitOffset(45) ← one commit for entire batch
+    Note over Consumer: Efficient — but if crash after processing 42\nrecords 40-42 are reprocessed on restart
+</pre><p>Best balance of safety and throughput for most applications. Spring Kafka&rsquo;s default AckMode when <code>enable.auto.commit=false</code>.</p><hr><h2 id=ackmodemanual--you-control-every-commit>AckMode.MANUAL — You Control Every Commit</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.listener.ack-mode</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>manual</span>
+</span></span></code></pre></div><p>Inject <code>Acknowledgment</code> and call <code>.acknowledge()</code> when ready:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@KafkaListener</span><span style=color:#eceff4>(</span>topics <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;orders&#34;</span><span style=color:#eceff4>,</span> groupId <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;inventory-service&#34;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>onOrderPlaced</span><span style=color:#eceff4>(</span>
+</span></span><span style=display:flex><span>        OrderPlacedEvent event<span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>        Acknowledgment ack<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>try</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        inventoryService<span style=color:#eceff4>.</span><span style=color:#8fbcbb>reserveStock</span><span style=color:#eceff4>(</span>event<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>        ack<span style=color:#eceff4>.</span><span style=color:#8fbcbb>acknowledge</span><span style=color:#eceff4>();</span>  <span style=color:#616e87;font-style:italic>// commit THIS record&#39;s offset</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span> <span style=color:#81a1c1;font-weight:700>catch</span> <span style=color:#eceff4>(</span>TransientException e<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#616e87;font-style:italic>// Do NOT acknowledge — will be redelivered after restart</span>
+</span></span><span style=display:flex><span>        log<span style=color:#eceff4>.</span><span style=color:#8fbcbb>warn</span><span style=color:#eceff4>(</span><span style=color:#a3be8c>&#34;Transient error, not committing offset: {}&#34;</span><span style=color:#eceff4>,</span> e<span style=color:#eceff4>.</span><span style=color:#8fbcbb>getMessage</span><span style=color:#eceff4>());</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p><strong>Important</strong>: <code>MANUAL</code> mode batches acknowledgments — it calls <code>commitAsync()</code> on the next poll, not immediately. Use <code>MANUAL_IMMEDIATE</code> if you need synchronous commits.</p><h3 id=manual-commit-with-manual_immediate>Manual Commit with MANUAL_IMMEDIATE</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@KafkaListener</span><span style=color:#eceff4>(</span>topics <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;orders&#34;</span><span style=color:#eceff4>,</span> groupId <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;inventory-service&#34;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>onOrderPlaced</span><span style=color:#eceff4>(</span>OrderPlacedEvent event<span style=color:#eceff4>,</span> Acknowledgment ack<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    inventoryService<span style=color:#eceff4>.</span><span style=color:#8fbcbb>reserveStock</span><span style=color:#eceff4>(</span>event<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    ack<span style=color:#eceff4>.</span><span style=color:#8fbcbb>acknowledge</span><span style=color:#eceff4>();</span>  <span style=color:#616e87;font-style:italic>// blocks until broker confirms commit (synchronous)</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.listener.ack-mode</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>manual_immediate</span>
+</span></span></code></pre></div><p>Synchronous commits add latency but guarantee the offset is committed before your method returns.</p><hr><h2 id=manual-batch-acknowledgment>Manual Batch Acknowledgment</h2><p>For batch listeners, acknowledge the entire batch or individual records:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@KafkaListener</span><span style=color:#eceff4>(</span>topics <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;orders&#34;</span><span style=color:#eceff4>,</span> groupId <span style=color:#81a1c1>=</span> <span style=color:#a3be8c>&#34;inventory-service-batch&#34;</span><span style=color:#eceff4>)</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> <span style=color:#81a1c1>void</span> <span style=color:#88c0d0>onOrderBatch</span><span style=color:#eceff4>(</span>
+</span></span><span style=display:flex><span>        List<span style=color:#81a1c1>&lt;</span>ConsumerRecord<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> OrderPlacedEvent<span style=color:#81a1c1>&gt;&gt;</span> records<span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>        Acknowledgment ack<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    List<span style=color:#81a1c1>&lt;</span>OrderPlacedEvent<span style=color:#81a1c1>&gt;</span> successful <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>new</span> ArrayList<span style=color:#81a1c1>&lt;&gt;</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>for</span> <span style=color:#eceff4>(</span>ConsumerRecord<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> OrderPlacedEvent<span style=color:#81a1c1>&gt;</span> record <span style=color:#eceff4>:</span> records<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>try</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>            inventoryService<span style=color:#eceff4>.</span><span style=color:#8fbcbb>reserveStock</span><span style=color:#eceff4>(</span>record<span style=color:#eceff4>.</span><span style=color:#8fbcbb>value</span><span style=color:#eceff4>());</span>
+</span></span><span style=display:flex><span>            successful<span style=color:#eceff4>.</span><span style=color:#8fbcbb>add</span><span style=color:#eceff4>(</span>record<span style=color:#eceff4>.</span><span style=color:#8fbcbb>value</span><span style=color:#eceff4>());</span>
+</span></span><span style=display:flex><span>        <span style=color:#eceff4>}</span> <span style=color:#81a1c1;font-weight:700>catch</span> <span style=color:#eceff4>(</span>Exception e<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>            log<span style=color:#eceff4>.</span><span style=color:#8fbcbb>error</span><span style=color:#eceff4>(</span><span style=color:#a3be8c>&#34;Failed at offset={}&#34;</span><span style=color:#eceff4>,</span> record<span style=color:#eceff4>.</span><span style=color:#8fbcbb>offset</span><span style=color:#eceff4>(),</span> e<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#616e87;font-style:italic>// nack from this record forward — will retry from this position</span>
+</span></span><span style=display:flex><span>            ack<span style=color:#eceff4>.</span><span style=color:#8fbcbb>nack</span><span style=color:#eceff4>(</span>records<span style=color:#eceff4>.</span><span style=color:#8fbcbb>indexOf</span><span style=color:#eceff4>(</span>record<span style=color:#eceff4>),</span> Duration<span style=color:#eceff4>.</span><span style=color:#8fbcbb>ofSeconds</span><span style=color:#eceff4>(</span>5<span style=color:#eceff4>));</span>
+</span></span><span style=display:flex><span>            <span style=color:#81a1c1;font-weight:700>return</span><span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ack<span style=color:#eceff4>.</span><span style=color:#8fbcbb>acknowledge</span><span style=color:#eceff4>();</span>  <span style=color:#616e87;font-style:italic>// commit entire batch</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p><code>ack.nack(index, sleepDuration)</code> seeks the partition back to the failed record&rsquo;s offset — it will be redelivered after <code>sleepDuration</code>.</p><hr><h2 id=choosing-the-right-ackmode>Choosing the Right AckMode</h2><pre class=mermaid>flowchart TD
+    Q1{Processing\ncritical data?}
+    Q2{Need bulk\ndatabase ops?}
+    Q3{Complex retry\nlogic needed?}
+
+    Q1 -->|No — analytics, logs| BatchAuto["BATCH\n(default, good enough)"]
+    Q1 -->|Yes — orders, payments| Q2
+
+    Q2 -->|Yes — save 100 records at once| Batch["BATCH\nCommit after all succeed"]
+    Q2 -->|No — process one at a time| Q3
+
+    Q3 -->|Yes — selective retry/DLQ| Manual["MANUAL\nor MANUAL_IMMEDIATE"]
+    Q3 -->|No — simple processing| Record["RECORD\n(simple, safe)"]
+</pre><hr><h2 id=ackmode-configuration-in-bean>AckMode Configuration in @Bean</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Bean</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> ConcurrentKafkaListenerContainerFactory<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> Object<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>kafkaListenerContainerFactory</span><span style=color:#eceff4>(</span>
+</span></span><span style=display:flex><span>        ConsumerFactory<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> Object<span style=color:#81a1c1>&gt;</span> consumerFactory<span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ConcurrentKafkaListenerContainerFactory<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> Object<span style=color:#81a1c1>&gt;</span> factory <span style=color:#81a1c1>=</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1;font-weight:700>new</span> ConcurrentKafkaListenerContainerFactory<span style=color:#81a1c1>&lt;&gt;</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    factory<span style=color:#eceff4>.</span><span style=color:#8fbcbb>setConsumerFactory</span><span style=color:#eceff4>(</span>consumerFactory<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    factory<span style=color:#eceff4>.</span><span style=color:#8fbcbb>setConcurrency</span><span style=color:#eceff4>(</span>3<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    factory<span style=color:#eceff4>.</span><span style=color:#8fbcbb>getContainerProperties</span><span style=color:#eceff4>().</span><span style=color:#8fbcbb>setAckMode</span><span style=color:#eceff4>(</span>ContainerProperties<span style=color:#eceff4>.</span><span style=color:#8fbcbb>AckMode</span><span style=color:#eceff4>.</span><span style=color:#8fbcbb>MANUAL</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>return</span> factory<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><hr><h2 id=commit-semantics-summary>Commit Semantics Summary</h2><pre class=mermaid>quadrantChart
+    title Delivery Semantics by AckMode
+    x-axis Low Safety --> High Safety
+    y-axis Low Throughput --> High Throughput
+    quadrant-1 High safety, lower throughput
+    quadrant-2 High safety, high throughput
+    quadrant-3 Low safety, low throughput
+    quadrant-4 Low safety, high throughput
+    AUTO_COMMIT: [0.15, 0.85]
+    BATCH: [0.55, 0.75]
+    RECORD: [0.7, 0.35]
+    MANUAL_IMMEDIATE: [0.85, 0.2]
+    MANUAL: [0.8, 0.5]
+</pre><table><thead><tr><th>AckMode</th><th>Delivery</th><th>Throughput</th><th>Use case</th></tr></thead><tbody><tr><td>AUTO_COMMIT</td><td>At-most-once</td><td>Highest</td><td>Non-critical metrics</td></tr><tr><td>BATCH</td><td>At-least-once</td><td>High</td><td>Default for most apps</td></tr><tr><td>RECORD</td><td>At-least-once</td><td>Medium</td><td>Low-volume critical events</td></tr><tr><td>MANUAL</td><td>At-least-once</td><td>Medium-High</td><td>Custom retry logic</td></tr><tr><td>MANUAL_IMMEDIATE</td><td>At-least-once</td><td>Lower</td><td>Strict ordering + commit</td></tr></tbody></table><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>Auto-commit commits offsets on a timer regardless of processing result — it provides at-most-once semantics and risks data loss</li><li>Always set <code>enable.auto.commit=false</code> for production and use Spring Kafka&rsquo;s <code>AckMode</code> instead</li><li><code>BATCH</code> is the right default: commit after all records in a poll succeed, high throughput, at-least-once</li><li><code>MANUAL</code> / <code>MANUAL_IMMEDIATE</code> give full control: commit only after confirmed processing, selective nack for failed records</li><li><code>ack.nack(index, duration)</code> in batch mode seeks back to the failed offset for targeted redelivery</li><li>Make your consumers idempotent — with at-least-once semantics, any record can be delivered more than once</li></ul><p>Next: <a href=/tutorials/spring-kafka/seeking-offsets/>Seeking to Specific Offsets: Replay, Recovery, and Time-Based Seeking</a> — programmatically seek consumer positions to replay events, skip bad records, or resume from a specific timestamp.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>Consumer Groups: Parallel Processing and Partition Assignment Strategies</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/spring-kafka/seeking-offsets/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
+<span class=series-nav-title>Seeking to Specific Offsets: Replay, Recovery, and Time-Based Seeking</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>

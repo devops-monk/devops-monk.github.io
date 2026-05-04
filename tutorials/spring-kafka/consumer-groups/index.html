@@ -1,0 +1,213 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Deep-dive into Kafka consumer groups — how partitions are assigned to consumers, the three built-in assignors (Range, RoundRobin, StickyAssignor), cooperative rebalancing, and how to scale consumers for maximum throughput."><title>Consumer Groups: Parallel Processing and Partition Assignment Strategies | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Consumer Groups: Parallel Processing and Partition Assignment Strategies"><meta name=twitter:description content="Deep-dive into Kafka consumer groups — how partitions are assigned to consumers, the three built-in assignors (Range, RoundRobin, StickyAssignor), cooperative rebalancing, and how to scale consumers for maximum throughput."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-kafka/consumer-groups/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Consumer Groups: Parallel Processing and Partition Assignment Strategies"><meta property="og:description" content="Deep-dive into Kafka consumer groups — how partitions are assigned to consumers, the three built-in assignors (Range, RoundRobin, StickyAssignor), cooperative rebalancing, and how to scale consumers for maximum throughput."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-04T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-04T00:00:00+00:00"><meta property="article:tag" content="Kafka"><meta property="article:tag" content="Spring-Kafka"><meta property="article:tag" content="Spring-Boot"><meta property="article:tag" content="Java"><meta property="article:tag" content="Consumer-Groups"><meta property="article:tag" content="Partitioning"><meta itemprop=name content="Consumer Groups: Parallel Processing and Partition Assignment Strategies"><meta itemprop=description content="Deep-dive into Kafka consumer groups — how partitions are assigned to consumers, the three built-in assignors (Range, RoundRobin, StickyAssignor), cooperative rebalancing, and how to scale consumers for maximum throughput."><meta itemprop=datePublished content="2026-05-04T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-04T00:00:00+00:00"><meta itemprop=wordCount content="1168"><meta itemprop=keywords content="Kafka,Spring-Kafka,Spring-Boot,Java,Consumer-Groups,Partitioning,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Consumer Groups: Parallel Processing and Partition Assignment Strategies","headline":"Consumer Groups: Parallel Processing and Partition Assignment Strategies","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-kafka/consumer-groups/","description":"Deep-dive into Kafka consumer groups — how partitions are assigned to consumers, the three built-in assignors (Range, RoundRobin, StickyAssignor), cooperative rebalancing, and how to scale consumers for maximum throughput.","wordCount":"1168","keywords":["kafka","spring-kafka","spring-boot","java","consumer-groups","partitioning","tutorial"],"datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-kafka/consumer-groups/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-kafka/consumer-groups/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Consumer Groups: Parallel Processing and Partition Assignment Strategies\"","datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-kafka\/consumer-groups\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      document.addEventListener('DOMContentLoaded', () => mermaid.run());
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li><li class="menu-item current-menu-item"><a href=/tutorials/spring-kafka/>Spring Kafka Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Kafka Tutorial</a></div><div class=series-progress><span class=series-part>Part 14 of 19</span><div class=series-progress-bar><div class=series-progress-fill style=width:73%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups/ rel=bookmark><time class="entry-date published" datetime=2026-05-04T00:00:00>May 04, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>6 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups/ rel=bookmark>Consumer Groups: Parallel Processing and Partition Assignment Strategies</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/>kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/>spring-kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/>java</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer-groups/>consumer-groups</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/partitioning/>partitioning</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#consumer-group-fundamentals>Consumer Group Fundamentals</a></li><li><a href=#the-three-built-in-partition-assignors>The Three Built-in Partition Assignors</a><ul><li><a href=#1-rangeassignor-default-for-single-topic-groups>1. RangeAssignor (Default for single-topic groups)</a></li><li><a href=#2-roundrobinassignor>2. RoundRobinAssignor</a></li><li><a href=#3-stickyassignor-recommended>3. StickyAssignor (Recommended)</a></li><li><a href=#4-cooperativestickyassignor-best-for-production>4. CooperativeStickyAssignor (Best for production)</a></li></ul></li><li><a href=#configuring-the-assignor>Configuring the Assignor</a></li><li><a href=#scaling-consumers-the-rules>Scaling Consumers: The Rules</a><ul><li><a href=#setting-concurrency-in-spring-boot>Setting Concurrency in Spring Boot</a></li></ul></li><li><a href=#consumer-group-coordinator>Consumer Group Coordinator</a></li><li><a href=#static-group-membership>Static Group Membership</a></li><li><a href=#monitoring-consumer-groups-with-cli>Monitoring Consumer Groups with CLI</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=consumer-group-fundamentals>Consumer Group Fundamentals</h2><p>A consumer group is how Kafka distributes work across multiple consumers. Each partition in a topic is assigned to exactly one consumer instance in the group at any given time.</p><pre class=mermaid>flowchart TB
+    subgraph Topic["Topic: orders — 6 partitions"]
+        P0["P0"] 
+        P1["P1"] 
+        P2["P2"] 
+        P3["P3"] 
+        P4["P4"] 
+        P5["P5"]
+    end
+
+    subgraph CG1["Group: inventory-service (3 instances)"]
+        I1["Instance 1\nP0, P1"]
+        I2["Instance 2\nP2, P3"]
+        I3["Instance 3\nP4, P5"]
+    end
+
+    subgraph CG2["Group: notification-service (1 instance)"]
+        N1["Instance 1\nP0,P1,P2,P3,P4,P5"]
+    end
+
+    P0 & P1 --> I1
+    P2 & P3 --> I2
+    P4 & P5 --> I3
+    P0 & P1 & P2 & P3 & P4 & P5 --> N1
+</pre><p>Both groups receive all events — they are independent. The inventory service spreads work across 3 instances; the notification service uses a single instance reading all 6 partitions.</p><hr><h2 id=the-three-built-in-partition-assignors>The Three Built-in Partition Assignors</h2><p>Kafka provides three partition assignment strategies. The group leader consumer runs the chosen assignor algorithm and distributes the result to all members.</p><h3 id=1-rangeassignor-default-for-single-topic-groups>1. RangeAssignor (Default for single-topic groups)</h3><p>Sorts consumers and partitions, then assigns consecutive partition ranges.</p><pre class=mermaid>flowchart LR
+    subgraph "RangeAssignor — Topic: orders (6 partitions), 3 consumers"
+        C1["Consumer 1"] --- |"P0, P1"| A1[" "]
+        C2["Consumer 2"] --- |"P2, P3"| A2[" "]
+        C3["Consumer 3"] --- |"P4, P5"| A3[" "]
+    end
+</pre><p><strong>Problem</strong>: When subscribing to multiple topics, the &ldquo;first&rdquo; consumer gets more partitions. With topics <code>orders</code> (3 partitions) and <code>payments</code> (3 partitions) and 2 consumers:</p><ul><li>Consumer 1: orders-P0, orders-P1, payments-P0, payments-P1 (4 partitions)</li><li>Consumer 2: orders-P2, payments-P2 (2 partitions)</li></ul><h3 id=2-roundrobinassignor>2. RoundRobinAssignor</h3><p>Distributes partitions one at a time, cycling through consumers.</p><pre class=mermaid>flowchart LR
+    subgraph "RoundRobinAssignor — 6 partitions, 3 consumers"
+        P0 -->|"round 1"| C1["Consumer 1\nP0, P3"]
+        P1 -->|"round 1"| C2["Consumer 2\nP1, P4"]
+        P2 -->|"round 1"| C3["Consumer 3\nP2, P5"]
+        P3 -->|"round 2"| C1
+        P4 -->|"round 2"| C2
+        P5 -->|"round 2"| C3
+    end
+</pre><p>More balanced than Range for multi-topic subscriptions, but still triggers full reassignment on membership change.</p><h3 id=3-stickyassignor-recommended>3. StickyAssignor (Recommended)</h3><p>Distributes evenly AND minimises partition movement on rebalance — consumers keep as many of their current partitions as possible.</p><pre class=mermaid>flowchart TD
+    subgraph Before["Before: 3 consumers, 6 partitions"]
+        B1["C1: P0, P1"]
+        B2["C2: P2, P3"]
+        B3["C3: P4, P5"]
+    end
+
+    subgraph After["After C3 leaves — StickyAssignor"]
+        A1["C1: P0, P1, P4"]
+        A2["C2: P2, P3, P5"]
+        Note["Only P4 and P5 moved\n(minimal disruption)"]
+    end
+
+    subgraph AfterRR["After C3 leaves — RoundRobinAssignor"]
+        AR1["C1: P0, P2, P4"]
+        AR2["C2: P1, P3, P5"]
+        NoteRR["All 6 partitions reassigned\n(maximal disruption)"]
+    end
+
+    Before --> After
+    Before --> AfterRR
+</pre><h3 id=4-cooperativestickyassignor-best-for-production>4. CooperativeStickyAssignor (Best for production)</h3><p>Same as StickyAssignor but uses <strong>incremental (cooperative) rebalancing</strong> — only the partitions that need to move are revoked. Consumers keep processing their unchanged partitions during the rebalance.</p><pre class=mermaid>sequenceDiagram
+    participant C1 as Consumer 1\n(P0, P1)
+    participant C2 as Consumer 2\n(P2, P3)
+    participant C3 as Consumer 3 (new)
+    participant Coord as Coordinator
+
+    Note over C1,C2: Eager (classic) rebalance: ALL stop
+    Coord->>C1: Revoke ALL partitions
+    Coord->>C2: Revoke ALL partitions
+    Note over C1,C2: Processing STOPPED for all
+
+    Note over C1,C3: Cooperative rebalance: only moved partitions stop
+    Coord->>C2: Revoke only P3 (will go to C3)
+    Note over C1,C2: C1 keeps processing P0,P1\nC2 keeps processing P2
+    C2->>Coord: Revoke complete
+    Coord->>C3: Assign P3
+    Note over C1,C3: Zero interruption for unchanged partitions
+</pre><hr><h2 id=configuring-the-assignor>Configuring the Assignor</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#616e87;font-style:italic># application.properties — set for all consumers</span>
+</span></span><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.consumer.properties.partition.assignment.strategy</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>\
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>  org.apache.kafka.clients.consumer.CooperativeStickyAssignor</span>
+</span></span></code></pre></div><p>Or in <code>@Bean</code> configuration:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#d08770>@Bean</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>public</span> ConsumerFactory<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> Object<span style=color:#81a1c1>&gt;</span> <span style=color:#88c0d0>consumerFactory</span><span style=color:#eceff4>()</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    Map<span style=color:#81a1c1>&lt;</span>String<span style=color:#eceff4>,</span> Object<span style=color:#81a1c1>&gt;</span> config <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>new</span> HashMap<span style=color:#81a1c1>&lt;&gt;</span><span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>    config<span style=color:#eceff4>.</span><span style=color:#8fbcbb>put</span><span style=color:#eceff4>(</span>ConsumerConfig<span style=color:#eceff4>.</span><span style=color:#8fbcbb>BOOTSTRAP_SERVERS_CONFIG</span><span style=color:#eceff4>,</span> bootstrapServers<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    config<span style=color:#eceff4>.</span><span style=color:#8fbcbb>put</span><span style=color:#eceff4>(</span>ConsumerConfig<span style=color:#eceff4>.</span><span style=color:#8fbcbb>GROUP_ID_CONFIG</span><span style=color:#eceff4>,</span> <span style=color:#a3be8c>&#34;inventory-service&#34;</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    config<span style=color:#eceff4>.</span><span style=color:#8fbcbb>put</span><span style=color:#eceff4>(</span>ConsumerConfig<span style=color:#eceff4>.</span><span style=color:#8fbcbb>KEY_DESERIALIZER_CLASS_CONFIG</span><span style=color:#eceff4>,</span> StringDeserializer<span style=color:#eceff4>.</span><span style=color:#8fbcbb>class</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    config<span style=color:#eceff4>.</span><span style=color:#8fbcbb>put</span><span style=color:#eceff4>(</span>ConsumerConfig<span style=color:#eceff4>.</span><span style=color:#8fbcbb>VALUE_DESERIALIZER_CLASS_CONFIG</span><span style=color:#eceff4>,</span> JsonDeserializer<span style=color:#eceff4>.</span><span style=color:#8fbcbb>class</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>    config<span style=color:#eceff4>.</span><span style=color:#8fbcbb>put</span><span style=color:#eceff4>(</span>ConsumerConfig<span style=color:#eceff4>.</span><span style=color:#8fbcbb>PARTITION_ASSIGNMENT_STRATEGY_CONFIG</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>        List<span style=color:#eceff4>.</span><span style=color:#8fbcbb>of</span><span style=color:#eceff4>(</span>CooperativeStickyAssignor<span style=color:#eceff4>.</span><span style=color:#8fbcbb>class</span><span style=color:#eceff4>));</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1;font-weight:700>return</span> <span style=color:#81a1c1;font-weight:700>new</span> DefaultKafkaConsumerFactory<span style=color:#81a1c1>&lt;&gt;</span><span style=color:#eceff4>(</span>config<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><hr><h2 id=scaling-consumers-the-rules>Scaling Consumers: The Rules</h2><pre class=mermaid>flowchart TD
+    Partitions["Topic: 6 partitions"]
+
+    subgraph Scale1["1 consumer instance"]
+        C1_1["Instance 1: P0,P1,P2,P3,P4,P5\n(all partitions, 1 thread)"]
+    end
+
+    subgraph Scale2["2 consumer instances"]
+        C2_1["Instance 1: P0,P1,P2"]
+        C2_2["Instance 2: P3,P4,P5"]
+    end
+
+    subgraph Scale3["3 consumer instances"]
+        C3_1["Instance 1: P0,P1"]
+        C3_2["Instance 2: P2,P3"]
+        C3_3["Instance 3: P4,P5"]
+    end
+
+    subgraph Scale6["6 consumer instances"]
+        C6_1["Instance 1: P0"]
+        C6_2["Instance 2: P1"]
+        C6_3["Instance 3: P2"]
+        C6_4["Instance 4: P3"]
+        C6_5["Instance 5: P4"]
+        C6_6["Instance 6: P5"]
+    end
+
+    subgraph Scale8["8 consumer instances (2 idle)"]
+        C8_1["Instance 1: P0"]
+        C8_2["..."]
+        C8_7["Instance 7: idle ⚠"]
+        C8_8["Instance 8: idle ⚠"]
+    end
+
+    Partitions --> Scale1
+    Partitions --> Scale2
+    Partitions --> Scale3
+    Partitions --> Scale6
+    Partitions --> Scale8
+</pre><p><strong>Rules:</strong></p><ul><li>Maximum throughput = number of partitions</li><li>Adding instances beyond partition count creates idle consumers</li><li>Concurrency within one instance (<code>concurrency=N</code>) creates N consumer threads — each thread is one &ldquo;consumer&rdquo; in the group</li><li>Total active consumers in the group = (instances × concurrency) — capped at partition count</li></ul><h3 id=setting-concurrency-in-spring-boot>Setting Concurrency in Spring Boot</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#616e87;font-style:italic># Each instance runs 3 consumer threads — 3 partitions per instance</span>
+</span></span><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.listener.concurrency</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>3</span>
+</span></span></code></pre></div><p>With 2 instances and <code>concurrency=3</code>, you have 6 consumer threads total — matching 6 partitions.</p><hr><h2 id=consumer-group-coordinator>Consumer Group Coordinator</h2><p>The group coordinator is a broker responsible for managing the group:</p><pre class=mermaid>sequenceDiagram
+    participant C1 as Consumer 1
+    participant C2 as Consumer 2
+    participant Coord as Group Coordinator\n(a Broker)
+
+    C1->>Coord: FindCoordinator(group=inventory-service)
+    Coord-->>C1: Coordinator is Broker 2
+
+    C1->>Coord: JoinGroup (protocols: cooperative-sticky)
+    C2->>Coord: JoinGroup (protocols: cooperative-sticky)
+
+    Note over Coord: All members joined\nElect leader (first to join)
+
+    Coord-->>C1: JoinGroupResponse (YOU are leader, member list)
+    Coord-->>C2: JoinGroupResponse (follower)
+
+    C1->>C1: Run CooperativeStickyAssignor\nC1→[P0,P1,P2], C2→[P3,P4,P5]
+
+    C1->>Coord: SyncGroup (assignment)
+    C2->>Coord: SyncGroup (no assignment — follower)
+
+    Coord-->>C1: SyncGroupResponse [P0,P1,P2]
+    Coord-->>C2: SyncGroupResponse [P3,P4,P5]
+
+    Note over C1,C2: Both start consuming their partitions
+</pre><p>The <strong>group leader</strong> (first consumer to join) runs the assignment algorithm and submits it to the coordinator. The coordinator distributes it to all members. This design keeps complex logic in the client, not the broker.</p><hr><h2 id=static-group-membership>Static Group Membership</h2><p>Normal rebalancing: every consumer restart triggers a rebalance. With static membership, a consumer that restarts within <code>session.timeout.ms</code> keeps its old partition assignment — no rebalance occurs.</p><pre class=mermaid>sequenceDiagram
+    participant C1 as Consumer 1\n(group.instance.id=inv-1)
+    participant C2 as Consumer 2\n(group.instance.id=inv-2)
+    participant Coord as Coordinator
+
+    Note over C1,C2: Normal operation: C1→P0,P1  C2→P2,P3
+
+    C1->>C1: Crashes (rolling deploy)
+    Note over Coord: Static member inv-1 gone\nWaiting session.timeout.ms (45s)
+
+    C1->>Coord: Re-join as inv-1 within 45s
+    Coord-->>C1: Re-assign same partitions P0,P1
+    Note over C1,C2: No rebalance occurred\nC2 never stopped processing
+</pre><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.consumer.properties.group.instance.id</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>inventory-instance-${HOSTNAME}</span>
+</span></span><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.consumer.properties.session.timeout.ms</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>60000</span>
+</span></span></code></pre></div><p>Static membership is especially useful for rolling deployments — eliminates rebalance storms when deploying new versions of a service.</p><hr><h2 id=monitoring-consumer-groups-with-cli>Monitoring Consumer Groups with CLI</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># List all groups</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 --list
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Describe with lag</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --describe --group inventory-service
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Output:</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># GROUP             TOPIC   PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG   CONSUMER-ID</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># inventory-service orders  0          1250            1250            0     inv-1-...</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># inventory-service orders  1          1180            1185            5     inv-2-...</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># inventory-service orders  2          1340            1340            0     inv-2-...</span>
+</span></span></code></pre></div><p>Lag on partition 1 = 5. That consumer is behind — either slower processing or a stuck thread.</p><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>Each partition is assigned to exactly one consumer in the group — this is the fundamental unit of parallel processing</li><li><code>CooperativeStickyAssignor</code> is the best production choice: balanced distribution AND minimal partition movement on rebalance</li><li>Maximum parallelism = number of partitions; extra consumers beyond partition count are idle</li><li><code>concurrency=N</code> creates N consumer threads per application instance — total group size = instances × concurrency</li><li>Static group membership (<code>group.instance.id</code>) eliminates rebalance storms during rolling deployments</li><li>The group leader (not the coordinator) runs the assignment algorithm — the coordinator only stores and distributes it</li></ul><p>Next: <a href=/tutorials/spring-kafka/offset-management/>Offset Management: Auto-Commit vs Manual Acknowledgment</a> — control exactly when offsets are committed to prevent data loss and duplicate processing.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-consumer-basics/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>Kafka Consumer in Spring Boot: @KafkaListener Basics</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/spring-kafka/offset-management/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
+<span class=series-nav-title>Offset Management: Auto-Commit vs Manual Acknowledgment</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
