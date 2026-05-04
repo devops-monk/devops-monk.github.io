@@ -1,7 +1,8 @@
 <!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Understand why ZooKeeper was removed from Kafka, how the KRaft consensus protocol replaces it, what changes operationally, and how to configure Kafka in KRaft mode."><title>KRaft Mode: Running Kafka Without ZooKeeper | Devops Monk</title>
 <meta name=twitter:card content="summary"><meta name=twitter:title content="KRaft Mode: Running Kafka Without ZooKeeper"><meta name=twitter:description content="Understand why ZooKeeper was removed from Kafka, how the KRaft consensus protocol replaces it, what changes operationally, and how to configure Kafka in KRaft mode."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-kafka/kraft-mode/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="KRaft Mode: Running Kafka Without ZooKeeper"><meta property="og:description" content="Understand why ZooKeeper was removed from Kafka, how the KRaft consensus protocol replaces it, what changes operationally, and how to configure Kafka in KRaft mode."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-04T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-04T00:00:00+00:00"><meta property="article:tag" content="Kafka"><meta property="article:tag" content="Spring-Kafka"><meta property="article:tag" content="Kraft"><meta property="article:tag" content="Zookeeper"><meta property="article:tag" content="Tutorial"><meta itemprop=name content="KRaft Mode: Running Kafka Without ZooKeeper"><meta itemprop=description content="Understand why ZooKeeper was removed from Kafka, how the KRaft consensus protocol replaces it, what changes operationally, and how to configure Kafka in KRaft mode."><meta itemprop=datePublished content="2026-05-04T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-04T00:00:00+00:00"><meta itemprop=wordCount content="1059"><meta itemprop=keywords content="Kafka,Spring-Kafka,Kraft,Zookeeper,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"KRaft Mode: Running Kafka Without ZooKeeper","headline":"KRaft Mode: Running Kafka Without ZooKeeper","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-kafka/kraft-mode/","description":"Understand why ZooKeeper was removed from Kafka, how the KRaft consensus protocol replaces it, what changes operationally, and how to configure Kafka in KRaft mode.","wordCount":"1059","keywords":["kafka","spring-kafka","kraft","zookeeper","tutorial"],"datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-kafka/kraft-mode/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-kafka/kraft-mode/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"KRaft Mode: Running Kafka Without ZooKeeper\"","datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-kafka\/kraft-mode\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      document.addEventListener('DOMContentLoaded', () => mermaid.run());
     </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
 <i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
 <i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li><li class="menu-item current-menu-item"><a href=/tutorials/spring-kafka/>Spring Kafka Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Kafka Tutorial</a></div><div class=series-progress><span class=series-part>Part 4 of 12</span><div class=series-progress-bar><div class=series-progress-fill style=width:33%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-kafka/kraft-mode/ rel=bookmark><time class="entry-date published" datetime=2026-05-04T00:00:00>May 04, 2026
@@ -15,94 +16,94 @@
 &nbsp;
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zookeeper/>zookeeper</a>
 &nbsp;
-<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#why-zookeeper-had-to-go>Why ZooKeeper Had to Go</a></li><li><a href=#kraft-kafka-raft-metadata-protocol>KRaft: Kafka Raft Metadata Protocol</a></li><li><a href=#roles-combined-vs-separated>Roles: Combined vs Separated</a></li><li><a href=#the-__cluster_metadata-topic>The __cluster_metadata Topic</a></li><li><a href=#controller-failover-in-kraft>Controller Failover in KRaft</a></li><li><a href=#kraft-configuration-reference>KRaft Configuration Reference</a></li><li><a href=#kraft-in-docker-compose-used-throughout-this-series>KRaft in Docker Compose (used throughout this series)</a></li><li><a href=#zookeeper-mode-vs-kraft-mode-migration>ZooKeeper Mode vs KRaft Mode: Migration</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=why-zookeeper-had-to-go>Why ZooKeeper Had to Go</h2><p>For the first decade of Kafka&rsquo;s existence, every Kafka cluster required an Apache ZooKeeper cluster to manage metadata: controller election, topic configurations, partition leadership, access control lists, and consumer group state.</p><p>This created real problems:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TB
-    subgraph OldArchitecture[&#34;Old Architecture: Kafka + ZooKeeper&#34;]
-        subgraph ZK[&#34;ZooKeeper Cluster (3+ nodes)&#34;]
-            Z1[&#34;ZK Node 1&#34;]
-            Z2[&#34;ZK Node 2&#34;]
-            Z3[&#34;ZK Node 3&#34;]
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#why-zookeeper-had-to-go>Why ZooKeeper Had to Go</a></li><li><a href=#kraft-kafka-raft-metadata-protocol>KRaft: Kafka Raft Metadata Protocol</a></li><li><a href=#roles-combined-vs-separated>Roles: Combined vs Separated</a></li><li><a href=#the-__cluster_metadata-topic>The __cluster_metadata Topic</a></li><li><a href=#controller-failover-in-kraft>Controller Failover in KRaft</a></li><li><a href=#kraft-configuration-reference>KRaft Configuration Reference</a></li><li><a href=#kraft-in-docker-compose-used-throughout-this-series>KRaft in Docker Compose (used throughout this series)</a></li><li><a href=#zookeeper-mode-vs-kraft-mode-migration>ZooKeeper Mode vs KRaft Mode: Migration</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=why-zookeeper-had-to-go>Why ZooKeeper Had to Go</h2><p>For the first decade of Kafka&rsquo;s existence, every Kafka cluster required an Apache ZooKeeper cluster to manage metadata: controller election, topic configurations, partition leadership, access control lists, and consumer group state.</p><p>This created real problems:</p><pre class=mermaid>flowchart TB
+    subgraph OldArchitecture["Old Architecture: Kafka + ZooKeeper"]
+        subgraph ZK["ZooKeeper Cluster (3+ nodes)"]
+            Z1["ZK Node 1"]
+            Z2["ZK Node 2"]
+            Z3["ZK Node 3"]
         end
-        subgraph Kafka[&#34;Kafka Cluster&#34;]
-            K1[&#34;Broker 1\n(Controller)&#34;]
-            K2[&#34;Broker 2&#34;]
-            K3[&#34;Broker 3&#34;]
+        subgraph Kafka["Kafka Cluster"]
+            K1["Broker 1\n(Controller)"]
+            K2["Broker 2"]
+            K3["Broker 3"]
         end
-        K1 &lt;--&gt;|metadata| ZK
-        K2 &lt;--&gt;|metadata| ZK
-        K3 &lt;--&gt;|metadata| ZK
+        K1 <-->|metadata| ZK
+        K2 <-->|metadata| ZK
+        K3 <-->|metadata| ZK
     end
 
-    Problems[&#34;Problems:\n• Must operate TWO distributed systems\n• ZooKeeper has different ops model\n• Controller must sync from ZK on startup\n• Metadata changes are slow (ZK round-trips)\n• Max ~200k partitions per cluster&#34;]
+    Problems["Problems:\n• Must operate TWO distributed systems\n• ZooKeeper has different ops model\n• Controller must sync from ZK on startup\n• Metadata changes are slow (ZK round-trips)\n• Max ~200k partitions per cluster"]
     OldArchitecture --- Problems
-</code></pre><p>Operational burden was the biggest issue: teams had to learn, monitor, and maintain ZooKeeper as a separate system alongside Kafka. ZooKeeper also became a bottleneck for large clusters — the metadata propagation path was slow (ZooKeeper → Controller → all brokers), limiting partition counts and rebalance speed.</p><hr><h2 id=kraft-kafka-raft-metadata-protocol>KRaft: Kafka Raft Metadata Protocol</h2><p>KRaft (Kafka Raft) replaces ZooKeeper with a built-in consensus protocol based on the Raft algorithm. Metadata is stored in a special internal topic (<code>__cluster_metadata</code>) that is itself managed by Kafka — no external system needed.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TB
-    subgraph KRaftArchitecture[&#34;KRaft Architecture (Kafka 3.3+)&#34;]
-        subgraph Controllers[&#34;Controller Quorum (Raft)&#34;]
-            C1[&#34;Broker 1\n⭐ Active Controller\n(Raft Leader)&#34;]
-            C2[&#34;Broker 2\n(Raft Follower)&#34;]
-            C3[&#34;Broker 3\n(Raft Follower)&#34;]
+</pre><p>Operational burden was the biggest issue: teams had to learn, monitor, and maintain ZooKeeper as a separate system alongside Kafka. ZooKeeper also became a bottleneck for large clusters — the metadata propagation path was slow (ZooKeeper → Controller → all brokers), limiting partition counts and rebalance speed.</p><hr><h2 id=kraft-kafka-raft-metadata-protocol>KRaft: Kafka Raft Metadata Protocol</h2><p>KRaft (Kafka Raft) replaces ZooKeeper with a built-in consensus protocol based on the Raft algorithm. Metadata is stored in a special internal topic (<code>__cluster_metadata</code>) that is itself managed by Kafka — no external system needed.</p><pre class=mermaid>flowchart TB
+    subgraph KRaftArchitecture["KRaft Architecture (Kafka 3.3+)"]
+        subgraph Controllers["Controller Quorum (Raft)"]
+            C1["Broker 1\n⭐ Active Controller\n(Raft Leader)"]
+            C2["Broker 2\n(Raft Follower)"]
+            C3["Broker 3\n(Raft Follower)"]
         end
-        subgraph DataBrokers[&#34;Data Brokers&#34;]
-            D4[&#34;Broker 4&#34;]
-            D5[&#34;Broker 5&#34;]
-            D6[&#34;Broker 6&#34;]
+        subgraph DataBrokers["Data Brokers"]
+            D4["Broker 4"]
+            D5["Broker 5"]
+            D6["Broker 6"]
         end
-        C1 &lt;--&gt;|Raft consensus| C2
-        C1 &lt;--&gt;|Raft consensus| C3
-        C1 --&gt;|metadata push| D4
-        C1 --&gt;|metadata push| D5
-        C1 --&gt;|metadata push| D6
+        C1 <-->|Raft consensus| C2
+        C1 <-->|Raft consensus| C3
+        C1 -->|metadata push| D4
+        C1 -->|metadata push| D5
+        C1 -->|metadata push| D6
     end
 
-    Benefits[&#34;Benefits:\n• One system to operate\n• Metadata stored in Kafka itself\n• Controller knows current state (no sync on startup)\n• Millions of partitions per cluster\n• Faster rebalances and failovers&#34;]
+    Benefits["Benefits:\n• One system to operate\n• Metadata stored in Kafka itself\n• Controller knows current state (no sync on startup)\n• Millions of partitions per cluster\n• Faster rebalances and failovers"]
     KRaftArchitecture --- Benefits
-</code></pre><hr><h2 id=roles-combined-vs-separated>Roles: Combined vs Separated</h2><p>In KRaft mode, each broker has one or more <strong>process roles</strong>:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
-    subgraph Combined[&#34;Combined Mode\n(small clusters, dev/test)&#34;]
-        CB1[&#34;Broker 1\nroles: broker, controller&#34;]
-        CB2[&#34;Broker 2\nroles: broker, controller&#34;]
-        CB3[&#34;Broker 3\nroles: broker, controller&#34;]
+</pre><hr><h2 id=roles-combined-vs-separated>Roles: Combined vs Separated</h2><p>In KRaft mode, each broker has one or more <strong>process roles</strong>:</p><pre class=mermaid>flowchart LR
+    subgraph Combined["Combined Mode\n(small clusters, dev/test)"]
+        CB1["Broker 1\nroles: broker, controller"]
+        CB2["Broker 2\nroles: broker, controller"]
+        CB3["Broker 3\nroles: broker, controller"]
     end
 
-    subgraph Separated[&#34;Dedicated Mode\n(production, large clusters)&#34;]
-        subgraph ControlPlane[&#34;Controller Nodes (3)&#34;]
-            CC1[&#34;Node 1\nroles: controller&#34;]
-            CC2[&#34;Node 2\nroles: controller&#34;]
-            CC3[&#34;Node 3\nroles: controller&#34;]
+    subgraph Separated["Dedicated Mode\n(production, large clusters)"]
+        subgraph ControlPlane["Controller Nodes (3)"]
+            CC1["Node 1\nroles: controller"]
+            CC2["Node 2\nroles: controller"]
+            CC3["Node 3\nroles: controller"]
         end
-        subgraph DataPlane[&#34;Broker Nodes (N)&#34;]
-            DB1[&#34;Node 4\nroles: broker&#34;]
-            DB2[&#34;Node 5\nroles: broker&#34;]
-            DB3[&#34;Node 6\nroles: broker&#34;]
+        subgraph DataPlane["Broker Nodes (N)"]
+            DB1["Node 4\nroles: broker"]
+            DB2["Node 5\nroles: broker"]
+            DB3["Node 6\nroles: broker"]
         end
     end
-</code></pre><ul><li><strong>Combined</strong>: every node is both a controller and a broker — simpler but the controller quorum shares resources with data workloads</li><li><strong>Dedicated</strong>: controller nodes are separate from data brokers — recommended for production clusters with high throughput, as controller nodes are not impacted by data plane load</li></ul><hr><h2 id=the-__cluster_metadata-topic>The __cluster_metadata Topic</h2><p>The controller quorum stores all cluster metadata in a special internal Kafka topic: <code>__cluster_metadata</code>. This topic:</p><ul><li>Has exactly <strong>1 partition</strong> (all metadata is ordered)</li><li>Uses <strong>Raft</strong> for replication among controllers (not the standard ISR mechanism)</li><li>Is <strong>not accessible</strong> to regular producers/consumers</li><li>Contains: broker registrations, topic/partition configurations, leadership records, ISR changes, access control entries</li></ul><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+</pre><ul><li><strong>Combined</strong>: every node is both a controller and a broker — simpler but the controller quorum shares resources with data workloads</li><li><strong>Dedicated</strong>: controller nodes are separate from data brokers — recommended for production clusters with high throughput, as controller nodes are not impacted by data plane load</li></ul><hr><h2 id=the-__cluster_metadata-topic>The __cluster_metadata Topic</h2><p>The controller quorum stores all cluster metadata in a special internal Kafka topic: <code>__cluster_metadata</code>. This topic:</p><ul><li>Has exactly <strong>1 partition</strong> (all metadata is ordered)</li><li>Uses <strong>Raft</strong> for replication among controllers (not the standard ISR mechanism)</li><li>Is <strong>not accessible</strong> to regular producers/consumers</li><li>Contains: broker registrations, topic/partition configurations, leadership records, ISR changes, access control entries</li></ul><pre class=mermaid>sequenceDiagram
     participant Admin as Admin (kafka-topics.sh)
     participant AC as Active Controller\n(Raft Leader)
     participant FC1 as Follower Controller 1
     participant FC2 as Follower Controller 2
     participant Broker as Data Broker
 
-    Admin-&gt;&gt;AC: Create topic &#34;orders&#34; (3 partitions, RF=3)
-    AC-&gt;&gt;AC: Append to __cluster_metadata
-    AC-&gt;&gt;FC1: Raft replicate
-    AC-&gt;&gt;FC2: Raft replicate
-    FC1--&gt;&gt;AC: Ack
-    FC2--&gt;&gt;AC: Ack
-    AC-&gt;&gt;Broker: Push metadata update (new partitions)
-    AC--&gt;&gt;Admin: Topic created
-</code></pre><p>Because metadata is stored in Kafka itself, the active controller always has the full, up-to-date metadata in memory. There is no synchronization lag on startup — a new controller becomes active in seconds.</p><hr><h2 id=controller-failover-in-kraft>Controller Failover in KRaft</h2><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    Admin->>AC: Create topic "orders" (3 partitions, RF=3)
+    AC->>AC: Append to __cluster_metadata
+    AC->>FC1: Raft replicate
+    AC->>FC2: Raft replicate
+    FC1-->>AC: Ack
+    FC2-->>AC: Ack
+    AC->>Broker: Push metadata update (new partitions)
+    AC-->>Admin: Topic created
+</pre><p>Because metadata is stored in Kafka itself, the active controller always has the full, up-to-date metadata in memory. There is no synchronization lag on startup — a new controller becomes active in seconds.</p><hr><h2 id=controller-failover-in-kraft>Controller Failover in KRaft</h2><pre class=mermaid>sequenceDiagram
     participant AC as Active Controller\n(Node 1, Raft term 1)
     participant F1 as Follower Controller\n(Node 2)
     participant F2 as Follower Controller\n(Node 3)
     participant Broker as Data Broker
 
     Note over AC: Node 1 crashes
-    F1-&gt;&gt;F1: Heartbeat timeout detected
-    F1-&gt;&gt;F2: RequestVote (term 2, I want to be leader)
-    F2--&gt;&gt;F1: VoteGranted
-    F1-&gt;&gt;F1: Become Active Controller (term 2)
-    F1-&gt;&gt;Broker: Notify: new controller is Node 2
+    F1->>F1: Heartbeat timeout detected
+    F1->>F2: RequestVote (term 2, I want to be leader)
+    F2-->>F1: VoteGranted
+    F1->>F1: Become Active Controller (term 2)
+    F1->>Broker: Notify: new controller is Node 2
     Note over F1,Broker: Failover in seconds\n(Raft is fast)
-</code></pre><p>Raft requires a quorum (majority) of controllers to be alive to elect a leader. With 3 controllers, the cluster tolerates 1 controller failure. With 5 controllers, it tolerates 2.</p><hr><h2 id=kraft-configuration-reference>KRaft Configuration Reference</h2><p>Every KRaft broker needs these properties:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#616e87;font-style:italic># Unique identifier for this node</span>
+</pre><p>Raft requires a quorum (majority) of controllers to be alive to elect a leader. With 3 controllers, the cluster tolerates 1 controller failure. With 5 controllers, it tolerates 2.</p><hr><h2 id=kraft-configuration-reference>KRaft Configuration Reference</h2><p>Every KRaft broker needs these properties:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#616e87;font-style:italic># Unique identifier for this node</span>
 </span></span><span style=display:flex><span><span style=color:#8fbcbb>node.id</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>1</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Roles this node plays</span>
@@ -160,14 +161,14 @@
 </span></span></code></pre></div><p>The <code>CLUSTER_ID</code> is a pre-generated UUID. The Confluent image handles the <code>kafka-storage format</code> step automatically when <code>CLUSTER_ID</code> is set.</p><p>Start Kafka:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker compose up -d
 </span></span><span style=display:flex><span>docker compose logs -f kafka  <span style=color:#616e87;font-style:italic># watch for &#34;started&#34; message</span>
 </span></span></code></pre></div><p>Verify it is running:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-broker-api-versions.sh --bootstrap-server localhost:9092
-</span></span></code></pre></div><hr><h2 id=zookeeper-mode-vs-kraft-mode-migration>ZooKeeper Mode vs KRaft Mode: Migration</h2><p>If you are migrating an existing cluster from ZooKeeper mode to KRaft, Kafka provides a migration path (available from Kafka 3.5+). The migration is done in phases:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
-    ZK[&#34;ZooKeeper Mode\n(all brokers)&#34;]
-    Bridge[&#34;Bridge Mode\n(ZK + KRaft controllers\nrunning together)&#34;]
-    KRaft[&#34;KRaft Mode\n(ZooKeeper decommissioned)&#34;]
+</span></span></code></pre></div><hr><h2 id=zookeeper-mode-vs-kraft-mode-migration>ZooKeeper Mode vs KRaft Mode: Migration</h2><p>If you are migrating an existing cluster from ZooKeeper mode to KRaft, Kafka provides a migration path (available from Kafka 3.5+). The migration is done in phases:</p><pre class=mermaid>flowchart LR
+    ZK["ZooKeeper Mode\n(all brokers)"]
+    Bridge["Bridge Mode\n(ZK + KRaft controllers\nrunning together)"]
+    KRaft["KRaft Mode\n(ZooKeeper decommissioned)"]
 
-    ZK --&gt;|&#34;Phase 1:\ndeploy KRaft controllers&#34;| Bridge
-    Bridge --&gt;|&#34;Phase 2:\nbrokers migrate to KRaft&#34;| KRaft
-</code></pre><p>For new deployments, always use KRaft mode. ZooKeeper mode is removed in Kafka 4.0.</p><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>ZooKeeper was Kafka&rsquo;s external metadata manager — KRaft replaces it with a built-in Raft consensus protocol</li><li>In KRaft mode, metadata is stored in <code>__cluster_metadata</code>, a special internal Kafka topic</li><li>Each node has a <code>process.roles</code>: <code>broker</code>, <code>controller</code>, or both (<code>broker,controller</code>)</li><li>The controller quorum uses Raft — typically 3 or 5 controller nodes; tolerates floor(N/2) failures</li><li>Combined mode (broker+controller on same node) is fine for development; use dedicated controllers in production</li><li>Format storage with a shared <code>CLUSTER_ID</code> before starting any node in a new cluster</li><li>For this series, a single Docker Compose node in combined mode is used for simplicity</li></ul><p>Next: <a href=/tutorials/spring-kafka/kafka-cluster-setup/>Starting a Kafka Cluster: Single-Broker and 3-Broker with KRaft</a> — hands-on setup of a local Kafka cluster using Docker Compose, ready for all upcoming examples.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+    ZK -->|"Phase 1:\ndeploy KRaft controllers"| Bridge
+    Bridge -->|"Phase 2:\nbrokers migrate to KRaft"| KRaft
+</pre><p>For new deployments, always use KRaft mode. ZooKeeper mode is removed in Kafka 4.0.</p><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>ZooKeeper was Kafka&rsquo;s external metadata manager — KRaft replaces it with a built-in Raft consensus protocol</li><li>In KRaft mode, metadata is stored in <code>__cluster_metadata</code>, a special internal Kafka topic</li><li>Each node has a <code>process.roles</code>: <code>broker</code>, <code>controller</code>, or both (<code>broker,controller</code>)</li><li>The controller quorum uses Raft — typically 3 or 5 controller nodes; tolerates floor(N/2) failures</li><li>Combined mode (broker+controller on same node) is fine for development; use dedicated controllers in production</li><li>Format storage with a shared <code>CLUSTER_ID</code> before starting any node in a new cluster</li><li>For this series, a single Docker Compose node in combined mode is used for simplicity</li></ul><p>Next: <a href=/tutorials/spring-kafka/kafka-cluster-setup/>Starting a Kafka Cluster: Single-Broker and 3-Broker with KRaft</a> — hands-on setup of a local Kafka cluster using Docker Compose, ready for all upcoming examples.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
 <span class=series-nav-title>Consumer Groups, Offsets, and the __consumer_offsets Topic</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-cluster-setup/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
 <span class=series-nav-title>Starting a Kafka Cluster: Single-Broker and 3-Broker with KRaft</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
 Copyright © 2026
