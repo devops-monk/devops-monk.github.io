@@ -1,0 +1,267 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Master the Kafka CLI tools — create and manage topics, produce messages with and without keys, consume from the beginning or live, view consumer group lag, and reset offsets."><title>Kafka CLI: Creating Topics, Producing, and Consuming Messages | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Kafka CLI: Creating Topics, Producing, and Consuming Messages"><meta name=twitter:description content="Master the Kafka CLI tools — create and manage topics, produce messages with and without keys, consume from the beginning or live, view consumer group lag, and reset offsets."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-kafka/kafka-cli/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Kafka CLI: Creating Topics, Producing, and Consuming Messages"><meta property="og:description" content="Master the Kafka CLI tools — create and manage topics, produce messages with and without keys, consume from the beginning or live, view consumer group lag, and reset offsets."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-04T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-04T00:00:00+00:00"><meta property="article:tag" content="Kafka"><meta property="article:tag" content="Kafka-Cli"><meta property="article:tag" content="Spring-Kafka"><meta property="article:tag" content="Tutorial"><meta itemprop=name content="Kafka CLI: Creating Topics, Producing, and Consuming Messages"><meta itemprop=description content="Master the Kafka CLI tools — create and manage topics, produce messages with and without keys, consume from the beginning or live, view consumer group lag, and reset offsets."><meta itemprop=datePublished content="2026-05-04T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-04T00:00:00+00:00"><meta itemprop=wordCount content="1399"><meta itemprop=keywords content="Kafka,Kafka-Cli,Spring-Kafka,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Kafka CLI: Creating Topics, Producing, and Consuming Messages","headline":"Kafka CLI: Creating Topics, Producing, and Consuming Messages","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-kafka/kafka-cli/","description":"Master the Kafka CLI tools — create and manage topics, produce messages with and without keys, consume from the beginning or live, view consumer group lag, and reset offsets.","wordCount":"1399","keywords":["kafka","kafka-cli","spring-kafka","tutorial"],"datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-kafka/kafka-cli/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-kafka/kafka-cli/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Kafka CLI: Creating Topics, Producing, and Consuming Messages\"","datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-kafka\/kafka-cli\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Kafka Tutorial</a></div><div class=series-progress><span class=series-part>Part 6 of 6</span><div class=series-progress-bar><div class=series-progress-fill style=width:100%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-cli/ rel=bookmark><time class="entry-date published" datetime=2026-05-04T00:00:00>May 04, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>7 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-cli/ rel=bookmark>Kafka CLI: Creating Topics, Producing, and Consuming Messages</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/>kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-cli/>kafka-cli</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/>spring-kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#why-learn-the-cli-first>Why Learn the CLI First?</a></li><li><a href=#kafka-topicssh-managing-topics>kafka-topics.sh: Managing Topics</a><ul><li><a href=#create-a-topic>Create a Topic</a></li><li><a href=#list-topics>List Topics</a></li><li><a href=#describe-a-topic>Describe a Topic</a></li><li><a href=#alter-topic-configuration>Alter Topic Configuration</a></li><li><a href=#delete-a-topic>Delete a Topic</a></li></ul></li><li><a href=#kafka-console-producersh-sending-messages>kafka-console-producer.sh: Sending Messages</a><ul><li><a href=#send-messages-without-a-key>Send Messages Without a Key</a></li><li><a href=#send-messages-with-keys>Send Messages With Keys</a></li><li><a href=#send-from-a-file>Send from a File</a></li></ul></li><li><a href=#kafka-console-consumersh-reading-messages>kafka-console-consumer.sh: Reading Messages</a><ul><li><a href=#consume-new-messages-live-tail>Consume New Messages (Live Tail)</a></li><li><a href=#consume-from-the-beginning>Consume From the Beginning</a></li><li><a href=#display-keys-and-metadata>Display Keys and Metadata</a></li><li><a href=#consume-with-a-consumer-group>Consume with a Consumer Group</a></li><li><a href=#consume-a-specific-number-of-messages>Consume a Specific Number of Messages</a></li></ul></li><li><a href=#kafka-consumer-groupssh-monitoring-consumer-groups>kafka-consumer-groups.sh: Monitoring Consumer Groups</a><ul><li><a href=#list-all-groups>List All Groups</a></li><li><a href=#describe-a-group-shows-lag>Describe a Group (Shows Lag)</a></li><li><a href=#describe-all-groups-at-once>Describe All Groups at Once</a></li></ul></li><li><a href=#resetting-consumer-group-offsets>Resetting Consumer Group Offsets</a></li><li><a href=#producing-and-consuming-in-order>Producing and Consuming in Order</a></li><li><a href=#kafka-configssh-viewing-and-changing-configuration>kafka-configs.sh: Viewing and Changing Configuration</a></li><li><a href=#topics-needed-for-this-series>Topics Needed for This Series</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=why-learn-the-cli-first>Why Learn the CLI First?</h2><p>Before writing any Spring code, understanding the Kafka CLI tools gives you the ability to:</p><ul><li>Verify your cluster is working correctly</li><li>Inspect topics and partitions</li><li>Debug consumer lag issues</li><li>Replay messages from specific offsets</li><li>Reset consumer groups during incident recovery</li></ul><p>All CLI tools are in Kafka&rsquo;s <code>bin/</code> directory. In Docker, run them with <code>docker exec</code>:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka &lt;tool&gt; &lt;args&gt;
+</span></span></code></pre></div><hr><h2 id=kafka-topicssh-managing-topics>kafka-topics.sh: Managing Topics</h2><h3 id=create-a-topic>Create a Topic</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --create <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --partitions <span style=color:#b48ead>3</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --replication-factor <span style=color:#b48ead>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Output: Created topic orders.</span>
+</span></span></code></pre></div><p>Key options:</p><ul><li><code>--partitions</code>: number of partitions (determines max parallelism)</li><li><code>--replication-factor</code>: how many copies of each partition (must be ≤ number of brokers)</li><li><code>--config retention.ms=604800000</code>: set topic-level config at creation</li></ul><h3 id=list-topics>List Topics</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --list
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Output:</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># orders</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># payments</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># __consumer_offsets</span>
+</span></span></code></pre></div><h3 id=describe-a-topic>Describe a Topic</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --describe <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders
+</span></span></code></pre></div><pre tabindex=0><code>Topic: orders   TopicId: xyz   PartitionCount: 3   ReplicationFactor: 1
+  Topic: orders   Partition: 0   Leader: 1   Replicas: 1   Isr: 1
+  Topic: orders   Partition: 1   Leader: 1   Replicas: 1   Isr: 1
+  Topic: orders   Partition: 2   Leader: 1   Replicas: 1   Isr: 1
+</code></pre><p>The columns:</p><ul><li><strong>Leader</strong>: broker ID that currently leads this partition</li><li><strong>Replicas</strong>: all broker IDs that hold a copy</li><li><strong>Isr</strong>: in-sync replicas (subset of Replicas that are caught up)</li></ul><h3 id=alter-topic-configuration>Alter Topic Configuration</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Change retention to 3 days</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-configs.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-type topics <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-name orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --alter <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --add-config retention.ms<span style=color:#81a1c1>=</span><span style=color:#b48ead>259200000</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Add partitions (can only increase, never decrease)</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --alter <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --partitions <span style=color:#b48ead>6</span>
+</span></span></code></pre></div><h3 id=delete-a-topic>Delete a Topic</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --delete <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders
+</span></span></code></pre></div><p>Deletion is permanent and immediate (assuming <code>delete.topic.enable=true</code>, the default).</p><hr><h2 id=kafka-console-producersh-sending-messages>kafka-console-producer.sh: Sending Messages</h2><h3 id=send-messages-without-a-key>Send Messages Without a Key</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> -it kafka kafka-console-producer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders
+</span></span></code></pre></div><p>The producer opens an interactive prompt. Type each message and press Enter:</p><pre tabindex=0><code>&gt;{&#34;orderId&#34;:&#34;1001&#34;,&#34;customerId&#34;:&#34;cust-1&#34;,&#34;total&#34;:99.99}
+&gt;{&#34;orderId&#34;:&#34;1002&#34;,&#34;customerId&#34;:&#34;cust-2&#34;,&#34;total&#34;:149.50}
+&gt;{&#34;orderId&#34;:&#34;1003&#34;,&#34;customerId&#34;:&#34;cust-3&#34;,&#34;total&#34;:29.99}
+&gt;^C
+</code></pre><p>Messages without keys are distributed round-robin across partitions (or using sticky partitioning within a batch).</p><h3 id=send-messages-with-keys>Send Messages With Keys</h3><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    Msg1[&#34;key=cust-1\nvalue=OrderPlaced&#34;]
+    Msg2[&#34;key=cust-2\nvalue=OrderPlaced&#34;]
+    Msg3[&#34;key=cust-1\nvalue=OrderShipped&#34;]
+
+    Msg1 --&gt;|&#34;hash(cust-1) % 3 = 0&#34;| P0[&#34;Partition 0&#34;]
+    Msg2 --&gt;|&#34;hash(cust-2) % 3 = 1&#34;| P1[&#34;Partition 1&#34;]
+    Msg3 --&gt;|&#34;hash(cust-1) % 3 = 0&#34;| P0
+</code></pre><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> -it kafka kafka-console-producer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property parse.key<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property key.separator<span style=color:#81a1c1>=</span>:
+</span></span></code></pre></div><p>Now type messages as <code>key:value</code>:</p><pre tabindex=0><code>&gt;cust-1:{&#34;orderId&#34;:&#34;1001&#34;,&#34;customerId&#34;:&#34;cust-1&#34;,&#34;total&#34;:99.99}
+&gt;cust-2:{&#34;orderId&#34;:&#34;1002&#34;,&#34;customerId&#34;:&#34;cust-2&#34;,&#34;total&#34;:149.50}
+&gt;cust-1:{&#34;orderId&#34;:&#34;1003&#34;,&#34;customerId&#34;:&#34;cust-1&#34;,&#34;total&#34;:29.99}
+&gt;^C
+</code></pre><p>Both messages for <code>cust-1</code> land on the same partition — their relative order is preserved.</p><h3 id=send-from-a-file>Send from a File</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># orders.txt</span>
+</span></span><span style=display:flex><span>cust-1:<span style=color:#81a1c1>{</span><span style=color:#a3be8c>&#34;orderId&#34;</span>:<span style=color:#a3be8c>&#34;1001&#34;</span>,<span style=color:#a3be8c>&#34;customerId&#34;</span>:<span style=color:#a3be8c>&#34;cust-1&#34;</span>,<span style=color:#a3be8c>&#34;total&#34;</span>:99.99<span style=color:#81a1c1>}</span>
+</span></span><span style=display:flex><span>cust-2:<span style=color:#81a1c1>{</span><span style=color:#a3be8c>&#34;orderId&#34;</span>:<span style=color:#a3be8c>&#34;1002&#34;</span>,<span style=color:#a3be8c>&#34;customerId&#34;</span>:<span style=color:#a3be8c>&#34;cust-2&#34;</span>,<span style=color:#a3be8c>&#34;total&#34;</span>:149.50<span style=color:#81a1c1>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-producer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property parse.key<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property key.separator<span style=color:#81a1c1>=</span>: <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  &lt; orders.txt
+</span></span></code></pre></div><hr><h2 id=kafka-console-consumersh-reading-messages>kafka-console-consumer.sh: Reading Messages</h2><h3 id=consume-new-messages-live-tail>Consume New Messages (Live Tail)</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-consumer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders
+</span></span></code></pre></div><p>Waits for new messages and prints them as they arrive. This is the default — equivalent to <code>tail -f</code> for a Kafka topic.</p><h3 id=consume-from-the-beginning>Consume From the Beginning</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-consumer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --from-beginning
+</span></span></code></pre></div><p>Reads every record ever written to the topic (within retention). This is the same as <code>auto.offset.reset=earliest</code> for a new consumer group.</p><h3 id=display-keys-and-metadata>Display Keys and Metadata</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-consumer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --from-beginning <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.key<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property key.separator<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34; =&gt; &#34;</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.partition<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.offset<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.timestamp<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span>
+</span></span></code></pre></div><p>Output:</p><pre tabindex=0><code>CreateTime:1714820400000   Partition:0   Offset:0   cust-1 =&gt; {&#34;orderId&#34;:&#34;1001&#34;,...}
+CreateTime:1714820401000   Partition:1   Offset:0   cust-2 =&gt; {&#34;orderId&#34;:&#34;1002&#34;,...}
+CreateTime:1714820402000   Partition:0   Offset:1   cust-1 =&gt; {&#34;orderId&#34;:&#34;1003&#34;,...}
+</code></pre><p>Notice both messages for <code>cust-1</code> are on Partition 0, in order.</p><h3 id=consume-with-a-consumer-group>Consume with a Consumer Group</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-consumer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --from-beginning <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --group inventory-service-cli
+</span></span></code></pre></div><p>This creates a consumer group named <code>inventory-service-cli</code>. Kafka tracks its offset in <code>__consumer_offsets</code>. If you stop and restart this command, it resumes from where it left off (not from the beginning, despite <code>--from-beginning</code> — that flag only applies when the group has no committed offset).</p><h3 id=consume-a-specific-number-of-messages>Consume a Specific Number of Messages</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-consumer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --from-beginning <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --max-messages <span style=color:#b48ead>5</span>
+</span></span></code></pre></div><hr><h2 id=kafka-consumer-groupssh-monitoring-consumer-groups>kafka-consumer-groups.sh: Monitoring Consumer Groups</h2><h3 id=list-all-groups>List All Groups</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --list
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Output:</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># inventory-service</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># notification-service</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># inventory-service-cli</span>
+</span></span></code></pre></div><h3 id=describe-a-group-shows-lag>Describe a Group (Shows Lag)</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --describe <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --group inventory-service
+</span></span></code></pre></div><pre tabindex=0><code>GROUP             TOPIC   PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG   CONSUMER-ID
+inventory-service orders  0          42              42              0     consumer-1-...
+inventory-service orders  1          38              40              2     consumer-2-...
+inventory-service orders  2          55              55              0     consumer-2-...
+</code></pre><p>The <code>LAG</code> column shows records not yet consumed per partition. Partition 1 has lag of 2 — the consumer is 2 records behind.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>xychart-beta
+    title &#34;Consumer Lag by Partition&#34;
+    x-axis [&#34;Partition 0&#34;, &#34;Partition 1&#34;, &#34;Partition 2&#34;]
+    y-axis &#34;Lag (records)&#34; 0 --&gt; 10
+    bar [0, 2, 0]
+</code></pre><h3 id=describe-all-groups-at-once>Describe All Groups at Once</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --describe <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --all-groups
+</span></span></code></pre></div><hr><h2 id=resetting-consumer-group-offsets>Resetting Consumer Group Offsets</h2><p>When you need to replay events — after a bug fix, during testing, or for a new consumer — reset the offsets.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
+    Decision{Reset strategy}
+    Earliest[&#34;--to-earliest\nReset to offset 0\n(replay everything)&#34;]
+    Latest[&#34;--to-latest\nReset to current end\n(skip all historical)&#34;]
+    Offset[&#34;--to-offset N\nReset to specific offset&#34;]
+    DateTime[&#34;--to-datetime 2024-01-15T10:00:00.000\nReset to timestamp&#34;]
+    Shift[&#34;--shift-by -100\nGo back 100 records&#34;]
+
+    Decision --&gt; Earliest
+    Decision --&gt; Latest
+    Decision --&gt; Offset
+    Decision --&gt; DateTime
+    Decision --&gt; Shift
+</code></pre><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Reset to beginning (replay all messages)</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --group inventory-service <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --reset-offsets --to-earliest <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --execute
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Reset to a specific offset on partition 0</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --group inventory-service <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders:0 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --reset-offsets --to-offset <span style=color:#b48ead>100</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --execute
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Go back 50 records from current position</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --group inventory-service <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --reset-offsets --shift-by -50 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --execute
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Reset to a specific timestamp</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-consumer-groups.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --group inventory-service <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --reset-offsets --to-datetime 2024-01-15T00:00:00.000 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --execute
+</span></span></code></pre></div><p><strong>Important</strong>: the consumer group must be stopped before resetting offsets (no active members).</p><hr><h2 id=producing-and-consuming-in-order>Producing and Consuming in Order</h2><p>A key guarantee in Kafka: records with the same key on the same partition are always consumed in the order they were produced.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant Producer
+    participant P0 as Partition 0\n(key=cust-1)
+    participant Consumer
+
+    Producer-&gt;&gt;P0: offset 0: OrderPlaced (cust-1)
+    Producer-&gt;&gt;P0: offset 1: PaymentProcessed (cust-1)
+    Producer-&gt;&gt;P0: offset 2: OrderShipped (cust-1)
+
+    Consumer-&gt;&gt;P0: Fetch from offset 0
+    P0--&gt;&gt;Consumer: offset 0: OrderPlaced ✓
+    Consumer-&gt;&gt;P0: Fetch from offset 1
+    P0--&gt;&gt;Consumer: offset 1: PaymentProcessed ✓
+    Consumer-&gt;&gt;P0: Fetch from offset 2
+    P0--&gt;&gt;Consumer: offset 2: OrderShipped ✓
+
+    Note over Consumer: Events for cust-1 always arrive\nin the order they were produced
+</code></pre><p>Test this with the CLI:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Producer: send ordered events for cust-1</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> -it kafka kafka-console-producer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property parse.key<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property key.separator<span style=color:#81a1c1>=</span>:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Type:</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># cust-1:{&#34;event&#34;:&#34;OrderPlaced&#34;,&#34;orderId&#34;:&#34;1001&#34;}</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># cust-1:{&#34;event&#34;:&#34;PaymentProcessed&#34;,&#34;orderId&#34;:&#34;1001&#34;}</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># cust-1:{&#34;event&#34;:&#34;OrderShipped&#34;,&#34;orderId&#34;:&#34;1001&#34;}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Consumer: verify order</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-console-consumer.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --topic orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --from-beginning <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.key<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.partition<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --property print.offset<span style=color:#81a1c1>=</span><span style=color:#81a1c1>true</span>
+</span></span></code></pre></div><p>All three cust-1 events appear on the same partition in the same order.</p><hr><h2 id=kafka-configssh-viewing-and-changing-configuration>kafka-configs.sh: Viewing and Changing Configuration</h2><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># View topic configuration (only non-default values)</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-configs.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-type topics <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-name orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --describe
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># View all configuration including defaults</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-configs.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-type topics <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-name orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --describe <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --all
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Change message max bytes for a topic</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-configs.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-type topics <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --entity-name orders <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --alter <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --add-config max.message.bytes<span style=color:#81a1c1>=</span><span style=color:#b48ead>2097152</span>
+</span></span></code></pre></div><hr><h2 id=topics-needed-for-this-series>Topics Needed for This Series</h2><p>Create all topics used across the tutorial series at once:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>for</span> TOPIC in orders payments inventory-updates notifications<span style=color:#eceff4>;</span> <span style=color:#81a1c1;font-weight:700>do</span>
+</span></span><span style=display:flex><span>  docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    --create <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    --topic $TOPIC <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    --partitions <span style=color:#b48ead>3</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    --replication-factor <span style=color:#b48ead>1</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>    --if-not-exists
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>done</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Verify all created</span>
+</span></span><span style=display:flex><span>docker <span style=color:#81a1c1>exec</span> kafka kafka-topics.sh <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --bootstrap-server localhost:9092 <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>  --list
+</span></span></code></pre></div><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li><code>kafka-topics.sh</code> creates, describes, lists, alters, and deletes topics</li><li><code>kafka-console-producer.sh</code> with <code>--property parse.key=true</code> sends keyed messages — keys route to the same partition every time</li><li><code>kafka-console-consumer.sh --from-beginning</code> reads all historical records; without it, only new records are received</li><li><code>kafka-consumer-groups.sh --describe</code> shows <code>LAG</code> per partition — the primary indicator of a healthy vs. struggling consumer</li><li>Offset reset is a powerful recovery tool: <code>--to-earliest</code>, <code>--to-latest</code>, <code>--to-offset</code>, <code>--to-datetime</code>, <code>--shift-by</code></li><li>Records with the same key on the same partition are always consumed in production order</li></ul><p>Next: <a href=/tutorials/spring-kafka/kafka-producer-basics/>Kafka Producer in Spring Boot: KafkaTemplate Basics</a> — replace the CLI producer with a Spring Boot application using <code>KafkaTemplate</code>.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-cluster-setup/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>Starting a Kafka Cluster: Single-Broker and 3-Broker with KRaft</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>

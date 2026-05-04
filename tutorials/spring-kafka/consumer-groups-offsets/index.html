@@ -1,0 +1,184 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Understand how Kafka consumer groups enable parallel processing, how offset commits work, what the __consumer_offsets internal topic stores, and what happens when consumers join, leave, or restart."><title>Consumer Groups, Offsets, and the __consumer_offsets Topic | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Consumer Groups, Offsets, and the __consumer_offsets Topic"><meta name=twitter:description content="Understand how Kafka consumer groups enable parallel processing, how offset commits work, what the __consumer_offsets internal topic stores, and what happens when consumers join, leave, or restart."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Consumer Groups, Offsets, and the __consumer_offsets Topic"><meta property="og:description" content="Understand how Kafka consumer groups enable parallel processing, how offset commits work, what the __consumer_offsets internal topic stores, and what happens when consumers join, leave, or restart."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-04T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-04T00:00:00+00:00"><meta property="article:tag" content="Kafka"><meta property="article:tag" content="Spring-Kafka"><meta property="article:tag" content="Spring-Boot"><meta property="article:tag" content="Java"><meta property="article:tag" content="Consumer-Groups"><meta property="article:tag" content="Offsets"><meta itemprop=name content="Consumer Groups, Offsets, and the __consumer_offsets Topic"><meta itemprop=description content="Understand how Kafka consumer groups enable parallel processing, how offset commits work, what the __consumer_offsets internal topic stores, and what happens when consumers join, leave, or restart."><meta itemprop=datePublished content="2026-05-04T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-04T00:00:00+00:00"><meta itemprop=wordCount content="1384"><meta itemprop=keywords content="Kafka,Spring-Kafka,Spring-Boot,Java,Consumer-Groups,Offsets,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Consumer Groups, Offsets, and the __consumer_offsets Topic","headline":"Consumer Groups, Offsets, and the __consumer_offsets Topic","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/","description":"Understand how Kafka consumer groups enable parallel processing, how offset commits work, what the __consumer_offsets internal topic stores, and what happens when consumers join, leave, or restart.","wordCount":"1384","keywords":["kafka","spring-kafka","spring-boot","java","consumer-groups","offsets","tutorial"],"datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Consumer Groups, Offsets, and the __consumer_offsets Topic\"","datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-kafka\/consumer-groups-offsets\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Kafka Tutorial</a></div><div class=series-progress><span class=series-part>Part 3 of 6</span><div class=series-progress-bar><div class=series-progress-fill style=width:50%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/ rel=bookmark><time class="entry-date published" datetime=2026-05-04T00:00:00>May 04, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>7 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/ rel=bookmark>Consumer Groups, Offsets, and the __consumer_offsets Topic</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/>kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/>spring-kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/>java</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer-groups/>consumer-groups</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/offsets/>offsets</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#what-is-a-consumer-group>What Is a Consumer Group?</a></li><li><a href=#multiple-consumer-groups-independent-reads>Multiple Consumer Groups: Independent Reads</a></li><li><a href=#offsets-tracking-position-in-the-log>Offsets: Tracking Position in the Log</a></li><li><a href=#the-__consumer_offsets-topic>The __consumer_offsets Topic</a></li><li><a href=#offset-commit-strategies>Offset Commit Strategies</a><ul><li><a href=#auto-commit-default>Auto-Commit (Default)</a></li><li><a href=#manual-commit>Manual Commit</a></li></ul></li><li><a href=#rebalancing-partitions-moving-between-consumers>Rebalancing: Partitions Moving Between Consumers</a><ul><li><a href=#cooperative-incremental-rebalancing>Cooperative (Incremental) Rebalancing</a></li></ul></li><li><a href=#consumer-group-state-machine>Consumer Group State Machine</a></li><li><a href=#what-happens-on-consumer-restart>What Happens on Consumer Restart</a></li><li><a href=#lag-the-distance-between-producer-and-consumer>Lag: The Distance Between Producer and Consumer</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=what-is-a-consumer-group>What Is a Consumer Group?</h2><p>A <strong>consumer group</strong> is a set of consumer instances that jointly consume a topic. Kafka assigns each partition to exactly one consumer within the group at a time. This is what enables parallel processing: multiple consumers in the same group read different partitions simultaneously.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    subgraph Topic[&#34;Topic: orders — 4 partitions&#34;]
+        P0[&#34;Partition 0&#34;]
+        P1[&#34;Partition 1&#34;]
+        P2[&#34;Partition 2&#34;]
+        P3[&#34;Partition 3&#34;]
+    end
+
+    subgraph CG[&#34;Consumer Group: inventory-service&#34;]
+        C1[&#34;Consumer Instance 1&#34;]
+        C2[&#34;Consumer Instance 2&#34;]
+    end
+
+    P0 --&gt; C1
+    P1 --&gt; C1
+    P2 --&gt; C2
+    P3 --&gt; C2
+
+    Note1[&#34;2 consumers, 4 partitions\n→ each consumer handles 2 partitions\n→ 2× throughput vs single consumer&#34;]
+</code></pre><p>Every consumer instance identifies itself with a <code>group.id</code>. All instances with the same <code>group.id</code> form one consumer group. Kafka&rsquo;s group coordinator (a broker) manages the assignment.</p><hr><h2 id=multiple-consumer-groups-independent-reads>Multiple Consumer Groups: Independent Reads</h2><p>Different consumer groups are completely independent. Each group maintains its own offset per partition — meaning the same events are delivered to every group that subscribes to the topic.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    subgraph Topic[&#34;Topic: orders&#34;]
+        P0[&#34;Partition 0&#34;]
+        P1[&#34;Partition 1&#34;]
+    end
+
+    subgraph CG1[&#34;Consumer Group: inventory-service\n(at offset 150 on P0)&#34;]
+        Inv[&#34;Inventory Consumer&#34;]
+    end
+
+    subgraph CG2[&#34;Consumer Group: notification-service\n(at offset 90 on P0)&#34;]
+        Notif[&#34;Notification Consumer&#34;]
+    end
+
+    subgraph CG3[&#34;Consumer Group: analytics-service\n(at offset 0 — replaying)&#34;]
+        Analytics[&#34;Analytics Consumer&#34;]
+    end
+
+    P0 --&gt; Inv
+    P0 --&gt; Notif
+    P0 --&gt; Analytics
+    P1 --&gt; Inv
+    P1 --&gt; Notif
+    P1 --&gt; Analytics
+</code></pre><p>This is fundamentally different from a traditional message queue where a message is consumed by exactly one consumer. In Kafka, every consumer group gets every message — making it behave like a publish-subscribe system at the group level.</p><hr><h2 id=offsets-tracking-position-in-the-log>Offsets: Tracking Position in the Log</h2><p>An <strong>offset</strong> is a sequential integer identifying a record&rsquo;s position within a partition. Each partition has its own independent offset sequence starting at 0.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>block-beta
+  columns 8
+  block:partition[&#34;Partition 0&#34;]:8
+    r0[&#34;Offset 0\nOrderPlaced\ncust-1&#34;] r1[&#34;Offset 1\nOrderPlaced\ncust-3&#34;] r2[&#34;Offset 2\nOrderCancelled\ncust-1&#34;] r3[&#34;Offset 3\nOrderPlaced\ncust-7&#34;] r4[&#34;Offset 4\nOrderShipped\ncust-3&#34;] r5[&#34;Offset 5\n(not yet\nwritten)&#34;] r6[&#34;  &#34;] r7[&#34;← HEAD\n(LEO=5)&#34;]
+  end
+  r0:::consumed
+  r1:::consumed
+  r2:::consumed
+  r3:::fetched
+  r4:::available
+
+classDef consumed fill:#86efac,stroke:#16a34a
+classDef fetched fill:#fde68a,stroke:#d97706
+classDef available fill:#e5e7eb,stroke:#9ca3af
+</code></pre><ul><li><strong>Green (0–2)</strong>: consumed and committed — consumer has confirmed processing</li><li><strong>Yellow (3)</strong>: fetched but not yet committed — consumer is processing</li><li><strong>Grey (4)</strong>: not yet fetched</li><li><strong>LEO (Log End Offset)</strong>: the next offset to be written (=5 here)</li></ul><p>The consumer&rsquo;s <strong>committed offset</strong> is the position Kafka stores on behalf of the consumer. On restart, the consumer resumes from its committed offset — it will re-receive offset 3 (the last uncommitted record).</p><hr><h2 id=the-__consumer_offsets-topic>The __consumer_offsets Topic</h2><p>Kafka stores committed offsets in an internal topic called <code>__consumer_offsets</code>. It is a regular Kafka topic with 50 partitions by default, using log compaction to retain only the latest offset per (group, topic, partition) key.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
+    Consumer[&#34;Consumer\ngroup: inventory-service&#34;]
+    Commit[&#34;OffsetCommitRequest\ngroup=inventory-service\ntopic=orders\npartition=0\noffset=42&#34;]
+    CO[&#34;__consumer_offsets\n(internal topic, 50 partitions)&#34;]
+    Restart[&#34;Consumer restarts&#34;]
+    Fetch[&#34;OffsetFetchRequest\ngroup=inventory-service\ntopic=orders\npartition=0&#34;]
+    Resume[&#34;Resume from offset 42&#34;]
+
+    Consumer --&gt;|&#34;processes record 42,\ncommits offset 43&#34;| Commit
+    Commit --&gt;|persisted in| CO
+    Restart --&gt;|on startup| Fetch
+    Fetch --&gt;|reads from| CO
+    CO --&gt;|&#34;returns 43&#34;| Resume
+</code></pre><p>The key stored is <code>(group.id, topic, partition)</code>. The value is the committed offset plus metadata (timestamp, leader epoch, optional commit metadata string).</p><hr><h2 id=offset-commit-strategies>Offset Commit Strategies</h2><h3 id=auto-commit-default>Auto-Commit (Default)</h3><p>With <code>enable.auto.commit=true</code>, the consumer automatically commits the highest fetched offset at a fixed interval (<code>auto.commit.interval.ms</code>, default 5000ms).</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant Consumer
+    participant Kafka
+
+    Consumer-&gt;&gt;Kafka: fetch(partition=0, offset=10)
+    Kafka--&gt;&gt;Consumer: records 10, 11, 12, 13, 14
+    Consumer-&gt;&gt;Consumer: process records (no explicit commit)
+    Note over Consumer: 5 seconds pass
+    Consumer-&gt;&gt;Kafka: commitOffset(partition=0, offset=15) ← auto
+    Consumer-&gt;&gt;Kafka: fetch(partition=0, offset=15)
+    Kafka--&gt;&gt;Consumer: records 15, 16...
+
+    Note over Consumer,Kafka: Problem: if consumer crashes at offset 12,\nit restarts at offset 10 (last auto-committed)\n→ records 10-12 are re-processed (at-least-once)
+</code></pre><p>Auto-commit gives <strong>at-least-once</strong> delivery semantics — records may be re-processed after a crash. It does not give <strong>at-most-once</strong> (you could miss records) or <strong>exactly-once</strong> (without transactions).</p><h3 id=manual-commit>Manual Commit</h3><p>With <code>enable.auto.commit=false</code>, the application controls when offsets are committed:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant Consumer
+    participant Kafka
+
+    Consumer-&gt;&gt;Kafka: fetch(partition=0, offset=10)
+    Kafka--&gt;&gt;Consumer: records 10, 11, 12
+    Consumer-&gt;&gt;Consumer: process record 10 ✓
+    Consumer-&gt;&gt;Consumer: process record 11 ✓
+    Consumer-&gt;&gt;Consumer: process record 12 ✓
+    Consumer-&gt;&gt;Kafka: commitSync(partition=0, offset=13)
+    Note over Consumer,Kafka: Offset committed only AFTER\nsuccessful processing\n→ at-least-once (safer than auto-commit)
+</code></pre><p>Manual commit is explored in depth in the <a href=/tutorials/spring-kafka/offset-management/>Offset Management</a> article.</p><hr><h2 id=rebalancing-partitions-moving-between-consumers>Rebalancing: Partitions Moving Between Consumers</h2><p>When a consumer joins or leaves a group, Kafka <strong>rebalances</strong> — it reassigns partitions among the remaining consumers. During rebalancing, all consumers in the group stop consuming (stop-the-world).</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant Coordinator as Group Coordinator\n(a broker)
+    participant C1 as Consumer 1
+    participant C2 as Consumer 2
+    participant C3 as Consumer 3 (new)
+
+    Note over C1,C2: Before: C1 owns P0+P1, C2 owns P2+P3
+    C3-&gt;&gt;Coordinator: JoinGroup request
+    Coordinator-&gt;&gt;C1: Revoke all partitions
+    Coordinator-&gt;&gt;C2: Revoke all partitions
+    C1-&gt;&gt;C1: Commit offsets for P0, P1
+    C2-&gt;&gt;C2: Commit offsets for P2, P3
+    Coordinator-&gt;&gt;Coordinator: Calculate new assignment
+    Coordinator-&gt;&gt;C1: Assign P0, P1
+    Coordinator-&gt;&gt;C2: Assign P2
+    Coordinator-&gt;&gt;C3: Assign P3
+    Note over C1,C3: After: C1→P0+P1, C2→P2, C3→P3\nAll consumers resume
+</code></pre><p>Rebalancing causes a brief pause in processing (typically 1–30 seconds depending on configuration). For long-running processing jobs, this pause can be significant. The <code>max.poll.interval.ms</code> setting (default 5 minutes) controls how long the coordinator waits before declaring a consumer dead.</p><h3 id=cooperative-incremental-rebalancing>Cooperative (Incremental) Rebalancing</h3><p>Since Kafka 2.4, <strong>cooperative rebalancing</strong> (<code>CooperativeStickyAssignor</code>) avoids the stop-the-world pause. Only the partitions that need to move are revoked — consumers keep their other partitions running during the transition.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant C1 as Consumer 1\n(owns P0, P1)
+    participant C2 as Consumer 2\n(owns P2, P3)
+    participant C3 as Consumer 3 (joining)
+    participant Coord as Coordinator
+
+    C3-&gt;&gt;Coord: JoinGroup
+    Note over C1,C2: Round 1: Only revoke P3 from C2
+    Coord-&gt;&gt;C2: Revoke P3 (keep P2)
+    C2-&gt;&gt;Coord: RevokeComplete
+    Coord-&gt;&gt;C3: Assign P3
+    Note over C1,C3: C1 and C2 keep consuming during this\n→ no stop-the-world
+</code></pre><p>Enable cooperative rebalancing in Spring Kafka:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#8fbcbb>spring.kafka.consumer.properties.partition.assignment.strategy</span><span style=color:#81a1c1>=</span><span style=color:#a3be8c>\
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>  org.apache.kafka.clients.consumer.CooperativeStickyAssignor</span>
+</span></span></code></pre></div><hr><h2 id=consumer-group-state-machine>Consumer Group State Machine</h2><p>A consumer group goes through several states managed by the group coordinator:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>stateDiagram-v2
+    [*] --&gt; Empty : No members
+    Empty --&gt; PreparingRebalance : Consumer joins
+    PreparingRebalance --&gt; CompletingRebalance : All members joined (JoinGroup phase)
+    CompletingRebalance --&gt; Stable : Leader sends assignment (SyncGroup phase)
+    Stable --&gt; PreparingRebalance : Member joins/leaves/heartbeat timeout
+    Stable --&gt; Empty : All members leave
+    Empty --&gt; Dead : Group expires (offsets deleted after offsets.retention.minutes)
+</code></pre><ul><li><strong>Empty</strong>: no consumers, but offsets may still be stored</li><li><strong>PreparingRebalance</strong>: waiting for all members to join</li><li><strong>CompletingRebalance</strong>: leader calculates and submits assignment</li><li><strong>Stable</strong>: normal operation — partitions assigned, consumers processing</li><li><strong>Dead</strong>: group has been deleted (offsets cleaned up)</li></ul><hr><h2 id=what-happens-on-consumer-restart>What Happens on Consumer Restart</h2><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
+    Start[&#34;Consumer starts\ngroup.id = inventory-service&#34;]
+    FetchOffset[&#34;Fetch committed offset from\n__consumer_offsets\n(group, topic, partition)&#34;]
+    HasOffset{Offset exists?}
+    NoOffset[&#34;No committed offset\n→ apply auto.offset.reset&#34;]
+    Resume[&#34;Resume from committed offset&#34;]
+
+    AutoReset{auto.offset.reset}
+    Earliest[&#34;earliest → read from offset 0\n(re-process entire topic)&#34;]
+    Latest[&#34;latest → read only new records\n(skip historical events)&#34;]
+    NoneReset[&#34;none → throw exception&#34;]
+
+    Start --&gt; FetchOffset
+    FetchOffset --&gt; HasOffset
+    HasOffset --&gt;|Yes| Resume
+    HasOffset --&gt;|No| NoOffset
+    NoOffset --&gt; AutoReset
+    AutoReset --&gt;|earliest| Earliest
+    AutoReset --&gt;|latest| Latest
+    AutoReset --&gt;|none| NoneReset
+</code></pre><p><code>auto.offset.reset</code> only applies when no committed offset exists for the group — typically the first time a consumer group reads a topic, or after offsets expire (controlled by <code>offsets.retention.minutes</code>, default 7 days).</p><hr><h2 id=lag-the-distance-between-producer-and-consumer>Lag: The Distance Between Producer and Consumer</h2><p><strong>Consumer lag</strong> is the difference between the latest offset (LEO) and the consumer&rsquo;s committed offset. It tells you how far behind a consumer is.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>xychart-beta
+    title &#34;Consumer Lag Over Time (Partition 0)&#34;
+    x-axis [00:00, 00:05, 00:10, 00:15, 00:20, 00:25, 00:30]
+    y-axis &#34;Lag (records)&#34; 0 --&gt; 5000
+    line [200, 800, 3000, 4500, 3000, 1000, 150]
+</code></pre><p>High lag means the consumer is falling behind the producer. Causes:</p><ul><li>Consumer processing is too slow (CPU-bound, database calls, external API calls)</li><li>Consumer has too few instances (fewer instances than partitions)</li><li>Consumer is stuck (exception, deadlock)</li></ul><p>Monitor lag with <code>kafka-consumer-groups.sh --describe</code> or Micrometer metrics. Alert when lag grows continuously. Covered in depth in <a href=/tutorials/spring-kafka/monitoring/>Monitoring</a>.</p><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>A consumer group is a set of instances sharing work: each partition is assigned to exactly one instance in the group</li><li>Different consumer groups are independent — every group gets every message, enabling pub-sub semantics</li><li>Offsets are sequential position numbers per partition; committed offsets are stored in <code>__consumer_offsets</code></li><li>Auto-commit (default) periodically commits offsets — gives at-least-once delivery semantics</li><li>Manual commit gives precise control — commit after successful processing</li><li>Rebalancing reassigns partitions when the group membership changes; cooperative rebalancing minimizes the pause</li><li><code>auto.offset.reset</code> controls where a new consumer group starts reading (earliest, latest, or exception)</li><li>Consumer lag measures how far behind the consumer is relative to the producer&rsquo;s latest offset</li></ul><p>Next: <a href=/tutorials/spring-kafka/kraft-mode/>KRaft Mode: Running Kafka Without ZooKeeper</a> — the new consensus protocol that eliminates the ZooKeeper dependency and simplifies Kafka cluster operations.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>Kafka Architecture: Brokers, Topics, Partitions, and Replicas</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/spring-kafka/kraft-mode/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
+<span class=series-nav-title>KRaft Mode: Running Kafka Without ZooKeeper</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>

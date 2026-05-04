@@ -1,0 +1,185 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Deep-dive into Apache Kafka's internal architecture — brokers, the controller, topics, partitions, replication, leader election, and what happens when a broker fails."><title>Kafka Architecture: Brokers, Topics, Partitions, and Replicas | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Kafka Architecture: Brokers, Topics, Partitions, and Replicas"><meta name=twitter:description content="Deep-dive into Apache Kafka's internal architecture — brokers, the controller, topics, partitions, replication, leader election, and what happens when a broker fails."><meta property="og:url" content="https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Kafka Architecture: Brokers, Topics, Partitions, and Replicas"><meta property="og:description" content="Deep-dive into Apache Kafka's internal architecture — brokers, the controller, topics, partitions, replication, leader election, and what happens when a broker fails."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="tutorials"><meta property="article:published_time" content="2026-05-04T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-04T00:00:00+00:00"><meta property="article:tag" content="Kafka"><meta property="article:tag" content="Spring-Kafka"><meta property="article:tag" content="Spring-Boot"><meta property="article:tag" content="Java"><meta property="article:tag" content="Architecture"><meta property="article:tag" content="Tutorial"><meta itemprop=name content="Kafka Architecture: Brokers, Topics, Partitions, and Replicas"><meta itemprop=description content="Deep-dive into Apache Kafka's internal architecture — brokers, the controller, topics, partitions, replication, leader election, and what happens when a broker fails."><meta itemprop=datePublished content="2026-05-04T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-04T00:00:00+00:00"><meta itemprop=wordCount content="1284"><meta itemprop=keywords content="Kafka,Spring-Kafka,Spring-Boot,Java,Architecture,Tutorial"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Kafka Architecture: Brokers, Topics, Partitions, and Replicas","headline":"Kafka Architecture: Brokers, Topics, Partitions, and Replicas","inLanguage":"en-US","url":"https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/","description":"Deep-dive into Apache Kafka's internal architecture — brokers, the controller, topics, partitions, replication, leader election, and what happens when a broker fails.","wordCount":"1284","keywords":["kafka","spring-kafka","spring-boot","java","architecture","tutorial"],"datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Kafka Architecture: Brokers, Topics, Partitions, and Replicas\"","datePublished":"2026-05-04T00:00:00Z","dateModified":"2026-05-04T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/tutorials\/spring-kafka\/kafka-architecture\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-archive content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><div class=series-header><div class=series-label><a href=/tutorials/spring-boot/>Spring Kafka Tutorial</a></div><div class=series-progress><span class=series-part>Part 2 of 6</span><div class=series-progress-bar><div class=series-progress-fill style=width:33%></div></div></div></div><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/ rel=bookmark><time class="entry-date published" datetime=2026-05-04T00:00:00>May 04, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>7 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/tutorials/spring-kafka/kafka-architecture/ rel=bookmark>Kafka Architecture: Brokers, Topics, Partitions, and Replicas</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/>kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/>spring-kafka</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/>spring-boot</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/>java</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/architecture/>architecture</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#the-cluster-brokers-and-the-controller>The Cluster: Brokers and the Controller</a></li><li><a href=#topics-named-event-streams>Topics: Named Event Streams</a></li><li><a href=#partitions-the-unit-of-parallelism>Partitions: The Unit of Parallelism</a><ul><li><a href=#how-records-are-routed-to-partitions>How Records Are Routed to Partitions</a></li></ul></li><li><a href=#replicas-fault-tolerance>Replicas: Fault Tolerance</a><ul><li><a href=#in-sync-replicas-isr>In-Sync Replicas (ISR)</a></li></ul></li><li><a href=#what-happens-when-a-broker-fails>What Happens When a Broker Fails</a></li><li><a href=#log-retention-why-kafka-is-not-a-queue>Log Retention: Why Kafka Is Not a Queue</a></li><li><a href=#the-record-structure>The Record Structure</a></li><li><a href=#partition-count-and-consumer-parallelism>Partition Count and Consumer Parallelism</a></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></nav><div class=entry-content><h2 id=the-cluster-brokers-and-the-controller>The Cluster: Brokers and the Controller</h2><p>A Kafka cluster is a group of servers, each called a <strong>broker</strong>. Brokers store data and serve producer/consumer requests. One broker in the cluster acts as the <strong>controller</strong> — it manages partition leadership, handles broker joins and departures, and coordinates rebalancing.</p><p>In KRaft mode (Kafka 3.3+, the default from Kafka 4.0), the controller is built into Kafka itself — no ZooKeeper needed.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TB
+    subgraph Cluster[&#34;Kafka Cluster (KRaft mode)&#34;]
+        direction TB
+        B1[&#34;Broker 1\n⭐ Controller\n(manages metadata)&#34;]
+        B2[&#34;Broker 2\n(data broker)&#34;]
+        B3[&#34;Broker 3\n(data broker)&#34;]
+        B1 &lt;--&gt;|Raft consensus| B2
+        B1 &lt;--&gt;|Raft consensus| B3
+        B2 &lt;--&gt;|Raft consensus| B3
+    end
+
+    Producer[&#34;Producer&#34;] --&gt;|send records| B1
+    Producer --&gt;|send records| B2
+    Consumer[&#34;Consumer&#34;] --&gt;|fetch records| B2
+    Consumer --&gt;|fetch records| B3
+</code></pre><p>Each broker is identified by a numeric <code>node.id</code> (e.g. 1, 2, 3). Producers and consumers connect to any broker and are redirected to the correct one automatically.</p><hr><h2 id=topics-named-event-streams>Topics: Named Event Streams</h2><p>A <strong>topic</strong> is a named, append-only log. Think of it as a category or feed: <code>orders</code>, <code>payments</code>, <code>inventory-updates</code>. Producers write to topics; consumers read from them.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    OrderSvc[&#34;Order Service\n(Producer)&#34;]
+    InvSvc[&#34;Inventory Service\n(Consumer)&#34;]
+    PaySvc[&#34;Payment Service\n(Consumer)&#34;]
+    NotifSvc[&#34;Notification Service\n(Consumer)&#34;]
+
+    OrderSvc --&gt;|publish| orders[/&#34;Topic: orders&#34;/]
+    orders --&gt; InvSvc
+    orders --&gt; PaySvc
+    orders --&gt; NotifSvc
+</code></pre><p>Topics are not tied to a single broker. Their data is spread across multiple brokers via partitions.</p><hr><h2 id=partitions-the-unit-of-parallelism>Partitions: The Unit of Parallelism</h2><p>Every topic is divided into <strong>partitions</strong>. A partition is an ordered, immutable sequence of records. Each record in a partition has a unique sequential number called an <strong>offset</strong>.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>block-beta
+  columns 7
+  block:topic[&#34;Topic: orders (3 partitions)&#34;]:7
+    block:p0[&#34;Partition 0\n(Broker 1 — Leader)&#34;]:7
+      r0[&#34;offset 0\nkey: cust-1\nOrderPlaced&#34;] r1[&#34;offset 1\nkey: cust-3\nOrderPlaced&#34;] r2[&#34;offset 2\nkey: cust-1\nOrderCancelled&#34;] r3[&#34;offset 3\n...&#34;] r4[&#34;offset 4\n...&#34;] r5[&#34;offset 5\n...&#34;] r6[&#34;← HEAD&#34;]
+    end
+    block:p1[&#34;Partition 1\n(Broker 2 — Leader)&#34;]:7
+      s0[&#34;offset 0\nkey: cust-2&#34;] s1[&#34;offset 1\nkey: cust-4&#34;] s2[&#34;offset 2\nkey: cust-2&#34;] s3[&#34;...&#34;] s4[&#34;&#34;] s5[&#34;&#34;] s6[&#34;← HEAD&#34;]
+    end
+    block:p2[&#34;Partition 2\n(Broker 3 — Leader)&#34;]:7
+      t0[&#34;offset 0\nkey: cust-5&#34;] t1[&#34;offset 1\nkey: cust-6&#34;] t2[&#34;...&#34;] t3[&#34;&#34;] t4[&#34;&#34;] t5[&#34;&#34;] t6[&#34;← HEAD&#34;]
+    end
+  end
+</code></pre><p>Key properties of partitions:</p><ul><li><strong>Ordering is guaranteed within a partition</strong> — offset 3 always comes after offset 2 on Partition 0</li><li><strong>Ordering is NOT guaranteed across partitions</strong> — a record on Partition 0 and a record on Partition 1 have no relative ordering guarantee</li><li><strong>A partition lives on exactly one broker</strong> at a time (the leader)</li></ul><h3 id=how-records-are-routed-to-partitions>How Records Are Routed to Partitions</h3><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
+    Record[&#34;Record\nkey: cust-42\nvalue: OrderPlaced&#34;]
+    HasKey{Has key?}
+    HashKey[&#34;hash(key) % numPartitions\n→ always same partition\nfor same key&#34;]
+    RoundRobin[&#34;Round-robin across partitions\n(or sticky batch)&#34;]
+    P0[&#34;Partition 0&#34;]
+    P1[&#34;Partition 1&#34;]
+    P2[&#34;Partition 2&#34;]
+
+    Record --&gt; HasKey
+    HasKey --&gt;|Yes| HashKey
+    HasKey --&gt;|No| RoundRobin
+    HashKey --&gt;|&#34;cust-42 → P1&#34;| P1
+    RoundRobin --&gt; P0
+    RoundRobin --&gt; P2
+</code></pre><p>Using a key (e.g. <code>customerId</code> or <code>orderId</code>) ensures all events for the same entity land on the same partition — preserving per-entity ordering. This is the primary reason to use message keys.</p><hr><h2 id=replicas-fault-tolerance>Replicas: Fault Tolerance</h2><p>Every partition can have multiple <strong>replicas</strong> — copies stored on different brokers. One replica is the <strong>leader</strong> (handles all reads and writes); the others are <strong>followers</strong> (replicate from the leader).</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    subgraph B1[&#34;Broker 1&#34;]
+        P0L[&#34;Partition 0\n★ Leader&#34;]
+        P1F[&#34;Partition 1\n  Follower&#34;]
+        P2F[&#34;Partition 2\n  Follower&#34;]
+    end
+    subgraph B2[&#34;Broker 2&#34;]
+        P0F[&#34;Partition 0\n  Follower&#34;]
+        P1L[&#34;Partition 1\n★ Leader&#34;]
+        P2F2[&#34;Partition 2\n  Follower&#34;]
+    end
+    subgraph B3[&#34;Broker 3&#34;]
+        P0F2[&#34;Partition 0\n  Follower&#34;]
+        P1F2[&#34;Partition 1\n  Follower&#34;]
+        P2L[&#34;Partition 2\n★ Leader&#34;]
+    end
+
+    Producer --&gt;|write| P0L
+    Producer --&gt;|write| P1L
+    P0L --&gt;|replicate| P0F
+    P0L --&gt;|replicate| P0F2
+    P1L --&gt;|replicate| P1F
+    P1L --&gt;|replicate| P1F2
+</code></pre><p>With <code>replication.factor=3</code>, each partition has 3 copies spread across 3 brokers. The cluster can survive the loss of any 2 brokers and still serve every partition (from the surviving leader).</p><h3 id=in-sync-replicas-isr>In-Sync Replicas (ISR)</h3><p>An <strong>In-Sync Replica (ISR)</strong> is a follower that is fully caught up with the leader. The leader tracks the ISR set. A write is acknowledged to the producer only after all ISR members have written the record (when <code>acks=all</code>).</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant Producer
+    participant Leader as Partition 0 Leader\n(Broker 1)
+    participant F1 as Follower\n(Broker 2, ISR)
+    participant F2 as Follower\n(Broker 3, ISR)
+
+    Producer-&gt;&gt;Leader: ProduceRequest (acks=all)
+    Leader-&gt;&gt;Leader: Write to local log
+    Leader-&gt;&gt;F1: Replicate
+    Leader-&gt;&gt;F2: Replicate
+    F1--&gt;&gt;Leader: Ack
+    F2--&gt;&gt;Leader: Ack
+    Leader--&gt;&gt;Producer: ProduceResponse (offset=42)
+
+    Note over Leader,F2: Write acknowledged only after\nall ISR members confirm
+</code></pre><hr><h2 id=what-happens-when-a-broker-fails>What Happens When a Broker Fails</h2><p>When a broker goes down, the controller detects the failure (via missed heartbeats) and elects a new leader for each partition that lost its leader.</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant Controller
+    participant B2 as Broker 2\n(was follower, now new leader)
+    participant B3 as Broker 3\n(follower)
+    participant Producer
+    participant Consumer
+
+    Note over Controller: Broker 1 (old leader) stops heartbeating
+    Controller-&gt;&gt;Controller: Detect broker failure
+    Controller-&gt;&gt;B2: LeaderAndIsr: YOU are new leader for Partition 0
+    Controller-&gt;&gt;B3: LeaderAndIsr: update metadata
+    B2-&gt;&gt;B2: Become Partition 0 leader
+    Producer-&gt;&gt;B2: ProduceRequest (reconnects automatically)
+    Consumer-&gt;&gt;B2: FetchRequest (reconnects automatically)
+    Note over Producer,Consumer: Failover is transparent\n(seconds, not minutes)
+</code></pre><p>Producers and consumers fetch updated metadata from any available broker and reconnect to the new leader automatically. The failover takes seconds.</p><hr><h2 id=log-retention-why-kafka-is-not-a-queue>Log Retention: Why Kafka Is Not a Queue</h2><p>Kafka retains records based on two configurable policies, applied whichever comes first:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    subgraph Policy[&#34;Retention Policy (per topic)&#34;]
+        Time[&#34;Time-based\nretention.ms\ne.g. 7 days&#34;]
+        Size[&#34;Size-based\nretention.bytes\ne.g. 10 GB&#34;]
+    end
+
+    subgraph Partition[&#34;Partition Log&#34;]
+        S1[&#34;Segment 1\n(old — eligible\nfor deletion)&#34;]
+        S2[&#34;Segment 2&#34;]
+        S3[&#34;Segment 3\n(active — being\nwritten to)&#34;]
+    end
+
+    Time --&gt;|triggers| S1
+    Size --&gt;|triggers| S1
+    S1 --&gt;|deleted by\ncleaner thread| Deleted[&#34;🗑 Deleted&#34;]
+</code></pre><p>Kafka stores data in <strong>segments</strong> (files on disk). Old segments are deleted when retention limits are exceeded. Active segments are open for writes.</p><p><strong>Log compaction</strong> is an alternative to time/size retention: instead of deleting old segments wholesale, Kafka retains the <strong>latest record for each key</strong>. This is used for topics that represent current state (e.g. user profile updates) — consumers can always reconstruct the current state by reading the compacted topic.</p><hr><h2 id=the-record-structure>The Record Structure</h2><p>Every Kafka record (event) has:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>classDiagram
+    class KafkaRecord {
+        +String topic
+        +int partition
+        +long offset
+        +long timestamp
+        +byte[] key
+        +byte[] value
+        +Headers headers
+    }
+
+    class Headers {
+        +Header[] headerArray
+    }
+
+    class Header {
+        +String key
+        +byte[] value
+    }
+
+    KafkaRecord &#34;1&#34; --&gt; &#34;1&#34; Headers
+    Headers &#34;1&#34; --&gt; &#34;*&#34; Header
+</code></pre><ul><li><strong>key</strong>: optional bytes used for partition routing and log compaction</li><li><strong>value</strong>: the payload (your event data, serialized as bytes)</li><li><strong>headers</strong>: optional metadata key-value pairs (trace IDs, schema version, source service)</li><li><strong>timestamp</strong>: either producer-set (<code>CreateTime</code>) or broker-set (<code>LogAppendTime</code>)</li></ul><hr><h2 id=partition-count-and-consumer-parallelism>Partition Count and Consumer Parallelism</h2><p>The number of partitions directly controls the maximum parallelism for consumers:</p><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TB
+    subgraph Topic[&#34;Topic: orders — 3 partitions&#34;]
+        P0[&#34;Partition 0&#34;]
+        P1[&#34;Partition 1&#34;]
+        P2[&#34;Partition 2&#34;]
+    end
+
+    subgraph CG[&#34;Consumer Group: inventory-service&#34;]
+        C1[&#34;Consumer 1\n(thread 1)&#34;]
+        C2[&#34;Consumer 2\n(thread 2)&#34;]
+        C3[&#34;Consumer 3\n(thread 3)&#34;]
+    end
+
+    P0 --&gt; C1
+    P1 --&gt; C2
+    P2 --&gt; C3
+
+    Note1[&#34;3 partitions = 3 consumers max\nAdding a 4th consumer → idle\n(no partition to assign)&#34;]
+</code></pre><p><strong>Rule</strong>: maximum consumer parallelism = number of partitions. Adding more consumer instances than partitions results in idle consumers. Scale partitions first, then consumers.</p><p>Choosing partition count:</p><ul><li>Too few: limits throughput and consumer parallelism</li><li>Too many: more overhead (open files, replication traffic, rebalance time)</li><li>Practical starting point: <code>max(desired parallelism, target throughput / single-partition throughput)</code></li><li>Common values: 6, 12, 24 for business topics; larger for high-volume ingestion</li></ul><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>A Kafka cluster is a group of brokers; one broker acts as controller (via Raft in KRaft mode)</li><li>Topics are append-only logs split into partitions — partitions are the unit of parallelism and ordering</li><li>Records with the same key always land on the same partition, guaranteeing per-key ordering</li><li>Each partition has a leader (one broker) and zero or more followers (replicas on other brokers)</li><li><code>replication.factor=3</code> means each partition has 3 copies — the cluster survives 2 broker failures</li><li>ISR (In-Sync Replicas) defines which followers are eligible to become leader</li><li>Kafka retains data by time or size — consumers can replay from any offset within the retention window</li><li>Maximum consumer parallelism = number of partitions</li></ul><p>Next: <a href=/tutorials/spring-kafka/consumer-groups-offsets/>Consumer Groups, Offsets, and the __consumer_offsets Topic</a> — how multiple consumers share a topic, how offsets are committed, and what happens on restart.</p></div><nav class=series-navigation><div class=series-nav-prev><a href=https://devops-monk.com/tutorials/spring-kafka/what-is-apache-kafka/ class="series-nav-link series-nav-link--prev"><span class=series-nav-direction>← Previous</span>
+<span class=series-nav-title>What Is Apache Kafka: Event Streaming From First Principles</span></a></div><div class=series-nav-toc><a href=/tutorials/spring-boot/ class="series-nav-link series-nav-link--toc">☰ Full Series</a></div><div class=series-nav-next><a href=https://devops-monk.com/tutorials/spring-kafka/consumer-groups-offsets/ class="series-nav-link series-nav-link--next"><span class=series-nav-direction>Next →</span>
+<span class=series-nav-title>Consumer Groups, Offsets, and the __consumer_offsets Topic</span></a></div></nav></div></article></main></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
