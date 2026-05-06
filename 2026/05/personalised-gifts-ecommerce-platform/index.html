@@ -1,0 +1,738 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A deep dive into how I built a production-ready personalised gifts e-commerce store for the UK market — featuring Stripe card payments, Tink Pay by Bank via open banking, Clerk authentication, Cloudinary image management, and a full admin dashboard — deployed on a Hostinger VPS."><title>Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15 | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15"><meta name=twitter:description content="A deep dive into how I built a production-ready personalised gifts e-commerce store for the UK market — featuring Stripe card payments, Tink Pay by Bank via open banking, Clerk authentication, Cloudinary image management, and a full admin dashboard — deployed on a Hostinger VPS."><meta property="og:url" content="https://devops-monk.com/2026/05/personalised-gifts-ecommerce-platform/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15"><meta property="og:description" content="A deep dive into how I built a production-ready personalised gifts e-commerce store for the UK market — featuring Stripe card payments, Tink Pay by Bank via open banking, Clerk authentication, Cloudinary image management, and a full admin dashboard — deployed on a Hostinger VPS."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-05-06T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-06T00:00:00+00:00"><meta property="article:tag" content="Next.js"><meta property="article:tag" content="TypeScript"><meta property="article:tag" content="Mysql"><meta property="article:tag" content="Prisma"><meta property="article:tag" content="Stripe"><meta property="article:tag" content="Open Banking"><meta itemprop=name content="Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15"><meta itemprop=description content="A deep dive into how I built a production-ready personalised gifts e-commerce store for the UK market — featuring Stripe card payments, Tink Pay by Bank via open banking, Clerk authentication, Cloudinary image management, and a full admin dashboard — deployed on a Hostinger VPS."><meta itemprop=datePublished content="2026-05-06T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-06T00:00:00+00:00"><meta itemprop=wordCount content="3398"><meta itemprop=keywords content="Next.js,TypeScript,Mysql,Prisma,Stripe,Open Banking,Clerk,Cloudinary,Tailwind CSS,DevOps,VPS"><meta property="og:image" content="https://devops-monk.com/images/og-default.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/og-default.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15","headline":"Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15","inLanguage":"en-US","url":"https://devops-monk.com/2026/05/personalised-gifts-ecommerce-platform/","description":"A deep dive into how I built a production-ready personalised gifts e-commerce store for the UK market — featuring Stripe card payments, Tink Pay by Bank via open banking, Clerk authentication, Cloudinary image management, and a full admin dashboard — deployed on a Hostinger VPS.","wordCount":"3398","keywords":["Next.js","TypeScript","MySQL","Prisma","Stripe","Open Banking","Clerk","Cloudinary","Tailwind CSS","DevOps","VPS"],"datePublished":"2026-05-06T00:00:00Z","dateModified":"2026-05-06T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/2026/05/personalised-gifts-ecommerce-platform/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/2026/05/personalised-gifts-ecommerce-platform/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15\"","datePublished":"2026-05-06T00:00:00Z","dateModified":"2026-05-06T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/2026\/05\/personalised-gifts-ecommerce-platform\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      document.addEventListener('DOMContentLoaded', () => mermaid.run());
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-kafka/>Spring Kafka Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Java</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/java8/>Java 8 Tutorial</a></li><li class=menu-item><a href=/tutorials/java11/>Java 11 Tutorial</a></li><li class=menu-item><a href=/tutorials/java17/>Java 17 Tutorial</a></li><li class=menu-item><a href=/tutorials/java21/>Java 21 Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/05/personalised-gifts-ecommerce-platform/ rel=bookmark><time class="entry-date published" datetime=2026-05-06T00:00:00>May 06, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>16 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/05/personalised-gifts-ecommerce-platform/ rel=bookmark>Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/next.js/>Next.js</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/>TypeScript</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mysql/>MySQL</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prisma/>Prisma</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stripe/>Stripe</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/open-banking/>Open Banking</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/clerk/>Clerk</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloudinary/>Cloudinary</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tailwind-css/>Tailwind CSS</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/>DevOps</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vps/>VPS</a></span></div></header><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fpersonalised-gifts-ecommerce-platform%2f&title=Building&#43;a+Full-Stack+Personalised+Gifts+E-Commerce+Platform+with+Next.js+15" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fpersonalised-gifts-ecommerce-platform%2f&text=Building&#43;a+Full-Stack+Personalised+Gifts+E-Commerce+Platform+with+Next.js+15" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fpersonalised-gifts-ecommerce-platform%2f&title=Building&#43;a+Full-Stack+Personalised+Gifts+E-Commerce+Platform+with+Next.js+15" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#what-the-platform-does>What the Platform Does</a></li><li><a href=#architecture-overview>Architecture Overview</a></li><li><a href=#tech-stack>Tech Stack</a></li><li><a href=#database-design>Database Design</a><ul><li><a href=#key-schema-decisions>Key schema decisions</a></li></ul></li><li><a href=#application-structure>Application Structure</a><ul><li><a href=#why-server-actions-instead-of-an-api-layer>Why Server Actions instead of an API layer?</a></li></ul></li><li><a href=#payment-architecture>Payment Architecture</a><ul><li><a href=#stripe--card-payments>Stripe — Card Payments</a></li><li><a href=#tink--pay-by-bank-open-banking>Tink — Pay by Bank (Open Banking)</a></li></ul></li><li><a href=#personalisation-engine>Personalisation Engine</a></li><li><a href=#admin-panel>Admin Panel</a></li><li><a href=#image-pipeline>Image Pipeline</a></li><li><a href=#authentication-flow>Authentication Flow</a></li><li><a href=#deployment-on-hostinger-vps>Deployment on Hostinger VPS</a><ul><li><a href=#deployment-workflow>Deployment workflow</a></li></ul></li><li><a href=#what-i-learned>What I Learned</a></li><li><a href=#services-and-costs>Services and Costs</a></li><li><a href=#source-code>Source Code</a></li></ul></nav></div></nav><div class=entry-content><p>Building an e-commerce site is one of those projects that sounds simple until you actually start. Payments, authentication, inventory, personalisation, image handling, email notifications, admin tools, live chat — each piece is its own rabbit hole. I built <strong>PersonalisedGifts</strong>, a full UK-market personalised gifts store from scratch, wiring all of these together into a single cohesive product.</p><p>The site lets customers browse gifts by category (Mugs, Jewellery, Canvas Prints, Home Décor) or occasion (Birthday, Wedding, Christmas, New Baby), personalise their chosen item with custom text, images, fonts, or colours, and pay via Stripe (cards, Apple Pay, Google Pay, Klarna) or directly from their bank account via Tink&rsquo;s open banking integration. It runs live on a Hostinger VPS at <strong><a href=https://gift.devops-monk.com>gift.devops-monk.com</a></strong>.</p><p>This post is the full technical walkthrough — architecture decisions, database design, payment integrations, deployment pipeline, and what I learned along the way.</p><hr><h2 id=what-the-platform-does>What the Platform Does</h2><p>At its core, PersonalisedGifts is an e-commerce store with one key differentiator: <strong>every product can be customised</strong>. A customer ordering a photo mug doesn&rsquo;t just add it to their cart — they upload their photo, pick a layout, add a name, and see a preview before buying. A customer ordering an engraved keyring can type the message and choose the font. That personalisation data travels all the way through the order, gets stored in the database, and surfaces in the admin panel so the maker knows exactly what to produce.</p><p>The platform supports:</p><ul><li><strong>Product catalogue</strong> with categories, occasions, variants (sizes, colours), and SEO fields</li><li><strong>Personalisation engine</strong> — per-product configuration for text inputs, image uploads, dropdowns, font pickers, colour pickers, and toggles</li><li><strong>Two payment methods</strong> — Stripe Checkout (cards, Apple Pay, Google Pay, Klarna) and Tink Pay by Bank (direct bank transfer via open banking, UK Faster Payments)</li><li><strong>Order management</strong> — full lifecycle from PENDING → PAID → PROCESSING → SHIPPED → DELIVERED, with per-item fulfilment tracking</li><li><strong>Admin dashboard</strong> — real-time stats, product CRUD with image upload, order management, customer listing</li><li><strong>Customer accounts</strong> — order history, wishlist, saved addresses, occasion reminders</li><li><strong>Gift options</strong> — gift wrapping, gift messages, and occasion-specific landing pages</li><li><strong>Live chat</strong> via Tawk.to for real-time customer support</li><li><strong>Transactional emails</strong> via Resend for order confirmations and shipping updates</li></ul><hr><h2 id=architecture-overview>Architecture Overview</h2><pre class=mermaid>
+flowchart TD
+    subgraph Client[Browser / Mobile]
+        NEXT[Next.js 15\nApp Router\nReact Server Components]
+        ZUSTAND[Zustand\nCart State]
+        FABRIC[Fabric.js\nPersonalisation Canvas]
+    end
+
+    subgraph Auth[Authentication]
+        CLERK[Clerk\nSign-in Sign-up\nSession Management\nWebhooks]
+    end
+
+    subgraph DB[Data Layer]
+        MYSQL[(MySQL 8.0\nPersonalised Gifts DB\n15 Tables)]
+        PRISMA[Prisma ORM\nServer Actions\nType-safe Queries]
+    end
+
+    subgraph Payments[Payment Providers]
+        STRIPE[Stripe Checkout\nCards Apple Pay\nGoogle Pay Klarna]
+        TINK[Tink Pay by Bank\nOpen Banking\nFaster Payments]
+    end
+
+    subgraph Media[Media and Comms]
+        CDN[Cloudinary\nImage CDN\nAuto WebP and AVIF]
+        EMAIL[Resend\nTransactional Emails]
+        CHAT[Tawk.to\nLive Chat Widget]
+    end
+
+    subgraph Infra[Infrastructure]
+        VPS[Hostinger VPS\nUbuntu 22.04]
+        NGINX[Nginx\nReverse Proxy\nSSL Termination]
+        PM2[PM2\nProcess Manager\nCluster Mode]
+        CERTBOT[Certbot\nLet Encrypt SSL]
+    end
+
+    NEXT -->|Server Actions| PRISMA
+    PRISMA --> MYSQL
+    NEXT -->|Clerk SDK| CLERK
+    CLERK -->|user.created webhook| PRISMA
+    NEXT -->|Stripe SDK| STRIPE
+    STRIPE -->|checkout.session.completed webhook| NEXT
+    NEXT -->|Tink API| TINK
+    TINK -->|payment:updated webhook| NEXT
+    NEXT -->|Upload API| CDN
+    NEXT -->|Order events| EMAIL
+    NEXT --> CHAT
+    NGINX --> NEXT
+    PM2 --> NEXT
+    VPS --> NGINX
+    VPS --> PM2
+    CERTBOT --> NGINX
+</pre><p>The application is a <strong>Next.js 15 App Router</strong> project running in standalone mode on a Hostinger VPS. There is no serverless layer, no edge runtime, no Vercel — just a Node.js process managed by PM2, sitting behind Nginx which handles SSL termination and static asset caching.</p><p><strong>Why a VPS instead of Vercel?</strong> A few reasons:</p><ol><li>The site uses MySQL rather than a serverless-compatible database. Prisma with MySQL requires a persistent connection pool, which is straightforward on a VPS and painful on Vercel&rsquo;s serverless functions.</li><li>Cost predictability. A £5/mo VPS is cheaper than Vercel Pro plus a managed database at any real traffic level.</li><li>Full control. I can run Prisma Studio, SSH in to inspect logs, and deploy database migrations without juggling managed service constraints.</li></ol><hr><h2 id=tech-stack>Tech Stack</h2><table><thead><tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr></thead><tbody><tr><td>Framework</td><td>Next.js 15 (App Router)</td><td>Full-stack React with server actions</td></tr><tr><td>Language</td><td>TypeScript</td><td>Type safety end-to-end</td></tr><tr><td>Database</td><td>MySQL 8.0</td><td>Relational data store</td></tr><tr><td>ORM</td><td>Prisma</td><td>Type-safe database access</td></tr><tr><td>Auth</td><td>Clerk</td><td>User management and sessions</td></tr><tr><td>Payments (cards)</td><td>Stripe Checkout</td><td>Card, Apple Pay, Google Pay, Klarna</td></tr><tr><td>Payments (bank)</td><td>Tink Pay by Bank</td><td>Open banking, UK Faster Payments</td></tr><tr><td>Styling</td><td>Tailwind CSS v4 + shadcn/ui</td><td>Utility-first CSS with 56 UI components</td></tr><tr><td>State</td><td>Zustand</td><td>Cart persistence</td></tr><tr><td>Image CDN</td><td>Cloudinary</td><td>Auto-resize, WebP/AVIF, CDN delivery</td></tr><tr><td>Email</td><td>Resend</td><td>Transactional emails</td></tr><tr><td>Live Chat</td><td>Tawk.to</td><td>Real-time customer support</td></tr><tr><td>Canvas</td><td>Fabric.js</td><td>Interactive personalisation previews</td></tr><tr><td>Deployment</td><td>Nginx + PM2 on Hostinger VPS</td><td>Standalone Node.js in production</td></tr></tbody></table><hr><h2 id=database-design>Database Design</h2><p>The schema has <strong>15 tables</strong> modelling the full e-commerce domain. Here is how they relate:</p><pre class=mermaid>
+erDiagram
+    User {
+        BigInt id
+        String clerkId
+        String email
+        Role role
+    }
+    Address {
+        BigInt id
+        BigInt userId
+        String line1
+        String city
+        String postalCode
+    }
+    Product {
+        Int id
+        String name
+        String slug
+        Decimal basePrice
+        ProductStatus status
+        Boolean isPersonalizable
+    }
+    Category {
+        Int id
+        String name
+        String slug
+        Int parentId
+    }
+    Occasion {
+        Int id
+        String name
+        String slug
+    }
+    ProductVariant {
+        Int id
+        Int productId
+        String sku
+        Decimal price
+        Int stockQty
+    }
+    PersonalizationOption {
+        Int id
+        Int productId
+        String optionKey
+        PersonalizationType optionType
+        Boolean isRequired
+        Decimal priceModifier
+    }
+    Order {
+        BigInt id
+        String orderNumber
+        OrderStatus status
+        Decimal totalAmount
+        String currency
+        String paymentMethod
+        Boolean isGift
+    }
+    OrderItem {
+        BigInt id
+        BigInt orderId
+        Int productId
+        Json personalizationData
+        String previewImageUrl
+        FulfillmentStatus fulfillmentStatus
+    }
+    Review {
+        Int id
+        Int productId
+        BigInt userId
+        Int rating
+    }
+    Wishlist {
+        Int id
+        BigInt userId
+        Int productId
+    }
+    Coupon {
+        Int id
+        String code
+        DiscountType discountType
+        Decimal discountValue
+    }
+
+    User ||--o{ Address : has
+    User ||--o{ Order : places
+    User ||--o{ Review : writes
+    User ||--o{ Wishlist : saves
+    Product }o--|| Category : belongs_to
+    Product ||--o{ ProductVariant : has
+    Product ||--o{ PersonalizationOption : configures
+    Product ||--o{ OrderItem : appears_in
+    Order ||--o{ OrderItem : contains
+    OrderItem }o--|| ProductVariant : uses
+</pre><h3 id=key-schema-decisions>Key schema decisions</h3><p><strong>PersonalizationOption is per-product, not per-order-item.</strong> The product defines what personalisation it accepts (e.g., <code>optionKey: "engraving_text"</code>, <code>optionType: TEXT</code>, <code>isRequired: true</code>). When a customer fills in their personalisation at checkout, the <em>values</em> are stored as a JSON blob in <code>OrderItem.personalizationData</code>. This keeps the schema flexible — a new personalisation field doesn&rsquo;t require a migration, just a new row in <code>PersonalizationOption</code>.</p><p><strong>OrderItem stores a snapshot.</strong> <code>productSnapshot</code> on <code>OrderItem</code> captures the product name, image, and price at time of purchase. This means if a product is later edited or deleted, the order history still shows exactly what was ordered. This is standard e-commerce practice but easy to forget during the build.</p><p><strong>FulfillmentStatus is per item, not per order.</strong> An order of three items (a mug, a keyring, and a print) might have the mug dispatched before the keyring is finished. Tracking fulfilment at the line-item level gives the seller much more granular control.</p><p><strong>Full-text index on Product.</strong> MySQL&rsquo;s full-text search index on <code>(name, description)</code> powers the admin product search without needing Elasticsearch or a separate search layer.</p><hr><h2 id=application-structure>Application Structure</h2><pre tabindex=0><code>src/
+├── app/                          # Next.js App Router
+│   ├── admin/                    # Admin dashboard (RBAC protected)
+│   │   ├── products/             # Product listing, create, edit
+│   │   ├── orders/               # Order management + fulfilment
+│   │   └── customers/            # Customer listing
+│   ├── account/                  # Authenticated user pages
+│   │   ├── orders/               # Order history
+│   │   ├── wishlist/             # Saved products
+│   │   └── addresses/            # Saved shipping addresses
+│   ├── api/
+│   │   ├── upload/               # Cloudinary upload endpoint (admin only)
+│   │   └── webhooks/             # Stripe, Clerk, Tink webhook handlers
+│   ├── cart/                     # Cart page
+│   ├── checkout/                 # Checkout flow, payment return pages
+│   ├── category/[slug]/          # Category landing pages
+│   ├── occasion/[slug]/          # Occasion landing pages
+│   └── products/                 # Product listing and detail
+├── components/
+│   ├── admin/                    # Admin-specific components
+│   ├── layout/                   # Header, footer
+│   ├── product/                  # Product card, personalisation form
+│   └── ui/                       # 56 shadcn/ui components
+├── lib/
+│   ├── actions/                  # Server actions (the &#34;API layer&#34;)
+│   │   ├── admin.ts              # Role guard: requireAdmin()
+│   │   ├── admin-products.ts     # Product CRUD with Prisma
+│   │   ├── checkout.ts           # Stripe checkout session creation
+│   │   ├── tink-checkout.ts      # Tink payment initiation
+│   │   ├── products.ts           # Public product queries
+│   │   ├── user.ts               # User + wishlist management
+│   │   └── address.ts            # Address CRUD
+│   ├── db.ts                     # Prisma client singleton
+│   ├── stripe.ts                 # Stripe server SDK
+│   ├── tink.ts                   # Tink API helpers
+│   └── cloudinary.ts             # Cloudinary config
+└── stores/
+    └── cart-store.ts             # Zustand cart with localStorage
+</code></pre><h3 id=why-server-actions-instead-of-an-api-layer>Why Server Actions instead of an API layer?</h3><p>Next.js 15 Server Actions let you call server-side logic directly from React components — no REST endpoints, no fetch calls, no API route boilerplate. The <code>checkout.ts</code> server action creates a Stripe session and returns the redirect URL in a single function call. This keeps the checkout flow entirely in React without an intermediate API layer.</p><p>The tradeoff: server actions are tightly coupled to Next.js and harder to reuse outside it. For a project that will only ever have a Next.js frontend, this is the right call. For a project that might add a mobile app later, a conventional API layer would be wiser.</p><hr><h2 id=payment-architecture>Payment Architecture</h2><p>This was the most complex part of the build. The site supports two completely different payment flows.</p><h3 id=stripe--card-payments>Stripe — Card Payments</h3><pre class=mermaid>
+sequenceDiagram
+    participant Customer
+    participant Next.js
+    participant Stripe
+    participant Webhook
+
+    Customer->>Next.js: Click "Pay by Card"
+    Next.js->>Stripe: Create Checkout Session\n(line items, metadata, success/cancel URLs)
+    Stripe-->>Next.js: Session URL
+    Next.js-->>Customer: Redirect to Stripe-hosted page
+    Customer->>Stripe: Enter card details + pay
+    Stripe-->>Customer: Redirect to /checkout/success?session_id=...
+    Stripe->>Webhook: POST /api/webhooks/stripe\ncheckout.session.completed
+    Webhook->>Next.js: Verify signature, update Order status to PAID
+    Webhook->>Next.js: Send order confirmation email via Resend
+</pre><p>Stripe Checkout is the hosted payment page approach — you redirect the customer to Stripe&rsquo;s servers, they handle the card UI, PCI compliance, 3D Secure, Apple Pay, Google Pay, and Klarna. When payment succeeds, Stripe fires a <code>checkout.session.completed</code> webhook. The webhook handler verifies the signature, finds the order by session ID, and marks it PAID.</p><p>The metadata passed to Stripe on session creation includes the internal <code>orderId</code> — this is what ties the webhook back to the database record.</p><h3 id=tink--pay-by-bank-open-banking>Tink — Pay by Bank (Open Banking)</h3><pre class=mermaid>
+sequenceDiagram
+    participant Customer
+    participant Next.js
+    participant Tink API
+    participant Customer's Bank
+    participant Tink Webhook
+
+    Customer->>Next.js: Click "Pay by Bank"
+    Next.js->>Tink API: POST /payments/initiate\n(amount, destination account, redirect URI)
+    Tink API-->>Next.js: Payment Request ID + Tink Link URL
+    Next.js-->>Customer: Redirect to Tink Link
+    Customer->>Tink API: Select bank, authenticate via banking app
+    Customer's Bank->>Tink API: Authorise payment via Faster Payments
+    Tink API-->>Customer: Redirect to /checkout/tink-return
+    Next.js->>Tink API: GET /payments/status (verify payment)
+    Tink Webhook->>Next.js: POST /api/webhooks/tink\npayment:updated event
+    Next.js->>Next.js: Update Order status to PAID
+</pre><p>Tink&rsquo;s Pay by Bank integration uses open banking — the customer authorises a payment directly from their bank account without entering card details. The flow:</p><ol><li>Server creates a payment initiation request via Tink&rsquo;s API, specifying the destination account (sort code + account number), amount, and redirect URI.</li><li>Tink Link (hosted by Tink) handles bank selection and authentication. On desktop, customers scan a QR code with their banking app. On mobile, it deep-links directly into their banking app.</li><li>The bank processes the payment via UK Faster Payments (typically instant).</li><li>Tink redirects the customer back to <code>/checkout/tink-return</code> with the payment request ID.</li><li>The return page polls Tink&rsquo;s API to confirm status, then a webhook confirms settlement.</li></ol><p><strong>Why two payment methods?</strong> Bank transfers have no processing fee (Stripe charges 1.5% + 20p per UK card transaction). For a £50 gift, that&rsquo;s about £0.95 per sale. At scale, offering a fee-free bank transfer option meaningfully improves margin. Tink is also preferred by customers who don&rsquo;t want to enter card details online.</p><hr><h2 id=personalisation-engine>Personalisation Engine</h2><p>The personalisation system is what makes this more than a generic e-commerce template. Each product can have multiple <code>PersonalizationOption</code> rows:</p><table><thead><tr><th>optionType</th><th>UI Component</th><th>Example use</th></tr></thead><tbody><tr><td><code>TEXT</code></td><td>Single-line input</td><td>Name, short message</td></tr><tr><td><code>TEXTAREA</code></td><td>Multi-line input</td><td>Longer dedication text</td></tr><tr><td><code>IMAGE</code></td><td>File upload via Cloudinary</td><td>Photo mug, canvas print</td></tr><tr><td><code>COLOUR</code></td><td>Colour picker</td><td>Ribbon colour, text colour</td></tr><tr><td><code>FONT</code></td><td>Font selector</td><td>Engraving font</td></tr><tr><td><code>DROPDOWN</code></td><td>Select menu</td><td>Size of engraving, layout style</td></tr><tr><td><code>TOGGLE</code></td><td>Checkbox</td><td>Add gift wrapping</td></tr></tbody></table><p>At product detail, these options render dynamically based on the product&rsquo;s configuration. The canvas preview (Fabric.js) updates in real time as the customer fills in their personalisation — typing a name shows it on the mug, uploading a photo places it on the canvas print.</p><p>The <code>constraints</code> JSON field on each option allows per-option validation:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;maxLength&#34;</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>20</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;allowedFonts&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span><span style=color:#a3be8c>&#34;Script MT&#34;</span><span style=color:#eceff4>,</span> <span style=color:#a3be8c>&#34;Arial&#34;</span><span style=color:#eceff4>,</span> <span style=color:#a3be8c>&#34;Georgia&#34;</span><span style=color:#eceff4>],</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;maxFileSize&#34;</span><span style=color:#eceff4>:</span> <span style=color:#b48ead>5242880</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;aspectRatio&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;1:1&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p>When the customer adds to cart, the personalisation data is serialised to <code>OrderItem.personalizationData</code>. The admin sees this data in the order detail view next to the item — exactly what text to engrave, which photo to print, which font to use.</p><hr><h2 id=admin-panel>Admin Panel</h2><p>The admin panel at <code>/admin</code> is a full product management interface with role-based access control. Only users with <code>role = ADMIN</code> in the database can access it — the layout server-side redirects anyone else.</p><pre class=mermaid>
+flowchart TD
+    Request[Request to /admin] --> AUTH{Clerk session\nvalid?}
+    AUTH -->|No| SIGNIN[Redirect to /sign-in]
+    AUTH -->|Yes| ROLE{DB role\n= ADMIN?}
+    ROLE -->|No| HOME[Redirect to /]
+    ROLE -->|Yes| ADMIN[Admin Dashboard]
+
+    ADMIN --> DASH[Dashboard\nRevenue Orders Products Customers\nRecent orders table]
+    ADMIN --> PROD[Products\nList with search and status filter\nCreate Edit Delete]
+    ADMIN --> ORD[Orders\nOrder detail\nFulfilment status per item]
+    ADMIN --> CUST[Customers\nAll registered users]
+
+    PROD --> UPLOAD[Image Upload\nDrag and drop to Cloudinary\nSet primary image\nReorder gallery]
+</pre><p>The product form handles both create and edit — it&rsquo;s a single shared component (<code>ProductForm</code>) that receives either an empty object or an existing product. Image upload is via a dedicated API route (<code>/api/upload</code>) that validates the Clerk session and admin role before proxying to Cloudinary. Drag-and-drop reordering updates <code>ProductImage.sortOrder</code>. Deleting a product cleans up the Cloudinary assets via the Admin API before removing the database record.</p><p>Dashboard stats are a single Prisma query using <code>$transaction</code> — revenue (sum of order totals), order count, product count, and customer count, computed in parallel:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>const</span> <span style=color:#eceff4>[</span>totalRevenue<span style=color:#eceff4>,</span> orderCount<span style=color:#eceff4>,</span> productCount<span style=color:#eceff4>,</span> customerCount<span style=color:#eceff4>]</span> <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>await</span> prisma<span style=color:#eceff4>.</span>$transaction<span style=color:#eceff4>([</span>
+</span></span><span style=display:flex><span>  prisma<span style=color:#eceff4>.</span>order<span style=color:#eceff4>.</span>aggregate<span style=color:#eceff4>({</span> _sum<span style=color:#81a1c1>:</span> <span style=color:#eceff4>{</span> totalAmount: <span style=color:#81a1c1>true</span> <span style=color:#eceff4>},</span> where<span style=color:#81a1c1>:</span> <span style=color:#eceff4>{</span> status<span style=color:#81a1c1>:</span> <span style=color:#a3be8c>&#39;PAID&#39;</span> <span style=color:#eceff4>}</span> <span style=color:#eceff4>}),</span>
+</span></span><span style=display:flex><span>  prisma<span style=color:#eceff4>.</span>order<span style=color:#eceff4>.</span>count<span style=color:#eceff4>(),</span>
+</span></span><span style=display:flex><span>  prisma<span style=color:#eceff4>.</span>product<span style=color:#eceff4>.</span>count<span style=color:#eceff4>({</span> where<span style=color:#81a1c1>:</span> <span style=color:#eceff4>{</span> status<span style=color:#81a1c1>:</span> <span style=color:#a3be8c>&#39;ACTIVE&#39;</span> <span style=color:#eceff4>}</span> <span style=color:#eceff4>}),</span>
+</span></span><span style=display:flex><span>  prisma<span style=color:#eceff4>.</span>user<span style=color:#eceff4>.</span>count<span style=color:#eceff4>({</span> where<span style=color:#81a1c1>:</span> <span style=color:#eceff4>{</span> role<span style=color:#81a1c1>:</span> <span style=color:#a3be8c>&#39;CUSTOMER&#39;</span> <span style=color:#eceff4>}</span> <span style=color:#eceff4>}),</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>]);</span>
+</span></span></code></pre></div><hr><h2 id=image-pipeline>Image Pipeline</h2><p>Product images go through a defined pipeline:</p><pre class=mermaid>
+flowchart LR
+    UPLOAD[Admin uploads image\ndrag and drop] --> API[/api/upload\nvalidates session and role]
+    API --> CDN[Cloudinary\nstores original]
+    CDN -->|Auto transform| WEBP[WebP and AVIF\nauto-format auto-quality]
+    CDN -->|Resize on demand| THUMB[w_400 h_400 c_fill\nproduct thumbnails]
+    CDN -->|Resize on demand| DETAIL[w_800 h_800 c_fill\nproduct detail]
+    CDN --> DB[URL stored in\nProductImage table]
+    DB --> NEXT[Next.js Image component\nserves optimised URL]
+</pre><p>Cloudinary handles format negotiation — the browser requests a URL and gets WebP on modern browsers or JPEG on older ones, without any code changes. The admin uploads once; the CDN handles all resizing. This is particularly important for personalised products where customers upload photos — Cloudinary validates dimensions and converts to a consistent format before it ever hits the database.</p><hr><h2 id=authentication-flow>Authentication Flow</h2><p>Clerk handles the entire auth surface — sign up, sign in, social login (Google, Apple), email verification, and session tokens. Integration is via middleware and the Clerk React SDK.</p><p>The Clerk webhook (<code>/api/webhooks/clerk</code>) listens for <code>user.created</code> and <code>user.updated</code> events. When a new user signs up via Clerk, the webhook creates a corresponding <code>User</code> row in MySQL. This keeps the Clerk identity store and the application database in sync — the <code>clerkId</code> field is the join key.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#616e87;font-style:italic>// src/app/api/webhooks/clerk/route.ts
+</span></span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic></span><span style=color:#81a1c1;font-weight:700>const</span> event <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>await</span> verifyWebhook<span style=color:#eceff4>(</span>request<span style=color:#eceff4>,</span> headers<span style=color:#eceff4>,</span> process<span style=color:#eceff4>.</span>env<span style=color:#eceff4>.</span>CLERK_WEBHOOK_SECRET<span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>if</span> <span style=color:#eceff4>(</span>event<span style=color:#eceff4>.</span><span style=color:#81a1c1;font-weight:700>type</span> <span style=color:#81a1c1>===</span> <span style=color:#a3be8c>&#39;user.created&#39;</span><span style=color:#eceff4>)</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>await</span> prisma<span style=color:#eceff4>.</span>user<span style=color:#eceff4>.</span>create<span style=color:#eceff4>({</span>
+</span></span><span style=display:flex><span>    data<span style=color:#81a1c1>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>      clerkId: <span style=color:#81a1c1>event.data.id</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>      email: <span style=color:#81a1c1>event.data.email_addresses</span><span style=color:#eceff4>[</span><span style=color:#b48ead>0</span><span style=color:#eceff4>].</span>email_address<span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>      name<span style=color:#81a1c1>:</span> <span style=color:#a3be8c>`</span><span style=color:#a3be8c>${</span>event<span style=color:#eceff4>.</span>data<span style=color:#eceff4>.</span>first_name<span style=color:#a3be8c>}</span><span style=color:#a3be8c> </span><span style=color:#a3be8c>${</span>event<span style=color:#eceff4>.</span>data<span style=color:#eceff4>.</span>last_name<span style=color:#a3be8c>}</span><span style=color:#a3be8c>`</span><span style=color:#eceff4>.</span>trim<span style=color:#eceff4>(),</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>},</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>});</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p>Role-based access is checked server-side in every admin action:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#616e87;font-style:italic>// src/lib/actions/admin.ts
+</span></span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic></span><span style=color:#81a1c1;font-weight:700>export</span> <span style=color:#81a1c1;font-weight:700>async</span> <span style=color:#81a1c1;font-weight:700>function</span> requireAdmin() {
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>const</span> <span style=color:#eceff4>{</span> userId <span style=color:#eceff4>}</span> <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>await</span> auth<span style=color:#eceff4>();</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>if</span> <span style=color:#eceff4>(</span><span style=color:#81a1c1>!</span>userId<span style=color:#eceff4>)</span> redirect<span style=color:#eceff4>(</span><span style=color:#a3be8c>&#39;/sign-in&#39;</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>const</span> user <span style=color:#81a1c1>=</span> <span style=color:#81a1c1;font-weight:700>await</span> prisma<span style=color:#eceff4>.</span>user<span style=color:#eceff4>.</span>findUnique<span style=color:#eceff4>({</span> where<span style=color:#81a1c1>:</span> <span style=color:#eceff4>{</span> clerkId: <span style=color:#81a1c1>userId</span> <span style=color:#eceff4>}</span> <span style=color:#eceff4>});</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>if</span> <span style=color:#eceff4>(</span><span style=color:#81a1c1>!</span>user <span style=color:#81a1c1>||</span> user<span style=color:#eceff4>.</span>role <span style=color:#81a1c1>!==</span> <span style=color:#a3be8c>&#39;ADMIN&#39;</span><span style=color:#eceff4>)</span> redirect<span style=color:#eceff4>(</span><span style=color:#a3be8c>&#39;/&#39;</span><span style=color:#eceff4>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>return</span> user<span style=color:#eceff4>;</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><hr><h2 id=deployment-on-hostinger-vps>Deployment on Hostinger VPS</h2><p>The production stack runs on a Hostinger KVM VPS (Ubuntu 22.04, 2GB RAM):</p><pre class=mermaid>
+flowchart TD
+    INTERNET[Internet\nHTTPS port 443] --> CERTBOT[Let Encrypt SSL\nCertbot auto-renewal]
+    CERTBOT --> NGINX[Nginx\nReverse Proxy\nStatic asset cache\nGzip compression]
+    NGINX -->|proxy_pass localhost:3000| PM2[PM2 Cluster\nMultiple Node.js processes]
+    PM2 --> NEXT[Next.js Standalone\n.next/standalone/server.js]
+    NEXT --> PRISMA[Prisma Client]
+    PRISMA --> MYSQL[(MySQL 8.0\nlocalhost:3306)]
+</pre><p><strong>Standalone build.</strong> <code>next build</code> with <code>output: 'standalone'</code> in <code>next.config.ts</code> produces a self-contained Node.js application in <code>.next/standalone/</code>. It includes only the necessary Node modules — no <code>node_modules</code> folder required at runtime. Static assets and public files are copied separately.</p><p><strong>PM2 cluster mode.</strong> Running with <code>-i max</code> starts one process per CPU core. On a 2-core VPS, this means two Node.js processes sharing the load. PM2 restarts crashed processes automatically and persists the process list across reboots via <code>pm2 save</code> + <code>pm2 startup</code>.</p><p><strong>Nginx configuration.</strong> Nginx handles SSL termination (Certbot, Let&rsquo;s Encrypt, auto-renewing every 90 days), serves <code>/_next/static</code> assets with a 1-year <code>Cache-Control: immutable</code> header (Next.js content-hashes these files so they are safe to cache forever), and proxies all other requests to PM2.</p><h3 id=deployment-workflow>Deployment workflow</h3><p>For a <strong>code-only deploy</strong>:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git pull origin main
+</span></span><span style=display:flex><span>npm install
+</span></span><span style=display:flex><span>npm run build
+</span></span><span style=display:flex><span>cp -r .next/static .next/standalone/.next/static
+</span></span><span style=display:flex><span>cp -r public .next/standalone/public
+</span></span><span style=display:flex><span>pm2 restart personalised-gifts
+</span></span></code></pre></div><p>For a <strong>schema change deploy</strong>:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Locally — create migration</span>
+</span></span><span style=display:flex><span>npx prisma migrate dev --name add-gift-notes-field
+</span></span><span style=display:flex><span>git add prisma/migrations <span style=color:#81a1c1>&amp;&amp;</span> git push
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># On VPS — apply migration</span>
+</span></span><span style=display:flex><span>git pull origin main
+</span></span><span style=display:flex><span>npx prisma migrate deploy
+</span></span><span style=display:flex><span>npx prisma generate
+</span></span><span style=display:flex><span>npm run build
+</span></span><span style=display:flex><span>cp -r .next/static .next/standalone/.next/static
+</span></span><span style=display:flex><span>cp -r public .next/standalone/public
+</span></span><span style=display:flex><span>pm2 restart personalised-gifts
+</span></span></code></pre></div><p>The discipline of using <code>migrate deploy</code> on the VPS (not <code>migrate dev</code>) matters — <code>migrate dev</code> needs shadow database access and creates migration files, while <code>migrate deploy</code> only applies existing migration files and is safe to run in production.</p><hr><h2 id=what-i-learned>What I Learned</h2><p><strong>Personalisation data is harder than it looks.</strong> Storing it as JSON is flexible, but displaying it usefully requires discipline. The admin needs to see &ldquo;Name: Sophie, Font: Script MT, Colour: #d4a017&rdquo; — not a raw JSON object. I ended up with a small <code>formatPersonalisation(data, options)</code> utility that joins the option labels with their values for human-readable display.</p><p><strong>Webhooks need idempotency.</strong> Both Stripe and Tink can fire the same webhook event more than once (at-least-once delivery). The webhook handler checks if the order is already PAID before updating — a simple guard that prevents double-processing without needing a dedicated idempotency key table.</p><p><strong>Tink sandbox is excellent.</strong> The Demo Bank in Tink&rsquo;s sandbox environment simulates the entire bank authentication flow end-to-end, including the QR code and banking app redirect. I could test the complete Pay by Bank journey without real bank accounts or real money.</p><p><strong>MySQL full-text search is good enough.</strong> I considered Algolia for product search. For 25 products in development and realistic SKU counts under 1,000, MySQL&rsquo;s built-in full-text index on <code>(name, description)</code> performs perfectly well. Adding a dedicated search service would be premature optimisation.</p><p><strong>Cloudinary&rsquo;s free tier goes fast.</strong> The 25 credits/month free tier covers about 25GB of bandwidth. Product images served to real users can hit this sooner than expected. For a live store with meaningful traffic, budgeting for paid Cloudinary usage (or implementing aggressive browser caching) matters.</p><hr><h2 id=services-and-costs>Services and Costs</h2><table><thead><tr><th>Service</th><th>What it does</th><th>Free tier</th><th>Production cost</th></tr></thead><tbody><tr><td>Clerk</td><td>Auth and user management</td><td>10,000 MAU/mo</td><td>$25/mo at 10K+ MAU</td></tr><tr><td>Stripe</td><td>Card payments</td><td>No monthly fee</td><td>1.5% + 20p per UK card</td></tr><tr><td>Tink</td><td>Pay by Bank (open banking)</td><td>Free sandbox</td><td>Enterprise pricing</td></tr><tr><td>Cloudinary</td><td>Image storage + CDN</td><td>25 credits/mo</td><td>Pay-as-you-go</td></tr><tr><td>Resend</td><td>Transactional email</td><td>3,000 emails/mo</td><td>$20/mo for 50K</td></tr><tr><td>Tawk.to</td><td>Live chat</td><td>Completely free</td><td>Free forever</td></tr><tr><td>Hostinger VPS</td><td>Compute + MySQL</td><td>—</td><td>~£5–15/mo</td></tr></tbody></table><p>The entire stack can run within free tiers for development and low-volume early launch. The only mandatory ongoing cost is the VPS.</p><hr><h2 id=source-code>Source Code</h2><p>The full source is available on GitHub. The project is structured to be deployable by anyone — the README includes a step-by-step guide to setting up every third-party service, configuring environment variables, running migrations, and deploying to a VPS.</p><p><strong>Stack summary:</strong></p><ul><li><strong>Next.js 15</strong> (App Router, Server Actions, standalone output)</li><li><strong>TypeScript</strong> end-to-end</li><li><strong>MySQL 8.0</strong> + <strong>Prisma</strong> (15 tables, full-text search, migrations)</li><li><strong>Clerk</strong> (auth, webhooks, RBAC)</li><li><strong>Stripe Checkout</strong> + <strong>Tink Pay by Bank</strong> (dual payment methods)</li><li><strong>Cloudinary</strong> (image CDN with auto-format)</li><li><strong>Resend</strong> (transactional email)</li><li><strong>Tawk.to</strong> (live chat)</li><li><strong>Tailwind CSS v4</strong> + <strong>shadcn/ui</strong> (56 components)</li><li><strong>Zustand</strong> (cart state)</li><li><strong>Fabric.js</strong> (personalisation canvas)</li><li><strong>PM2</strong> + <strong>Nginx</strong> + <strong>Certbot</strong> on <strong>Hostinger VPS</strong></li></ul><p>If you are building something similar — a personalised gifts store, a print-on-demand platform, or any product that needs both card and bank transfer payments in the UK — this architecture is a solid starting point. The combination of Next.js Server Actions, Prisma, and Clerk eliminates a huge amount of boilerplate while keeping the stack easy to reason about and deploy.</p></div><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fpersonalised-gifts-ecommerce-platform%2f&title=Building&#43;a+Full-Stack+Personalised+Gifts+E-Commerce+Platform+with+Next.js+15" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fpersonalised-gifts-ecommerce-platform%2f&text=Building&#43;a+Full-Stack+Personalised+Gifts+E-Commerce+Platform+with+Next.js+15" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fpersonalised-gifts-ecommerce-platform%2f&title=Building&#43;a+Full-Stack+Personalised+Gifts+E-Commerce+Platform+with+Next.js+15" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div></div></article><div class=author-bio><img src=/images/abhay.jpeg alt=Abhay class=author-bio-avatar><div class=author-bio-content><h3 class=author-bio-name>Abhay Pratap Singh</h3><p class=author-bio-desc>DevOps Engineer passionate about automation, cloud infrastructure, and self-hosted tools. I write about Kubernetes, Terraform, DNS, and everything in between.</p><div class=author-bio-links><a href=https://github.com/devops-monk target=_blank rel=noopener><i class="fa-brands fa-github"></i> GitHub</a>
+<a href=https://www.linkedin.com/in/abhay-pratap-singh-831997b5/ target=_blank rel=noopener><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+<a href=/index.xml target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></div></div></div><div class=newsletter-box><div class=newsletter-icon><i class="fa-solid fa-envelope-open-text"></i></div><h3 class=newsletter-title>Enjoyed this post?</h3><p class=newsletter-desc>Get new articles on DevOps, Kubernetes, Terraform, and self-hosted tools delivered straight to your inbox. No spam, unsubscribe any time.</p><a href="mailto:abhaypratap3536@gmail.com?subject=Subscribe to Devops Monk" class=newsletter-btn><i class="fa-solid fa-paper-plane"></i> Subscribe via Email</a></div><nav class="navigation post-navigation" role=navigation><h2 class=screen-reader-text>Post navigation</h2><div class=nav-links><div class=nav-next><a href=/2026/05/claude-adaptive-thinking-guide/ rel=prev><span class=post-title>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers
+<i class="fa fa-chevron-right"></i></span></a></div></div></nav><div class=related-posts><h3 class=related-title><i class="fa-solid fa-layer-group"></i> You might also like</h3><div class=related-grid><a class=related-card href=/2026/04/stock-market-analysis-dashboard/><span class=related-card-meta>Apr 2026 · 11 min read</span>
+<span class=related-card-title>Building a Zero-Cost Stock Market Intelligence Platform</span>
+<span class=related-card-cat>Personal Projects</span>
+</a><a class=related-card href=/2026/05/claude-adaptive-thinking-guide/><span class=related-card-meta>May 2026 · 9 min read</span>
+<span class=related-card-title>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/05/claude-managed-agents-guide/><span class=related-card-meta>May 2026 · 8 min read</span>
+<span class=related-card-title>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</span>
+<span class=related-card-cat>Claude</span></a></div></div></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
+<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/05/personalised-gifts-ecommerce-platform/>Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-adaptive-thinking-guide/>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-managed-agents-guide/>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-models-guide-2026/>Claude Models in 2026: Opus, Sonnet, and Haiku Compared</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-prompt-caching-guide/>Claude Prompt Caching: Cut Your API Costs by 90%</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/java-11-tutorial/ title="java 11 tutorial">java 11 tutorial</a></li><li><a href=/categories/java-17-tutorial/ title="java 17 tutorial">java 17 tutorial</a></li><li><a href=/categories/java-21-tutorial/ title="java 21 tutorial">java 21 tutorial</a></li><li><a href=/categories/java-8-tutorial/ title="java 8 tutorial">java 8 tutorial</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/liquibase-tutorial/ title="liquibase tutorial">liquibase tutorial</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/spring-batch-tutorial/ title="spring batch tutorial">spring batch tutorial</a></li><li><a href=/categories/spring-boot/ title="spring boot">spring boot</a></li><li><a href=/categories/spring-boot-tutorial/ title="spring boot tutorial">spring boot tutorial</a></li><li><a href=/categories/spring-data-jpa-tutorial/ title="spring data jpa tutorial">spring data jpa tutorial</a></li><li><a href=/categories/spring-kafka-tutorial/ title="spring kafka tutorial">spring kafka tutorial</a></li><li><a href=/categories/spring-security-tutorial/ title="spring security tutorial">spring security tutorial</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgment/ title=acknowledgment>acknowledgment
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgments/ title=acknowledgments>acknowledgments
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acl/ title=acl>acl
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/actuator/ title=actuator>actuator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/admin/ title=admin>admin
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agents/ title=agents>agents
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/ title=ai>ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/algebraic-data-types/ title=algebraic-data-types>algebraic-data-types
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/annotations/ title=annotations>annotations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api/ title=api>api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api-gateway/ title=api-gateway>api-gateway
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api-versioning/ title=api-versioning>api-versioning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/appcds/ title=appcds>appcds
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/architecture/ title=architecture>architecture
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/argon2/ title=argon2>argon2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/async/ title=async>async
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authentication/ title=authentication>authentication
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authorization/ title=authorization>authorization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authorization-server/ title=authorization-server>authorization-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/auto-configuration/ title=auto-configuration>auto-configuration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/ title=automation>automation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/avro/ title=avro>avro
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/backend/ title=backend>backend
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/backwards-compatible/ title=backwards-compatible>backwards-compatible
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/base64/ title=base64>base64
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bcrypt/ title=bcrypt>bcrypt
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-lifecycle/ title=bean-lifecycle>bean-lifecycle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-scopes/ title=bean-scopes>bean-scopes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-validation/ title=bean-validation>bean-validation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/beginner/ title=beginner>beginner
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/best-practices/ title=best-practices>best-practices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/buildpacks/ title=buildpacks>buildpacks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bun/ title=bun>bun
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caching/ title=caching>caching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caffeine/ title=caffeine>caffeine
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/chacha20/ title=chacha20>chacha20
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/checklist/ title=checklist>checklist
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ci-cd/ title=ci-cd>ci-cd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/circuit-breaker/ title=circuit-breaker>circuit-breaker
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ckad/ title=ckad>ckad
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/ title=claude>claude
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude.md/ title=claude.md>claude.md
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/clerk/ title=clerk>clerk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/ title=cli>cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloud-native/ title=cloud-native>cloud-native
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloudinary/ title=cloudinary>cloudinary
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cluster/ title=cluster>cluster
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/code-review/ title="code review">code review
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/collections/ title=collections>collections
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/collectors/ title=collectors>collectors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/comparator/ title=comparator>comparator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/comparison/ title=comparison>comparison
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/completablefuture/ title=completablefuture>completablefuture
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/compute/ title=compute>compute
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/computer-use/ title="computer use">computer use
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/concurrency/ title=concurrency>concurrency
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/config-server/ title=config-server>config-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/configuration/ title=configuration>configuration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer/ title=consumer>consumer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer-groups/ title=consumer-groups>consumer-groups
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/containers/ title=containers>containers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cors/ title=cors>cors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cost-optimization/ title="cost optimization">cost optimization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/crud/ title=crud>crud
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cryptography/ title=cryptography>cryptography
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/csp/ title=csp>csp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/csrf/ title=csrf>csrf
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/curve25519/ title=curve25519>curve25519
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/data-classes/ title=data-classes>data-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/data-jpa-test/ title=data-jpa-test>data-jpa-test
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/database/ title=database>database
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/date-time/ title=date-time>date-time
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dead-letter/ title=dead-letter>dead-letter
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/default-methods/ title=default-methods>default-methods
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dependency-injection/ title=dependency-injection>dependency-injection
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/deployment/ title=deployment>deployment
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/deserialization/ title=deserialization>deserialization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/ title=devops>devops
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dns/ title=dns>dns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/docker/ title=docker>docker
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dropwhile/ title=dropwhile>dropwhile
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dto/ title=dto>dto
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/durability/ title=durability>durability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dynamic-listeners/ title=dynamic-listeners>dynamic-listeners
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/ title=electron>electron
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/encapsulation/ title=encapsulation>encapsulation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/entity-mapping/ title=entity-mapping>entity-mapping
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/epsilon/ title=epsilon>epsilon
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/error-handling/ title=error-handling>error-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/eureka/ title=eureka>eureka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-driven/ title=event-driven>event-driven
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-streaming/ title=event-streaming>event-streaming
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/exactly-once/ title=exactly-once>exactly-once
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/exception-handling/ title=exception-handling>exception-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/feign/ title=feign>feign
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ffm-api/ title=ffm-api>ffm-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/files/ title=files>files
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/filtering/ title=filtering>filtering
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flatmap/ title=flatmap>flatmap
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flight-recorder/ title=flight-recorder>flight-recorder
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flyway/ title=flyway>flyway
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/foreach/ title=foreach>foreach
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/forkjoinpool/ title=forkjoinpool>forkjoinpool
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/function/ title=function>function
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional/ title=functional>functional
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional-interfaces/ title=functional-interfaces>functional-interfaces
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional-programming/ title=functional-programming>functional-programming
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/g1gc/ title=g1gc>g1gc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/garbage-collection/ title=garbage-collection>garbage-collection
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/gc/ title=gc>gc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github/ title=github>github
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/ title=github-actions>github-actions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/google/ title=google>google
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/graalvm/ title=graalvm>graalvm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/gradle/ title=gradle>gradle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/grafana/ title=grafana>grafana
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/groupingby/ title=groupingby>groupingby
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/headers/ title=headers>headers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/helm/ title=helm>helm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hibernate/ title=hibernate>hibernate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hooks/ title=hooks>hooks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hsts/ title=hsts>hsts
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/http/ title=http>http
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/http2/ title=http2>http2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/httpclient/ title=httpclient>httpclient
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/iac/ title=iac>iac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/idempotent/ title=idempotent>idempotent
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/immutable/ title=immutable>immutable
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instance-main/ title=instance-main>instance-main
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instanceof/ title=instanceof>instanceof
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instant/ title=instant>instant
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/integration-testing/ title=integration-testing>integration-testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/intellij/ title=intellij>intellij
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/interface/ title=interface>interface
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/interview/ title=interview>interview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/io/ title=io>io
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ioc/ title=ioc>ioc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/isblank/ title=isblank>isblank
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/ title=java>java
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java-21/ title=java-21>java-21
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java10/ title=java10>java10
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java11/ title=java11>java11
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java17/ title=java17>java17
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java21/ title=java21>java21
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java8/ title=java8>java8
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java9/ title=java9>java9
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/javafx/ title=javafx>javafx
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jaxb/ title=jaxb>jaxb
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jdeps/ title=jdeps>jdeps
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep/ title=jep>jep
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep126/ title=jep126>jep126
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep222/ title=jep222>jep222
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep269/ title=jep269>jep269
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep282/ title=jep282>jep282
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep286/ title=jep286>jep286
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep320/ title=jep320>jep320
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep321/ title=jep321>jep321
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep323/ title=jep323>jep323
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep324/ title=jep324>jep324
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep328/ title=jep328>jep328
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep329/ title=jep329>jep329
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep330/ title=jep330>jep330
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep332/ title=jep332>jep332
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep335/ title=jep335>jep335
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep356/ title=jep356>jep356
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep361/ title=jep361>jep361
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep378/ title=jep378>jep378
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep394/ title=jep394>jep394
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep395/ title=jep395>jep395
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep403/ title=jep403>jep403
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep406/ title=jep406>jep406
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep409/ title=jep409>jep409
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep412/ title=jep412>jep412
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep415/ title=jep415>jep415
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep431/ title=jep431>jep431
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep439/ title=jep439>jep439
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep440/ title=jep440>jep440
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep441/ title=jep441>jep441
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep443/ title=jep443>jep443
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep444/ title=jep444>jep444
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep445/ title=jep445>jep445
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep446/ title=jep446>jep446
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep448/ title=jep448>jep448
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep452/ title=jep452>jep452
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep453/ title=jep453>jep453
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jfr/ title=jfr>jfr
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jigsaw/ title=jigsaw>jigsaw
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jlink/ title=jlink>jlink
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jni/ title=jni>jni
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpa/ title=jpa>jpa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpms/ title=jpms>jpms
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jshell/ title=jshell>jshell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/json/ title=json>json
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jspecify/ title=jspecify>jspecify
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jsr310/ title=jsr310>jsr310
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/junit5/ title=junit5>junit5
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jvm/ title=jvm>jvm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jwt/ title=jwt>jwt
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/k8s/ title=k8s>k8s
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/ title=kafka>kafka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-cli/ title=kafka-cli>kafka-cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-streams/ title=kafka-streams>kafka-streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkahandler/ title=kafkahandler>kafkahandler
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkalistener/ title=kafkalistener>kafkalistener
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkatemplate/ title=kafkatemplate>kafkatemplate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kem/ title=kem>kem
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kraft/ title=kraft>kraft
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lambda/ title=lambda>lambda
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lambdas/ title=lambdas>lambdas
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ldap/ title=ldap>ldap
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lifecycle/ title=lifecycle>lifecycle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lines/ title=lines>lines
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/liquibase/ title=liquibase>liquibase
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/list-of/ title=list-of>list-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/llm/ title=llm>llm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/localdatetime/ title=localdatetime>localdatetime
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/logback/ title=logback>logback
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/logging/ title=logging>logging
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/loki/ title=loki>loki
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/longadder/ title=longadder>longadder
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lts/ title=lts>lts
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/map/ title=map>map
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/map-of/ title=map-of>map-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/maven/ title=maven>maven
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/merge/ title=merge>merge
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/messaging/ title=messaging>messaging
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/metaspace/ title=metaspace>metaspace
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/method-references/ title=method-references>method-references
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/method-security/ title=method-security>method-security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mfa/ title=mfa>mfa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/micrometer/ title=micrometer>micrometer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/microservices/ title=microservices>microservices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migration/ title=migration>migration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migrations/ title=migrations>migrations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mockito/ title=mockito>mockito
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mockmvc/ title=mockmvc>mockmvc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modular-monolith/ title=modular-monolith>modular-monolith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modules/ title=modules>modules
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modulith/ title=modulith>modulith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/monitoring/ title=monitoring>monitoring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mtls/ title=mtls>mtls
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mysql/ title=mysql>mysql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nashorn/ title=nashorn>nashorn
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/native/ title=native>native
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/native-image/ title=native-image>native-image
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/next.js/ title=next.js>next.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nio/ title=nio>nio
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/ title=node.js>node.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/non-blocking/ title=non-blocking>non-blocking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/non-blocking-retry/ title=non-blocking-retry>non-blocking-retry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/null-safety/ title=null-safety>null-safety
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nullpointerexception/ title=nullpointerexception>nullpointerexception
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2/ title=oauth2>oauth2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2-authorization-server/ title=oauth2-authorization-server>oauth2-authorization-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/observability/ title=observability>observability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/offsets/ title=offsets>offsets
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oidc/ title=oidc>oidc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/open-banking/ title="open banking">open banking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openai/ title=openai>openai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openapi/ title=openapi>openapi
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/opentelemetry/ title=opentelemetry>opentelemetry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/optional/ title=optional>optional
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/outbox-pattern/ title=outbox-pattern>outbox-pattern
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/overview/ title=overview>overview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/owasp/ title=owasp>owasp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/pagination/ title=pagination>pagination
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/parallel-streams/ title=parallel-streams>parallel-streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/partitioning/ title=partitioning>partitioning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/password/ title=password>password
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/password-reset/ title=password-reset>password-reset
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/path/ title=path>path
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/pattern-matching/ title=pattern-matching>pattern-matching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/performance/ title=performance>performance
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/permgen/ title=permgen>permgen
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/post-quantum/ title=post-quantum>post-quantum
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/postgresql/ title=postgresql>postgresql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/predicate/ title=predicate>predicate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/preview/ title=preview>preview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prisma/ title=prisma>prisma
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prng/ title=prng>prng
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/producer/ title=producer>producer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/production/ title=production>production
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/profiles/ title=profiles>profiles
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/profiling/ title=profiling>profiling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/project-loom/ title=project-loom>project-loom
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/project-panama/ title=project-panama>project-panama
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prometheus/ title=prometheus>prometheus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quarkus/ title=quarkus>quarkus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quartz/ title=quartz>quartz
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/queries/ title=queries>queries
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rag/ title=rag>rag
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/random/ title=random>random
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rbac/ title=rbac>rbac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/ title=react>react
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/reactive/ title=reactive>reactive
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/readstring/ title=readstring>readstring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/records/ title=records>records
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/redis/ title=redis>redis
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/registration/ title=registration>registration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/relationships/ title=relationships>relationships
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/removed-apis/ title=removed-apis>removed-apis
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/repeat/ title=repeat>repeat
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/repl/ title=repl>repl
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/replay/ title=replay>replay
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/request-handling/ title=request-handling>request-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/request-reply/ title=request-reply>request-reply
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/resilience4j/ title=resilience4j>resilience4j
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/response-shaping/ title=response-shaping>response-shaping
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest/ title=rest>rest
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest-api/ title=rest-api>rest-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/restclient/ title=restclient>restclient
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/retries/ title=retries>retries
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/retry/ title=retry>retry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/schema-registry/ title=schema-registry>schema-registry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/scoped-values/ title=scoped-values>scoped-values
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sealed-classes/ title=sealed-classes>sealed-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security-headers/ title=security-headers>security-headers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security-manager/ title=security-manager>security-manager
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/seeking/ title=seeking>seeking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sendto/ title=sendto>sendto
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/serialization/ title=serialization>serialization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/service-discovery/ title=service-discovery>service-discovery
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/session/ title=session>session
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/set-of/ title=set-of>set-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/setup/ title=setup>setup
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sha3/ title=sha3>sha3
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/ title=shell>shell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/simd/ title=simd>simd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/single-file/ title=single-file>single-file
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sorting/ title=sorting>sorting
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-ai/ title=spring-ai>spring-ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-batch/ title=spring-batch>spring-batch
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/ title=spring-boot>spring-boot
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot-4/ title=spring-boot-4>spring-boot-4
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-cloud/ title=spring-cloud>spring-cloud
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-data-jpa/ title=spring-data-jpa>spring-data-jpa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/ title=spring-kafka>spring-kafka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-modulith/ title=spring-modulith>spring-modulith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-security/ title=spring-security>spring-security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/springdoc/ title=springdoc>springdoc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stampedlock/ title=stampedlock>stampedlock
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stock-market/ title="stock market">stock market
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stream/ title=stream>stream
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/streams/ title=streams>streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/string/ title=string>string
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/strings/ title=strings>strings
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/strip/ title=strip>strip
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stripe/ title=stripe>stripe
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/structured-concurrency/ title=structured-concurrency>structured-concurrency
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/supplier/ title=supplier>supplier
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/switch/ title=switch>switch
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/switch-expressions/ title=switch-expressions>switch-expressions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tailwind-css/ title="tailwind css">tailwind css
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/takewhile/ title=takewhile>takewhile
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/terraform/ title=terraform>terraform
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testcontainers/ title=testcontainers>testcontainers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testing/ title=testing>testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/text-blocks/ title=text-blocks>text-blocks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tls13/ title=tls13>tls13
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/topics/ title=topics>topics
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/totp/ title=totp>totp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tracing/ title=tracing>tracing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/transactions/ title=transactions>transactions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tuning/ title=tuning>tuning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/ title=tutorial>tutorial
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/type-inference/ title=type-inference>type-inference
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/ title=typescript>typescript
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unnamed-classes/ title=unnamed-classes>unnamed-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unnamed-patterns/ title=unnamed-patterns>unnamed-patterns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/upgrade/ title=upgrade>upgrade
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/var/ title=var>var
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vector-api/ title=vector-api>vector-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/virtual-threads/ title=virtual-threads>virtual-threads
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vps/ title=vps>vps
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vulnerabilities/ title=vulnerabilities>vulnerabilities
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webauthn/ title=webauthn>webauthn
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webflux/ title=webflux>webflux
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/writestring/ title=writestring>writestring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zgc/ title=zgc>zgc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zoneddatetime/ title=zoneddatetime>zoneddatetime
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zookeeper/ title=zookeeper>zookeeper</a></div></div></aside></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
