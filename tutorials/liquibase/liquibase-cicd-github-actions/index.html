@@ -20,7 +20,7 @@
 &nbsp;
 <a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/>tutorial</a></span></div></header><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#the-setup-liquibase-action>The setup-liquibase Action</a></li><li><a href=#workflow-1-pr-validation-gates>Workflow 1: PR Validation Gates</a></li><li><a href=#workflow-2-staging-deployment>Workflow 2: Staging Deployment</a></li><li><a href=#workflow-3-production-deployment>Workflow 3: Production Deployment</a></li><li><a href=#workflow-4-rollback-manual-trigger>Workflow 4: Rollback (Manual Trigger)</a></li><li><a href=#github-secrets-configuration>GitHub Secrets Configuration</a></li><li><a href=#branch-protection-rules>Branch Protection Rules</a></li><li><a href=#common-mistakes>Common Mistakes</a></li><li><a href=#best-practices>Best Practices</a></li><li><a href=#what-youve-learned>What You&rsquo;ve Learned</a></li></ul></nav></div></nav><div class=entry-content><p>The Liquibase commands covered in Articles 5 and 16 become reliable only when they run automatically on every change. A developer who remembers to run <code>futureRollbackSQL</code> before merging is better than one who doesn&rsquo;t — but a pipeline that enforces it is better than both.</p><p>This article builds a complete GitHub Actions pipeline: PR validation gates that block merges when rollback is missing, a staging deployment workflow, and a production deployment workflow with mandatory tagging and pre-generated rollback files.</p><hr><h2 id=the-setup-liquibase-action>The setup-liquibase Action</h2><p>Liquibase&rsquo;s current GitHub Actions approach is a single <code>setup-liquibase</code> action that installs Liquibase and adds it to <code>PATH</code>, then lets you run any Liquibase command as a standard <code>run</code> step. This replaced 50+ individual command actions in Liquibase 4.x and is the only supported approach for Liquibase 5.x.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>- <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
 </span></span><span style=display:flex><span>  <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
-</span></span><span style=display:flex><span>    <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>    <span style=color:#616e87;font-style:italic># Liquibase version</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.33.0&#34;</span>    <span style=color:#616e87;font-style:italic># Liquibase version</span>
 </span></span><span style=display:flex><span>    <span style=color:#616e87;font-style:italic># edition: &#34;pro&#34;     # Uncomment for Liquibase Pro</span>
 </span></span></code></pre></div><p>After this step, <code>liquibase</code> is available in all subsequent <code>run</code> steps.</p><hr><h2 id=workflow-1-pr-validation-gates>Workflow 1: PR Validation Gates</h2><p>This workflow runs on every PR that touches migration files. It enforces the gates from Article 16 before merge is allowed.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#616e87;font-style:italic># .github/workflows/db-pr-validation.yml</span>
 </span></span><span style=display:flex><span><span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Database Migration Validation
@@ -72,7 +72,7 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
 </span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
-</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.33.0&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Gate 1: Syntax and checksum validation</span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Gate 1 — Validate changelog
@@ -186,7 +186,7 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
 </span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
-</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.33.0&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Validate changelog
 </span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
@@ -304,7 +304,7 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
 </span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
-</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.33.0&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      <span style=color:#616e87;font-style:italic># Pre-deployment: validate + preview</span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Validate changelog
@@ -460,7 +460,7 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>uses</span><span style=color:#eceff4>:</span> liquibase/setup-liquibase@v1
 </span></span><span style=display:flex><span>        <span style=color:#81a1c1>with</span><span style=color:#eceff4>:</span>
-</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.31.1&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#81a1c1>version</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;4.33.0&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#81a1c1>name</span><span style=color:#eceff4>:</span> Preview rollback SQL
 </span></span><span style=display:flex><span>        <span style=color:#81a1c1>env</span><span style=color:#eceff4>:</span>
