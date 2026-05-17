@@ -1,0 +1,739 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="How Claude Code plugins work, when to use them over standalone config, and a step-by-step walkthrough building a real DevOps plugin with skills, hooks, and an MCP server."><title>Claude Code Plugins: The Complete Guide to Building and Sharing Extensions | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Claude Code Plugins: The Complete Guide to Building and Sharing Extensions"><meta name=twitter:description content="How Claude Code plugins work, when to use them over standalone config, and a step-by-step walkthrough building a real DevOps plugin with skills, hooks, and an MCP server."><meta property="og:url" content="https://devops-monk.com/2026/05/claude-code-plugins-guide/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Claude Code Plugins: The Complete Guide to Building and Sharing Extensions"><meta property="og:description" content="How Claude Code plugins work, when to use them over standalone config, and a step-by-step walkthrough building a real DevOps plugin with skills, hooks, and an MCP server."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-05-17T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-17T00:00:00+00:00"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Plugins"><meta property="article:tag" content="Automation"><meta property="article:tag" content="DevOps"><meta property="article:tag" content="CLI"><meta itemprop=name content="Claude Code Plugins: The Complete Guide to Building and Sharing Extensions"><meta itemprop=description content="How Claude Code plugins work, when to use them over standalone config, and a step-by-step walkthrough building a real DevOps plugin with skills, hooks, and an MCP server."><meta itemprop=datePublished content="2026-05-17T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-17T00:00:00+00:00"><meta itemprop=wordCount content="2048"><meta itemprop=keywords content="Claude,Plugins,Automation,DevOps,CLI"><meta property="og:image" content="https://devops-monk.com/images/articles/claude-plugins-guide.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://devops-monk.com/images/articles/claude-plugins-guide.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/png href=/favicon.png><link rel="shortcut icon" href=/favicon.png><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Claude Code Plugins: The Complete Guide to Building and Sharing Extensions","headline":"Claude Code Plugins: The Complete Guide to Building and Sharing Extensions","inLanguage":"en-US","url":"https://devops-monk.com/2026/05/claude-code-plugins-guide/","description":"How Claude Code plugins work, when to use them over standalone config, and a step-by-step walkthrough building a real DevOps plugin with skills, hooks, and an MCP server.","wordCount":"2048","keywords":["Claude","Plugins","Automation","DevOps","CLI"],"datePublished":"2026-05-17T00:00:00Z","dateModified":"2026-05-17T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://devops-monk.com/2026/05/claude-code-plugins-guide/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/2026/05/claude-code-plugins-guide/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Claude Code Plugins: The Complete Guide to Building and Sharing Extensions\"","datePublished":"2026-05-17T00:00:00Z","dateModified":"2026-05-17T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/devops-monk.com\/"},"image":"https:\/\/devops-monk.com\/images\/og-default.png","url":"https:\/\/devops-monk.com\/2026\/05\/claude-code-plugins-guide\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      document.addEventListener('DOMContentLoaded', () => mermaid.run());
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-kafka/>Spring Kafka Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Java</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/java8/>Java 8 Tutorial</a></li><li class=menu-item><a href=/tutorials/java11/>Java 11 Tutorial</a></li><li class=menu-item><a href=/tutorials/java17/>Java 17 Tutorial</a></li><li class=menu-item><a href=/tutorials/java21/>Java 21 Tutorial</a></li><li class=menu-item><a href=/tutorials/java25/>Java 25 Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://devops-monk.com/2026/05/claude-code-plugins-guide/ rel=bookmark><time class="entry-date published" datetime=2026-05-17T00:00:00>May 17, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>10 min read</span></div><h2 class=entry-title><a href=https://devops-monk.com/2026/05/claude-code-plugins-guide/ rel=bookmark>Claude Code Plugins: The Complete Guide to Building and Sharing Extensions</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/>Claude</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/plugins/>Plugins</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/>Automation</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/>DevOps</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/>CLI</a></span></div></header><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fclaude-code-plugins-guide%2f&title=Claude&#43;Code+Plugins%3A+The+Complete+Guide+to+Building+and+Sharing+Extensions" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fclaude-code-plugins-guide%2f&text=Claude&#43;Code+Plugins%3A+The+Complete+Guide+to+Building+and+Sharing+Extensions" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fclaude-code-plugins-guide%2f&title=Claude&#43;Code+Plugins%3A+The+Complete+Guide+to+Building+and+Sharing+Extensions" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#plugins-vs-standalone-configuration>Plugins vs Standalone Configuration</a></li><li><a href=#plugin-structure>Plugin Structure</a><ul><li><a href=#what-each-component-does>What each component does</a></li></ul></li><li><a href=#the-plugin-manifest>The Plugin Manifest</a></li><li><a href=#building-a-real-plugin-devops-helper>Building a Real Plugin: DevOps Helper</a><ul><li><a href=#step-1-create-the-structure>Step 1: Create the structure</a></li><li><a href=#step-2-write-the-manifest>Step 2: Write the manifest</a></li><li><a href=#step-3-create-the-deploy-skill>Step 3: Create the deploy skill</a></li></ul></li><li><a href=#3-identify-target-environment>3. Identify target environment</a></li><li><a href=#4-deploy>4. Deploy</a></li><li><a href=#5-verify>5. Verify</a></li><li><a href=#6-report>6. Report</a></li><li><a href=#incident-summary--date>Incident Summary — [DATE]</a><ul><li><a href=#step-6-add-a-pre-deploy-safety-hook>Step 6: Add a pre-deploy safety hook</a></li><li><a href=#step-7-add-a-kubernetes-mcp-server>Step 7: Add a Kubernetes MCP server</a></li><li><a href=#step-8-add-a-background-error-log-monitor>Step 8: Add a background error log monitor</a></li><li><a href=#final-plugin-structure>Final plugin structure</a></li></ul></li><li><a href=#testing-your-plugin>Testing Your Plugin</a></li><li><a href=#installing-plugins>Installing Plugins</a></li><li><a href=#converting-existing-config-to-a-plugin>Converting Existing Config to a Plugin</a></li><li><a href=#publishing-to-the-anthropic-marketplace>Publishing to the Anthropic Marketplace</a></li><li><a href=#when-to-build-a-plugin>When to Build a Plugin</a></li><li><a href=#plugin-ideas-to-build-next>Plugin Ideas to Build Next</a></li></ul></nav></div></nav><div class=entry-content><p>Skills, agents, and hooks you add to <code>.claude/</code> are powerful — but they are locked to one project. Every time you start a new repo you copy the same files, maintain them in multiple places, and drift out of sync. Claude Code plugins solve this: a plugin is a shareable, versioned package that carries all your customisations and can be installed in any project with one command.</p><p>This post covers what plugins are, when to use them, and how to build a real one from scratch — a DevOps helper that ships a deployment skill, a pre-deploy safety hook, and an MCP server connection to your Kubernetes cluster.</p><hr><h2 id=plugins-vs-standalone-configuration>Plugins vs Standalone Configuration</h2><p>Claude Code supports two ways to extend it:</p><table><thead><tr><th>Approach</th><th>Skill names</th><th>Best for</th></tr></thead><tbody><tr><td><strong>Standalone</strong> (<code>.claude/</code> directory)</td><td><code>/deploy</code></td><td>One project, personal workflows, quick experiments</td></tr><tr><td><strong>Plugins</strong> (separate directory with manifest)</td><td><code>/devops-helper:deploy</code></td><td>Sharing with team, multiple projects, versioned releases, marketplace distribution</td></tr></tbody></table><p><strong>Start with standalone</strong> when you are iterating fast on a single project. <strong>Convert to a plugin</strong> when you want to share the same setup across projects or with teammates — or publish to the Anthropic marketplace.</p><p>The main trade-off is skill namespacing. Plugin skills are always prefixed with the plugin name (<code>/devops-helper:deploy</code>) to prevent conflicts when multiple plugins are installed. Standalone skills have no prefix (<code>/deploy</code>).</p><hr><h2 id=plugin-structure>Plugin Structure</h2><p>Every plugin is a directory with this layout:</p><pre tabindex=0><code>devops-helper/
+├── .claude-plugin/
+│   └── plugin.json          ← manifest (only file that goes in .claude-plugin/)
+├── skills/
+│   └── deploy/
+│       └── SKILL.md         ← skill definition
+├── agents/
+│   └── incident-responder.md
+├── hooks/
+│   └── hooks.json           ← event hooks
+├── .mcp.json                ← MCP server config
+├── monitors/
+│   └── monitors.json        ← background monitors
+├── bin/                     ← executables added to PATH
+├── settings.json            ← default settings applied when plugin is enabled
+└── README.md
+</code></pre><p>The critical rule: <strong>only <code>plugin.json</code> goes inside <code>.claude-plugin/</code></strong>. Everything else — skills, agents, hooks — sits at the plugin root. This is the most common structural mistake.</p><h3 id=what-each-component-does>What each component does</h3><table><thead><tr><th>Component</th><th>What it is</th></tr></thead><tbody><tr><td><code>skills/</code></td><td>Skills Claude invokes automatically or you call with <code>/plugin:skill-name</code></td></tr><tr><td><code>agents/</code></td><td>Subagent definitions for specialised parallel tasks</td></tr><tr><td><code>hooks/</code></td><td>Shell scripts that fire on lifecycle events (PreToolUse, PostToolUse, etc.)</td></tr><tr><td><code>.mcp.json</code></td><td>MCP server config connecting Claude to external APIs and databases</td></tr><tr><td><code>monitors/</code></td><td>Background watchers (log tails, file watchers) that notify Claude as events arrive</td></tr><tr><td><code>bin/</code></td><td>Executables added to the Bash tool&rsquo;s PATH during the session</td></tr><tr><td><code>settings.json</code></td><td>Default settings applied when the plugin is enabled</td></tr></tbody></table><hr><h2 id=the-plugin-manifest>The Plugin Manifest</h2><p>The manifest at <code>.claude-plugin/plugin.json</code> is the only required file:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;name&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;devops-helper&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;description&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;Deployment, Kubernetes, and incident-response tools for DevOps teams&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;version&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;1.0.0&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;author&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;name&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;Your Name&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;email&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;you@company.com&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>},</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;homepage&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;https://github.com/your-org/devops-helper&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;repository&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;https://github.com/your-org/devops-helper&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;license&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;MIT&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><table><thead><tr><th>Field</th><th>Purpose</th></tr></thead><tbody><tr><td><code>name</code></td><td>Plugin identifier and skill namespace prefix</td></tr><tr><td><code>description</code></td><td>Shown in the plugin manager when browsing</td></tr><tr><td><code>version</code></td><td>Bump to trigger updates for installers. Omit to use git SHA</td></tr><tr><td><code>author</code></td><td>Attribution — useful for marketplace listings</td></tr><tr><td><code>homepage</code> / <code>repository</code></td><td>Links shown in the plugin manager</td></tr></tbody></table><hr><h2 id=building-a-real-plugin-devops-helper>Building a Real Plugin: DevOps Helper</h2><p>Let&rsquo;s build a plugin that DevOps teams can install across all their projects. It will include:</p><ol><li>A <strong>deploy skill</strong> — runs deployment with pre-flight checks</li><li>A <strong>pre-deploy hook</strong> — blocks deploys to production without explicit confirmation</li><li>A <strong>Kubernetes MCP server</strong> — gives Claude live cluster access</li><li>A <strong>background log monitor</strong> — streams app errors to Claude automatically</li></ol><h3 id=step-1-create-the-structure>Step 1: Create the structure</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p devops-helper/.claude-plugin
+</span></span><span style=display:flex><span>mkdir -p devops-helper/skills/deploy
+</span></span><span style=display:flex><span>mkdir -p devops-helper/skills/rollback
+</span></span><span style=display:flex><span>mkdir -p devops-helper/skills/incident-summary
+</span></span><span style=display:flex><span>mkdir -p devops-helper/hooks
+</span></span><span style=display:flex><span>mkdir -p devops-helper/agents
+</span></span><span style=display:flex><span>mkdir -p devops-helper/monitors
+</span></span></code></pre></div><h3 id=step-2-write-the-manifest>Step 2: Write the manifest</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;name&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;devops-helper&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;description&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;Deployment safety, Kubernetes access, and incident response for DevOps teams&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;version&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;1.0.0&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;author&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;name&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;DevOps Team&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><h3 id=step-3-create-the-deploy-skill>Step 3: Create the deploy skill</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#616e87;font-style:italic>&lt;!-- devops-helper/skills/deploy/SKILL.md --&gt;</span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>description: &gt;
+</span></span><span style=display:flex><span>  Runs a deployment with pre-flight checks and rollback instructions.
+</span></span><span style=display:flex><span>  Auto-invokes when the user asks to deploy, release, or push to production.
+</span></span><span style=display:flex><span>user-invocable: true
+</span></span><span style=display:flex><span>allowed-tools:
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>-</span> Bash
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1;font-weight:700>-</span> Read
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Deploy Skill
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>When the user asks to deploy, follow this sequence:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## 1. Read deployment config
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>Read <span style=color:#a3be8c>`deploy.yaml`</span> or <span style=color:#a3be8c>`Makefile`</span> to understand the deployment command. If neither exists, ask the user.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## 2. Pre-flight checks
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>Run these before any deploy:
+</span></span><span style=display:flex><span>```bash
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Check current branch
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>git branch --show-current
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Check for uncommitted changes
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>git status --porcelain
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Run tests
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>npm test --silent 2&gt;<span style=color:#bf616a>&amp;</span>1 | tail -10
+</span></span></code></pre></div><p>If tests fail or there are uncommitted changes, stop and report. Do not deploy.</p><h2 id=3-identify-target-environment>3. Identify target environment</h2><p>Parse $ARGUMENTS for the environment name (staging, production, etc.).</p><ul><li>Default to <code>staging</code> if none specified</li><li>If <code>production</code> is specified, ask the user to confirm: &ldquo;Deploying to production. Type YES to confirm.&rdquo;</li></ul><h2 id=4-deploy>4. Deploy</h2><p>Run the deployment command. Stream output. Capture exit code.</p><h2 id=5-verify>5. Verify</h2><p>After deploy, verify the service is healthy:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Check rollout status (Kubernetes)</span>
+</span></span><span style=display:flex><span>kubectl rollout status deployment/$SERVICE_NAME -n $NAMESPACE --timeout<span style=color:#81a1c1>=</span>120s
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Or check the health endpoint</span>
+</span></span><span style=display:flex><span>curl -sf $HEALTH_URL <span style=color:#81a1c1>||</span> <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;Health check failed&#34;</span>
+</span></span></code></pre></div><h2 id=6-report>6. Report</h2><p>Summarise: what was deployed, to which environment, any warnings, and the health check result.
+If deploy failed: run the rollback skill immediately and report what happened.</p><pre tabindex=0><code>
+### Step 4: Create the rollback skill
+
+```markdown
+&lt;!-- devops-helper/skills/rollback/SKILL.md --&gt;
+---
+description: Rolls back the last deployment. Use when a deploy fails or causes issues.
+user-invocable: true
+allowed-tools:
+  - Bash
+---
+
+# Rollback Skill
+
+## Steps
+
+1. Identify the last stable deployment:
+```bash
+kubectl rollout history deployment/$SERVICE_NAME -n $NAMESPACE
+</code></pre><ol start=2><li>Roll back:</li></ol><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl rollout undo deployment/$SERVICE_NAME -n $NAMESPACE
+</span></span></code></pre></div><ol start=3><li>Wait and verify:</li></ol><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl rollout status deployment/$SERVICE_NAME -n $NAMESPACE --timeout<span style=color:#81a1c1>=</span>60s
+</span></span></code></pre></div><ol start=4><li>Report: whether rollback succeeded, which revision is now active, and recommend investigating what caused the failed deploy.</li></ol><pre tabindex=0><code>
+### Step 5: Create the incident summary skill
+
+```markdown
+&lt;!-- devops-helper/skills/incident-summary/SKILL.md --&gt;
+---
+description: &gt;
+  Generates an incident summary from logs and recent changes.
+  Auto-invokes when the user mentions an incident, outage, or asks what went wrong.
+user-invocable: true
+allowed-tools:
+  - Bash
+  - Read
+---
+
+# Incident Summary Skill
+
+Generate a structured incident summary. Collect:
+
+1. **Timeline**: Run `git log --since=&#34;6 hours ago&#34; --oneline` — what changed recently?
+2. **Errors**: Read recent error logs from `logs/error.log` or run `kubectl logs --tail=100 -l app=$SERVICE`
+3. **Impact**: Ask the user to describe impact if not obvious from logs
+
+Write a summary in this format:
+</code></pre><h2 id=incident-summary--date>Incident Summary — [DATE]</h2><p><strong>Status</strong>: Ongoing / Resolved</p><p><strong>Impact</strong>: [What broke, how many users affected]</p><p><strong>Timeline</strong>:</p><ul><li>HH:MM — [event]</li><li>HH:MM — [event]</li></ul><p><strong>Root cause</strong>: [One sentence]</p><p><strong>Fix applied</strong>: [What was done]</p><p><strong>Action items</strong>:</p><ul><li><input disabled type=checkbox> [Follow-up task]</li></ul><pre tabindex=0><code>
+Keep it factual, under 300 words, suitable for a post-mortem or Slack channel update.
+</code></pre><h3 id=step-6-add-a-pre-deploy-safety-hook>Step 6: Add a pre-deploy safety hook</h3><p>The hook blocks deploys to production unless the user explicitly confirms. It intercepts the <code>Bash</code> tool and checks if the command matches a deploy pattern targeting production:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#616e87;font-style:italic>// devops-helper/hooks/hooks.json
+</span></span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic></span><span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;hooks&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;PreToolUse&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span>
+</span></span><span style=display:flex><span>      <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>&#34;matcher&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;Bash&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>&#34;hooks&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span>
+</span></span><span style=display:flex><span>          <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#81a1c1>&#34;type&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;command&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>            <span style=color:#81a1c1>&#34;command&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;devops-helper/hooks/pre-deploy-check.sh&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#eceff4>]</span>
+</span></span><span style=display:flex><span>      <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>],</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;PostToolUse&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span>
+</span></span><span style=display:flex><span>      <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>&#34;matcher&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;Bash&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>&#34;hooks&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span>
+</span></span><span style=display:flex><span>          <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#81a1c1>&#34;type&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;command&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>            <span style=color:#81a1c1>&#34;command&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;devops-helper/hooks/log-commands.sh&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#eceff4>]</span>
+</span></span><span style=display:flex><span>      <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>]</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#5e81ac;font-style:italic>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#5e81ac;font-style:italic></span><span style=color:#616e87;font-style:italic># devops-helper/hooks/pre-deploy-check.sh</span>
+</span></span><span style=display:flex><span>input<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>cat<span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>cmd<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span><span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;</span>$input<span style=color:#a3be8c>&#34;</span> <span style=color:#eceff4>|</span> jq -r <span style=color:#a3be8c>&#39;.tool_input.command // &#34;&#34;&#39;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Check for production deploy patterns</span>
+</span></span><span style=display:flex><span>PROD_PATTERNS<span style=color:#81a1c1>=</span><span style=color:#a3be8c>&#34;prod|production|--env=prod&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>if</span> <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;</span>$cmd<span style=color:#a3be8c>&#34;</span> <span style=color:#eceff4>|</span> grep -qiE <span style=color:#a3be8c>&#34;(deploy|release|kubectl apply|helm upgrade)&#34;</span> <span style=color:#81a1c1>&amp;&amp;</span> <span style=color:#ebcb8b>\
+</span></span></span><span style=display:flex><span><span style=color:#ebcb8b></span>   <span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;</span>$cmd<span style=color:#a3be8c>&#34;</span> <span style=color:#eceff4>|</span> grep -qiE <span style=color:#a3be8c>&#34;</span>$PROD_PATTERNS<span style=color:#a3be8c>&#34;</span><span style=color:#eceff4>;</span> <span style=color:#81a1c1;font-weight:700>then</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  jq -n <span style=color:#a3be8c>&#39;{
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>    hookSpecificOutput: {
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>      hookEventName: &#34;PreToolUse&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>      permissionDecision: &#34;ask&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>      permissionDecisionReason: &#34;Production deployment detected. Confirm this is intentional before proceeding.&#34;
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>    }
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>  }&#39;</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>exit</span> <span style=color:#b48ead>0</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>exit</span> <span style=color:#b48ead>0</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#5e81ac;font-style:italic>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#5e81ac;font-style:italic></span><span style=color:#616e87;font-style:italic># devops-helper/hooks/log-commands.sh</span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Append every Bash command to an audit log</span>
+</span></span><span style=display:flex><span>input<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>cat<span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>cmd<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span><span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;</span>$input<span style=color:#a3be8c>&#34;</span> <span style=color:#eceff4>|</span> jq -r <span style=color:#a3be8c>&#39;.tool_input.command // &#34;&#34;&#39;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>ts<span style=color:#81a1c1>=</span><span style=color:#81a1c1;font-weight:700>$(</span>date -u +<span style=color:#a3be8c>&#34;%Y-%m-%dT%H:%M:%SZ&#34;</span><span style=color:#81a1c1;font-weight:700>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>echo</span> <span style=color:#a3be8c>&#34;[</span>$ts<span style=color:#a3be8c>] </span>$cmd<span style=color:#a3be8c>&#34;</span> &gt;&gt; <span style=color:#a3be8c>&#34;</span><span style=color:#a3be8c>${</span>AUDIT_LOG<span style=color:#81a1c1;font-weight:700>:-</span><span style=color:#eceff4>/tmp/claude-commands.log</span><span style=color:#a3be8c>}</span><span style=color:#a3be8c>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1>exit</span> <span style=color:#b48ead>0</span>
+</span></span></code></pre></div><h3 id=step-7-add-a-kubernetes-mcp-server>Step 7: Add a Kubernetes MCP server</h3><p>The <code>.mcp.json</code> file at the plugin root connects Claude to your cluster:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#81a1c1>&#34;mcpServers&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;kubernetes&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>&#34;command&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;npx&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>&#34;args&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span><span style=color:#a3be8c>&#34;-y&#34;</span><span style=color:#eceff4>,</span> <span style=color:#a3be8c>&#34;@anthropic/mcp-server-kubernetes&#34;</span><span style=color:#eceff4>],</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>&#34;env&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>&#34;KUBECONFIG&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;${KUBECONFIG:-~/.kube/config}&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>},</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;pagerduty&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>&#34;command&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;npx&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>&#34;args&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>[</span><span style=color:#a3be8c>&#34;-y&#34;</span><span style=color:#eceff4>,</span> <span style=color:#a3be8c>&#34;@anthropic/mcp-server-pagerduty&#34;</span><span style=color:#eceff4>],</span>
+</span></span><span style=display:flex><span>      <span style=color:#81a1c1>&#34;env&#34;</span><span style=color:#eceff4>:</span> <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#81a1c1>&#34;PAGERDUTY_API_KEY&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;${PAGERDUTY_API_KEY}&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>}</span>
+</span></span></code></pre></div><p>With this in place, Claude can run <code>kubectl</code> commands, read pod logs, and check deployment status via MCP tools — without you manually setting up shell access.</p><h3 id=step-8-add-a-background-error-log-monitor>Step 8: Add a background error log monitor</h3><p>The monitor streams new error log lines to Claude during the session:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#616e87;font-style:italic>// devops-helper/monitors/monitors.json
+</span></span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic></span><span style=color:#eceff4>[</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;name&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;app-errors&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;command&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;tail -F logs/error.log 2&gt;/dev/null || echo &#39;No error.log found&#39;&#34;</span><span style=color:#eceff4>,</span>
+</span></span><span style=display:flex><span>    <span style=color:#81a1c1>&#34;description&#34;</span><span style=color:#eceff4>:</span> <span style=color:#a3be8c>&#34;Application error log — new lines are delivered to Claude automatically&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#eceff4>}</span>
+</span></span><span style=display:flex><span><span style=color:#eceff4>]</span>
+</span></span></code></pre></div><p>Claude receives each new log line as a notification, letting it flag new errors without you having to ask.</p><h3 id=final-plugin-structure>Final plugin structure</h3><pre tabindex=0><code>devops-helper/
+├── .claude-plugin/
+│   └── plugin.json
+├── skills/
+│   ├── deploy/
+│   │   └── SKILL.md
+│   ├── rollback/
+│   │   └── SKILL.md
+│   └── incident-summary/
+│       └── SKILL.md
+├── hooks/
+│   ├── hooks.json
+│   ├── pre-deploy-check.sh
+│   └── log-commands.sh
+├── monitors/
+│   └── monitors.json
+├── .mcp.json
+└── README.md
+</code></pre><hr><h2 id=testing-your-plugin>Testing Your Plugin</h2><p>Test locally without installing using <code>--plugin-dir</code>:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Load from directory</span>
+</span></span><span style=display:flex><span>claude --plugin-dir ./devops-helper
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Load from a zip archive (Claude Code v2.1.128+)</span>
+</span></span><span style=display:flex><span>claude --plugin-dir ./devops-helper.zip
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Load multiple plugins at once</span>
+</span></span><span style=display:flex><span>claude --plugin-dir ./devops-helper --plugin-dir ./other-plugin
+</span></span></code></pre></div><p>Inside the session, verify everything loaded:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># List skills</span>
+</span></span><span style=display:flex><span>/help
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Test the deploy skill</span>
+</span></span><span style=display:flex><span>/devops-helper:deploy staging
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Test the rollback skill</span>
+</span></span><span style=display:flex><span>/devops-helper:rollback
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Check agents are visible</span>
+</span></span><span style=display:flex><span>/agents
+</span></span></code></pre></div><p>After making changes, reload without restarting:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>/reload-plugins
+</span></span></code></pre></div><p>If something does not work, check the structure first — the most common issue is placing <code>skills/</code> or <code>hooks/</code> inside <code>.claude-plugin/</code> instead of the plugin root.</p><hr><h2 id=installing-plugins>Installing Plugins</h2><p>Once the plugin is in a git repository, anyone can install it:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># From GitHub</span>
+</span></span><span style=display:flex><span>claude plugin add github:your-org/devops-helper
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># From the official Anthropic marketplace</span>
+</span></span><span style=display:flex><span>claude plugin add @anthropic/deploy-helper
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Project-scoped install (only active in this repo)</span>
+</span></span><span style=display:flex><span>claude plugin add github:your-org/devops-helper --project
+</span></span></code></pre></div><p>Managing installed plugins:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>claude plugin list                              <span style=color:#616e87;font-style:italic># see what&#39;s installed</span>
+</span></span><span style=display:flex><span>claude plugin update github:your-org/devops-helper
+</span></span><span style=display:flex><span>claude plugin update --all                      <span style=color:#616e87;font-style:italic># update everything</span>
+</span></span><span style=display:flex><span>claude plugin remove github:your-org/devops-helper
+</span></span></code></pre></div><p>Or use the in-app plugin manager:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>/plugin
+</span></span></code></pre></div><p>The <code>/plugin</code> command opens a browser with Discover, Installed, and Updates tabs.</p><hr><h2 id=converting-existing-config-to-a-plugin>Converting Existing Config to a Plugin</h2><p>If you have skills and hooks in <code>.claude/</code> already, migration is straightforward:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># 1. Create plugin structure</span>
+</span></span><span style=display:flex><span>mkdir -p my-plugin/.claude-plugin
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># 2. Write manifest</span>
+</span></span><span style=display:flex><span>cat &gt; my-plugin/.claude-plugin/plugin.json <span style=color:#a3be8c>&lt;&lt; &#39;EOF&#39;
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>{
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>  &#34;name&#34;: &#34;my-plugin&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>  &#34;description&#34;: &#34;Migrated from standalone .claude/ config&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>  &#34;version&#34;: &#34;1.0.0&#34;
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>}
+</span></span></span><span style=display:flex><span><span style=color:#a3be8c>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># 3. Copy existing components</span>
+</span></span><span style=display:flex><span>cp -r .claude/skills  my-plugin/
+</span></span><span style=display:flex><span>cp -r .claude/agents  my-plugin/
+</span></span><span style=display:flex><span>cp -r .claude/commands my-plugin/
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># 4. Migrate hooks</span>
+</span></span><span style=display:flex><span>mkdir my-plugin/hooks
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Copy the hooks object from .claude/settings.json into my-plugin/hooks/hooks.json</span>
+</span></span></code></pre></div><p>What changes after migration:</p><table><thead><tr><th>Before (standalone)</th><th>After (plugin)</th></tr></thead><tbody><tr><td><code>/deploy</code></td><td><code>/my-plugin:deploy</code></td></tr><tr><td>Copy files per project</td><td><code>claude plugin add github:you/my-plugin</code></td></tr><tr><td>Manual updates</td><td><code>claude plugin update --all</code></td></tr><tr><td>Only in one project</td><td>Available everywhere</td></tr></tbody></table><hr><h2 id=publishing-to-the-anthropic-marketplace>Publishing to the Anthropic Marketplace</h2><p>When your plugin is ready to share publicly:</p><ol><li>Push to a public GitHub repository</li><li>Add a <code>README.md</code> with installation instructions and a usage guide</li><li>Submit via the in-app form:<ul><li>Claude.ai: <strong>Settings → Plugins → Submit</strong></li><li>Platform console: <strong>platform.claude.com/plugins/submit</strong></li></ul></li></ol><p>Once listed, users can install with <code>/plugin install your-plugin-name</code> or <code>claude plugin add @your-org/your-plugin</code>.</p><p>For team-internal distribution, host the plugin in a private GitHub repo and configure the team marketplace URL in project settings — no public listing required.</p><hr><h2 id=when-to-build-a-plugin>When to Build a Plugin</h2><pre class=mermaid>
+flowchart TD
+    Q1{Do you need this\nacross multiple projects?} -->|Yes| Q2{Share with\nothers?}
+    Q1 -->|No| Standalone[Standalone .claude/ config]
+    Q2 -->|Yes| Plugin[Build a plugin]
+    Q2 -->|No| Q3{More than one\nproject?}
+    Q3 -->|Yes| Plugin
+    Q3 -->|No| Standalone
+</pre><p><strong>Build a plugin when:</strong></p><ul><li>You want the same skills and hooks in every project without copying files</li><li>You are building tools for a team and want them to install with one command</li><li>You want version control over your tooling (bump <code>version</code> to push updates)</li><li>You want to publish to the Anthropic marketplace for the community</li></ul><p><strong>Stick with standalone when:</strong></p><ul><li>The configuration is specific to one project and will never be reused</li><li>You are experimenting and not sure if the skill is worth keeping</li><li>You want short skill names without namespace prefixes</li></ul><p>The practical path: build standalone first, convert to a plugin once the skill proves its value.</p><hr><h2 id=plugin-ideas-to-build-next>Plugin Ideas to Build Next</h2><table><thead><tr><th>Plugin</th><th>What it does</th></tr></thead><tbody><tr><td><code>git-helper</code></td><td>PR description writer, commit message generator, branch namer</td></tr><tr><td><code>test-enforcer</code></td><td>Auto-run tests on edit, enforce coverage thresholds, generate missing tests</td></tr><tr><td><code>security-scanner</code></td><td>IDOR checker, injection auditor, pre-commit security review</td></tr><tr><td><code>doc-writer</code></td><td>Generate README, API docs, changelogs from code</td></tr><tr><td><code>infra-ops</code></td><td>Terraform plan reviewer, cost estimator, drift detector</td></tr><tr><td><code>incident-bot</code></td><td>Post-mortem template filler, on-call summary, PagerDuty integration</td></tr></tbody></table><p>Each of these follows the same pattern: a few skill files, an optional hook, and an MCP server connection if external data is needed.</p></div><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fclaude-code-plugins-guide%2f&title=Claude&#43;Code+Plugins%3A+The+Complete+Guide+to+Building+and+Sharing+Extensions" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fclaude-code-plugins-guide%2f&text=Claude&#43;Code+Plugins%3A+The+Complete+Guide+to+Building+and+Sharing+Extensions" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fdevops-monk.com%2f2026%2f05%2fclaude-code-plugins-guide%2f&title=Claude&#43;Code+Plugins%3A+The+Complete+Guide+to+Building+and+Sharing+Extensions" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div></div></article><div class=author-bio><img src=/images/abhay.jpeg alt=Abhay class=author-bio-avatar><div class=author-bio-content><h3 class=author-bio-name>Abhay Pratap Singh</h3><p class=author-bio-desc>DevOps Engineer passionate about automation, cloud infrastructure, and self-hosted tools. I write about Kubernetes, Terraform, DNS, and everything in between.</p><div class=author-bio-links><a href=https://github.com/devops-monk target=_blank rel=noopener><i class="fa-brands fa-github"></i> GitHub</a>
+<a href=https://www.linkedin.com/in/abhay-pratap-singh-831997b5/ target=_blank rel=noopener><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+<a href=/index.xml target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></div></div></div><div class=newsletter-box><div class=newsletter-icon><i class="fa-solid fa-envelope-open-text"></i></div><h3 class=newsletter-title>Enjoyed this post?</h3><p class=newsletter-desc>Get new articles on DevOps, Kubernetes, Terraform, and self-hosted tools delivered straight to your inbox. No spam, unsubscribe any time.</p><a href="mailto:abhaypratap3536@gmail.com?subject=Subscribe to Devops Monk" class=newsletter-btn><i class="fa-solid fa-paper-plane"></i> Subscribe via Email</a></div><nav class="navigation post-navigation" role=navigation><h2 class=screen-reader-text>Post navigation</h2><div class=nav-links><div class=nav-next><a href=/2026/05/personalised-gifts-ecommerce-platform/ rel=prev><span class=post-title>Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15
+<i class="fa fa-chevron-right"></i></span></a></div></div></nav><div class=related-posts><h3 class=related-title><i class="fa-solid fa-layer-group"></i> You might also like</h3><div class=related-grid><a class=related-card href=/2026/04/claude-code-hooks-subagents-piping/><span class=related-card-meta>Apr 2026 · 18 min read</span>
+<span class=related-card-title>Claude Code Hooks, Commands, Skills, and Subagents: The Complete Guide</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/04/build-ai-assistant-without-framework/><span class=related-card-meta>Apr 2026 · 6 min read</span>
+<span class=related-card-title>You Don't Need a Framework to Build an AI Assistant</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/05/claude-managed-agents-guide/><span class=related-card-meta>May 2026 · 11 min read</span>
+<span class=related-card-title>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</span>
+<span class=related-card-cat>Claude</span></a></div></div></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
+<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/05/claude-code-plugins-guide/>Claude Code Plugins: The Complete Guide to Building and Sharing Extensions</a></li><li class=widget__item><a class=widget__link href=/2026/05/personalised-gifts-ecommerce-platform/>Building a Full-Stack Personalised Gifts E-Commerce Platform with Next.js 15</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-adaptive-thinking-guide/>Claude Extended and Adaptive Thinking: Making Claude Reason Before It Answers</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-managed-agents-guide/>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-models-guide-2026/>Claude Models in 2026: Opus, Sonnet, and Haiku Compared</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/java-11-tutorial/ title="java 11 tutorial">java 11 tutorial</a></li><li><a href=/categories/java-17-tutorial/ title="java 17 tutorial">java 17 tutorial</a></li><li><a href=/categories/java-21-tutorial/ title="java 21 tutorial">java 21 tutorial</a></li><li><a href=/categories/java-25-tutorial/ title="java 25 tutorial">java 25 tutorial</a></li><li><a href=/categories/java-8-tutorial/ title="java 8 tutorial">java 8 tutorial</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/liquibase-tutorial/ title="liquibase tutorial">liquibase tutorial</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/spring-batch-tutorial/ title="spring batch tutorial">spring batch tutorial</a></li><li><a href=/categories/spring-boot/ title="spring boot">spring boot</a></li><li><a href=/categories/spring-boot-tutorial/ title="spring boot tutorial">spring boot tutorial</a></li><li><a href=/categories/spring-data-jpa-tutorial/ title="spring data jpa tutorial">spring data jpa tutorial</a></li><li><a href=/categories/spring-kafka-tutorial/ title="spring kafka tutorial">spring kafka tutorial</a></li><li><a href=/categories/spring-security-tutorial/ title="spring security tutorial">spring security tutorial</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgment/ title=acknowledgment>acknowledgment
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgments/ title=acknowledgments>acknowledgments
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acl/ title=acl>acl
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/actuator/ title=actuator>actuator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/admin/ title=admin>admin
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agents/ title=agents>agents
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/ title=ai>ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/algebraic-data-types/ title=algebraic-data-types>algebraic-data-types
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/annotations/ title=annotations>annotations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/aot/ title=aot>aot
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api/ title=api>api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api-gateway/ title=api-gateway>api-gateway
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api-versioning/ title=api-versioning>api-versioning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/appcds/ title=appcds>appcds
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/architecture/ title=architecture>architecture
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/argon2/ title=argon2>argon2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/async/ title=async>async
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authentication/ title=authentication>authentication
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authorization/ title=authorization>authorization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authorization-server/ title=authorization-server>authorization-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/auto-configuration/ title=auto-configuration>auto-configuration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/ title=automation>automation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/avro/ title=avro>avro
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/backend/ title=backend>backend
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/backwards-compatible/ title=backwards-compatible>backwards-compatible
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/base64/ title=base64>base64
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bcrypt/ title=bcrypt>bcrypt
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-lifecycle/ title=bean-lifecycle>bean-lifecycle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-scopes/ title=bean-scopes>bean-scopes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-validation/ title=bean-validation>bean-validation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/beginner/ title=beginner>beginner
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/best-practices/ title=best-practices>best-practices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/buildpacks/ title=buildpacks>buildpacks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bun/ title=bun>bun
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caching/ title=caching>caching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caffeine/ title=caffeine>caffeine
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/chacha20/ title=chacha20>chacha20
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/checklist/ title=checklist>checklist
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ci-cd/ title=ci-cd>ci-cd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/circuit-breaker/ title=circuit-breaker>circuit-breaker
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ckad/ title=ckad>ckad
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/ title=claude>claude
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude.md/ title=claude.md>claude.md
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/clerk/ title=clerk>clerk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/ title=cli>cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloud-native/ title=cloud-native>cloud-native
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloudinary/ title=cloudinary>cloudinary
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cluster/ title=cluster>cluster
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/code-review/ title="code review">code review
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/collections/ title=collections>collections
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/collectors/ title=collectors>collectors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/comparator/ title=comparator>comparator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/comparison/ title=comparison>comparison
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/completablefuture/ title=completablefuture>completablefuture
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/compute/ title=compute>compute
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/computer-use/ title="computer use">computer use
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/concurrency/ title=concurrency>concurrency
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/config-server/ title=config-server>config-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/configuration/ title=configuration>configuration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/constructors/ title=constructors>constructors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer/ title=consumer>consumer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer-groups/ title=consumer-groups>consumer-groups
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/containers/ title=containers>containers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cors/ title=cors>cors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cost-optimization/ title="cost optimization">cost optimization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/crud/ title=crud>crud
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cryptography/ title=cryptography>cryptography
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/csp/ title=csp>csp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/csrf/ title=csrf>csrf
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/curve25519/ title=curve25519>curve25519
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/data-classes/ title=data-classes>data-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/data-jpa-test/ title=data-jpa-test>data-jpa-test
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/database/ title=database>database
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/date-time/ title=date-time>date-time
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dead-letter/ title=dead-letter>dead-letter
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/default-methods/ title=default-methods>default-methods
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dependency-injection/ title=dependency-injection>dependency-injection
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/deployment/ title=deployment>deployment
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/deserialization/ title=deserialization>deserialization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/developers/ title=developers>developers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/ title=devops>devops
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dns/ title=dns>dns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/docker/ title=docker>docker
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dropwhile/ title=dropwhile>dropwhile
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dto/ title=dto>dto
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/durability/ title=durability>durability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dynamic-listeners/ title=dynamic-listeners>dynamic-listeners
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/ title=electron>electron
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/encapsulation/ title=encapsulation>encapsulation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/entity-mapping/ title=entity-mapping>entity-mapping
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/epsilon/ title=epsilon>epsilon
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/error-handling/ title=error-handling>error-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/eureka/ title=eureka>eureka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-driven/ title=event-driven>event-driven
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-streaming/ title=event-streaming>event-streaming
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/exactly-once/ title=exactly-once>exactly-once
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/exception-handling/ title=exception-handling>exception-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/feign/ title=feign>feign
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ffm-api/ title=ffm-api>ffm-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/files/ title=files>files
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/filtering/ title=filtering>filtering
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flatmap/ title=flatmap>flatmap
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flight-recorder/ title=flight-recorder>flight-recorder
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flyway/ title=flyway>flyway
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/foreach/ title=foreach>foreach
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/forkjoinpool/ title=forkjoinpool>forkjoinpool
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/function/ title=function>function
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional/ title=functional>functional
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional-interfaces/ title=functional-interfaces>functional-interfaces
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional-programming/ title=functional-programming>functional-programming
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/g1gc/ title=g1gc>g1gc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/garbage-collection/ title=garbage-collection>garbage-collection
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/gc/ title=gc>gc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github/ title=github>github
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/ title=github-actions>github-actions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/google/ title=google>google
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/graalvm/ title=graalvm>graalvm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/gradle/ title=gradle>gradle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/grafana/ title=grafana>grafana
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/groupingby/ title=groupingby>groupingby
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/headers/ title=headers>headers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/helm/ title=helm>helm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hibernate/ title=hibernate>hibernate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hooks/ title=hooks>hooks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hsts/ title=hsts>hsts
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/http/ title=http>http
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/http2/ title=http2>http2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/httpclient/ title=httpclient>httpclient
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/iac/ title=iac>iac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/idempotent/ title=idempotent>idempotent
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/immutable/ title=immutable>immutable
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/imports/ title=imports>imports
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instance-main/ title=instance-main>instance-main
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instanceof/ title=instanceof>instanceof
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instant/ title=instant>instant
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/integration-testing/ title=integration-testing>integration-testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/intellij/ title=intellij>intellij
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/interface/ title=interface>interface
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/interview/ title=interview>interview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/io/ title=io>io
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ioc/ title=ioc>ioc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/isblank/ title=isblank>isblank
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/ title=java>java
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java-21/ title=java-21>java-21
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java10/ title=java10>java10
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java11/ title=java11>java11
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java17/ title=java17>java17
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java21/ title=java21>java21
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java25/ title=java25>java25
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java8/ title=java8>java8
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java9/ title=java9>java9
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/javafx/ title=javafx>javafx
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jaxb/ title=jaxb>jaxb
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jdeps/ title=jdeps>jdeps
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep/ title=jep>jep
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep126/ title=jep126>jep126
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep222/ title=jep222>jep222
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep269/ title=jep269>jep269
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep282/ title=jep282>jep282
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep286/ title=jep286>jep286
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep320/ title=jep320>jep320
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep321/ title=jep321>jep321
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep323/ title=jep323>jep323
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep324/ title=jep324>jep324
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep328/ title=jep328>jep328
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep329/ title=jep329>jep329
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep330/ title=jep330>jep330
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep332/ title=jep332>jep332
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep335/ title=jep335>jep335
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep356/ title=jep356>jep356
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep361/ title=jep361>jep361
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep378/ title=jep378>jep378
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep394/ title=jep394>jep394
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep395/ title=jep395>jep395
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep403/ title=jep403>jep403
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep406/ title=jep406>jep406
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep409/ title=jep409>jep409
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep412/ title=jep412>jep412
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep415/ title=jep415>jep415
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep431/ title=jep431>jep431
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep439/ title=jep439>jep439
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep440/ title=jep440>jep440
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep441/ title=jep441>jep441
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep442/ title=jep442>jep442
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep443/ title=jep443>jep443
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep444/ title=jep444>jep444
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep445/ title=jep445>jep445
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep446/ title=jep446>jep446
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep448/ title=jep448>jep448
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep452/ title=jep452>jep452
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep453/ title=jep453>jep453
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep470/ title=jep470>jep470
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep505/ title=jep505>jep505
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep506/ title=jep506>jep506
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep507/ title=jep507>jep507
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep510/ title=jep510>jep510
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep511/ title=jep511>jep511
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep512/ title=jep512>jep512
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep513/ title=jep513>jep513
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep514/ title=jep514>jep514
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep515/ title=jep515>jep515
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep516/ title=jep516>jep516
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep519/ title=jep519>jep519
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jfr/ title=jfr>jfr
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jigsaw/ title=jigsaw>jigsaw
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jlink/ title=jlink>jlink
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jni/ title=jni>jni
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpa/ title=jpa>jpa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpms/ title=jpms>jpms
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jshell/ title=jshell>jshell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/json/ title=json>json
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jspecify/ title=jspecify>jspecify
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jsr310/ title=jsr310>jsr310
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/junit5/ title=junit5>junit5
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jvm/ title=jvm>jvm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jwt/ title=jwt>jwt
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/k8s/ title=k8s>k8s
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/ title=kafka>kafka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-cli/ title=kafka-cli>kafka-cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-streams/ title=kafka-streams>kafka-streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkahandler/ title=kafkahandler>kafkahandler
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkalistener/ title=kafkalistener>kafkalistener
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkatemplate/ title=kafkatemplate>kafkatemplate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kem/ title=kem>kem
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kraft/ title=kraft>kraft
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lambda/ title=lambda>lambda
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lambdas/ title=lambdas>lambdas
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ldap/ title=ldap>ldap
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lifecycle/ title=lifecycle>lifecycle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lines/ title=lines>lines
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/liquibase/ title=liquibase>liquibase
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/list-of/ title=list-of>list-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/llm/ title=llm>llm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/localdatetime/ title=localdatetime>localdatetime
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/logback/ title=logback>logback
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/logging/ title=logging>logging
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/loki/ title=loki>loki
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/longadder/ title=longadder>longadder
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lts/ title=lts>lts
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/map/ title=map>map
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/map-of/ title=map-of>map-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/maven/ title=maven>maven
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/memory/ title=memory>memory
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/merge/ title=merge>merge
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/messaging/ title=messaging>messaging
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/metaspace/ title=metaspace>metaspace
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/method-references/ title=method-references>method-references
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/method-security/ title=method-security>method-security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mfa/ title=mfa>mfa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/micrometer/ title=micrometer>micrometer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/microservices/ title=microservices>microservices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migration/ title=migration>migration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migrations/ title=migrations>migrations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mockito/ title=mockito>mockito
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mockmvc/ title=mockmvc>mockmvc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modular-monolith/ title=modular-monolith>modular-monolith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modules/ title=modules>modules
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modulith/ title=modulith>modulith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/monitoring/ title=monitoring>monitoring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mtls/ title=mtls>mtls
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mysql/ title=mysql>mysql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nashorn/ title=nashorn>nashorn
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/native/ title=native>native
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/native-image/ title=native-image>native-image
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/next.js/ title=next.js>next.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nio/ title=nio>nio
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/ title=node.js>node.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/non-blocking/ title=non-blocking>non-blocking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/non-blocking-retry/ title=non-blocking-retry>non-blocking-retry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/null-safety/ title=null-safety>null-safety
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nullpointerexception/ title=nullpointerexception>nullpointerexception
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2/ title=oauth2>oauth2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2-authorization-server/ title=oauth2-authorization-server>oauth2-authorization-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/observability/ title=observability>observability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/offsets/ title=offsets>offsets
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oidc/ title=oidc>oidc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/open-banking/ title="open banking">open banking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openai/ title=openai>openai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openapi/ title=openapi>openapi
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/opentelemetry/ title=opentelemetry>opentelemetry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/optional/ title=optional>optional
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/outbox-pattern/ title=outbox-pattern>outbox-pattern
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/overview/ title=overview>overview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/owasp/ title=owasp>owasp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/pagination/ title=pagination>pagination
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/parallel-streams/ title=parallel-streams>parallel-streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/partitioning/ title=partitioning>partitioning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/password/ title=password>password
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/password-reset/ title=password-reset>password-reset
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/path/ title=path>path
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/pattern-matching/ title=pattern-matching>pattern-matching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/performance/ title=performance>performance
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/permgen/ title=permgen>permgen
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/plugins/ title=plugins>plugins
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/post-quantum/ title=post-quantum>post-quantum
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/postgresql/ title=postgresql>postgresql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/predicate/ title=predicate>predicate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/preview/ title=preview>preview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/primitives/ title=primitives>primitives
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prisma/ title=prisma>prisma
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prng/ title=prng>prng
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/producer/ title=producer>producer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/production/ title=production>production
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/profiles/ title=profiles>profiles
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/profiling/ title=profiling>profiling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/project-loom/ title=project-loom>project-loom
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/project-panama/ title=project-panama>project-panama
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prometheus/ title=prometheus>prometheus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quarkus/ title=quarkus>quarkus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quartz/ title=quartz>quartz
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/queries/ title=queries>queries
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rag/ title=rag>rag
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/random/ title=random>random
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rbac/ title=rbac>rbac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/ title=react>react
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/reactive/ title=reactive>reactive
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/readstring/ title=readstring>readstring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/records/ title=records>records
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/redis/ title=redis>redis
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/registration/ title=registration>registration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/relationships/ title=relationships>relationships
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/removed-apis/ title=removed-apis>removed-apis
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/repeat/ title=repeat>repeat
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/repl/ title=repl>repl
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/replay/ title=replay>replay
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/request-handling/ title=request-handling>request-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/request-reply/ title=request-reply>request-reply
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/resilience4j/ title=resilience4j>resilience4j
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/response-shaping/ title=response-shaping>response-shaping
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest/ title=rest>rest
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest-api/ title=rest-api>rest-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/restclient/ title=restclient>restclient
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/retries/ title=retries>retries
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/retry/ title=retry>retry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/schema-registry/ title=schema-registry>schema-registry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/scoped-values/ title=scoped-values>scoped-values
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/scripting/ title=scripting>scripting
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sdkman/ title=sdkman>sdkman
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sealed-classes/ title=sealed-classes>sealed-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security-headers/ title=security-headers>security-headers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security-manager/ title=security-manager>security-manager
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/seeking/ title=seeking>seeking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sendto/ title=sendto>sendto
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/serialization/ title=serialization>serialization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/service-discovery/ title=service-discovery>service-discovery
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/session/ title=session>session
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/set-of/ title=set-of>set-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/setup/ title=setup>setup
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sha3/ title=sha3>sha3
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/ title=shell>shell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shenandoah/ title=shenandoah>shenandoah
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/simd/ title=simd>simd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/single-file/ title=single-file>single-file
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sorting/ title=sorting>sorting
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-ai/ title=spring-ai>spring-ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-batch/ title=spring-batch>spring-batch
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/ title=spring-boot>spring-boot
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot-4/ title=spring-boot-4>spring-boot-4
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-cloud/ title=spring-cloud>spring-cloud
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-data-jpa/ title=spring-data-jpa>spring-data-jpa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/ title=spring-kafka>spring-kafka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-modulith/ title=spring-modulith>spring-modulith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-security/ title=spring-security>spring-security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/springdoc/ title=springdoc>springdoc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stampedlock/ title=stampedlock>stampedlock
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/startup/ title=startup>startup
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stock-market/ title="stock market">stock market
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stream/ title=stream>stream
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/streams/ title=streams>streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/string/ title=string>string
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/strings/ title=strings>strings
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/strip/ title=strip>strip
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stripe/ title=stripe>stripe
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/structured-concurrency/ title=structured-concurrency>structured-concurrency
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/supplier/ title=supplier>supplier
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/switch/ title=switch>switch
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/switch-expressions/ title=switch-expressions>switch-expressions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tailwind-css/ title="tailwind css">tailwind css
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/takewhile/ title=takewhile>takewhile
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/terraform/ title=terraform>terraform
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testcontainers/ title=testcontainers>testcontainers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testing/ title=testing>testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/text-blocks/ title=text-blocks>text-blocks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tls13/ title=tls13>tls13
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/topics/ title=topics>topics
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/totp/ title=totp>totp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tracing/ title=tracing>tracing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/transactions/ title=transactions>transactions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tuning/ title=tuning>tuning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/ title=tutorial>tutorial
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/type-inference/ title=type-inference>type-inference
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/ title=typescript>typescript
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unnamed-classes/ title=unnamed-classes>unnamed-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unnamed-patterns/ title=unnamed-patterns>unnamed-patterns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/upgrade/ title=upgrade>upgrade
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/var/ title=var>var
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vector-api/ title=vector-api>vector-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/virtual-threads/ title=virtual-threads>virtual-threads
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vps/ title=vps>vps
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vulnerabilities/ title=vulnerabilities>vulnerabilities
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webauthn/ title=webauthn>webauthn
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webflux/ title=webflux>webflux
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/writestring/ title=writestring>writestring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zgc/ title=zgc>zgc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zoneddatetime/ title=zoneddatetime>zoneddatetime
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zookeeper/ title=zookeeper>zookeeper</a></div></div></aside></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
