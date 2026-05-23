@@ -90,7 +90,7 @@
 </span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># mysetup.jsh — pre-import common dependencies</span>
 </span></span><span style=display:flex><span>import com.fasterxml.jackson.databind.ObjectMapper<span style=color:#eceff4>;</span>
 </span></span><span style=display:flex><span>var mapper <span style=color:#81a1c1>=</span> new ObjectMapper<span style=color:#81a1c1>()</span><span style=color:#eceff4>;</span>
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Use the JShell default startup (common imports)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span># Use the JShell default startup <span style=color:#81a1c1>(</span>common imports<span style=color:#81a1c1>)</span>
 </span></span><span style=display:flex><span>jshell --startup DEFAULT
 </span></span></code></pre></div><h3 id=adding-classpath-entries>Adding classpath entries</h3><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Add a JAR to the session classpath</span>
 </span></span><span style=display:flex><span>jshell --class-path target/myapp.jar:libs/jackson-databind.jar
