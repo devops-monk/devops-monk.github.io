@@ -1,0 +1,693 @@
+<!doctype html><html lang=en-US prefix="og: http://ogp.me/ns#"><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Master sub-agents in Claude Code — creating specialized assistants, delegation patterns, persistent memory, and parallel task execution for developers, testers, and DevOps."><title>Claude Code Sub-Agents: Specialist Assistants and Delegation | Devops Monk</title>
+<meta name=twitter:card content="summary"><meta name=twitter:title content="Claude Code Sub-Agents: Specialist Assistants and Delegation"><meta name=twitter:description content="Master sub-agents in Claude Code — creating specialized assistants, delegation patterns, persistent memory, and parallel task execution for developers, testers, and DevOps."><meta property="og:url" content="https://blog.devops-monk.com/2026/06/claude-code-subagents-delegation/"><meta property="og:site_name" content="Devops Monk"><meta property="og:title" content="Claude Code Sub-Agents: Specialist Assistants and Delegation"><meta property="og:description" content="Master sub-agents in Claude Code — creating specialized assistants, delegation patterns, persistent memory, and parallel task execution for developers, testers, and DevOps."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-06-05T00:00:00+00:00"><meta property="article:modified_time" content="2026-06-05T00:00:00+00:00"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Sub-Agents"><meta property="article:tag" content="Automation"><meta property="article:tag" content="Delegation"><meta property="article:tag" content="DevOps"><meta itemprop=name content="Claude Code Sub-Agents: Specialist Assistants and Delegation"><meta itemprop=description content="Master sub-agents in Claude Code — creating specialized assistants, delegation patterns, persistent memory, and parallel task execution for developers, testers, and DevOps."><meta itemprop=datePublished content="2026-06-05T00:00:00+00:00"><meta itemprop=dateModified content="2026-06-05T00:00:00+00:00"><meta itemprop=wordCount content="1855"><meta itemprop=keywords content="Claude,Sub-Agents,Automation,Delegation,DevOps"><meta property="og:image" content="https://blog.devops-monk.com/images/articles/claude-subagents-guide.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://blog.devops-monk.com/images/articles/claude-subagents-guide.png"><link rel=stylesheet href=/assets/css/custom-fonts.css type=text/css media=all><link rel=stylesheet href=/assets/css/style.css type=text/css media=all><link rel=stylesheet href=/assets/css/genericons.css type=text/css media=all><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css media=all><link rel=stylesheet href=/assets/css/socicon.css type=text/css media=all><link rel=stylesheet href=/assets/css/social-logos/social-logos.css type=text/css media=all><link rel=stylesheet href=/assets/css/jetpack.css type=text/css media=all><link rel=stylesheet href=/assets/css/custom-styles.css type=text/css media=all><script type=text/javascript src=/assets/js/jquery-1.12.4.min.js></script><script type=text/javascript src=/assets/js/html5shiv.min.js></script><script type=text/javascript src=/assets/js/navigation.js></script><link rel=icon type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=96x96 href=/favicon-96x96.png><link rel=icon type=image/png sizes=32x32 href=/favicon.png><link rel="shortcut icon" href=/favicon.ico><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","name":"Claude Code Sub-Agents: Specialist Assistants and Delegation","headline":"Claude Code Sub-Agents: Specialist Assistants and Delegation","inLanguage":"en-US","url":"https://blog.devops-monk.com/2026/06/claude-code-subagents-delegation/","description":"Master sub-agents in Claude Code — creating specialized assistants, delegation patterns, persistent memory, and parallel task execution for developers, testers, and DevOps.","wordCount":"1855","keywords":["Claude","Sub-Agents","Automation","Delegation","DevOps"],"datePublished":"2026-06-05T00:00:00Z","dateModified":"2026-06-05T00:00:00Z","author":{"@type":"Person","name":"Abhay"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.devops-monk.com/2026/06/claude-code-subagents-delegation/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https://blog.devops-monk.com/2026/06/claude-code-subagents-delegation/"}},{"@context":"https://schema.org","@type":"Organization","name":"Devops Monk","url":"https://blog.devops-monk.com/","sameAs":["https://twitter.com/","https://github.com/abhi15sep","https://www.linkedin.com/in/abhay-singh-831997b5"]}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"\"Claude Code Sub-Agents: Specialist Assistants and Delegation\"","datePublished":"2026-06-05T00:00:00Z","dateModified":"2026-06-05T00:00:00Z","author":{"@type":"Person","name":"Abhay Pratap Singh","url":"https:\/\/blog.devops-monk.com\/about\/"},"publisher":{"@type":"Organization","name":"Devops Monk","url":"https:\/\/blog.devops-monk.com\/"},"image":"https:\/\/blog.devops-monk.com\/images\/og-default.png","url":"https:\/\/blog.devops-monk.com\/2026\/06\/claude-code-subagents-delegation\/"}</script><script src=https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js defer></script><script src=/assets/js/search.js defer></script><script src=/assets/js/enhancements.js defer></script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      document.addEventListener('DOMContentLoaded', () => mermaid.run());
+    </script></head><body class="home blog post-layout-one-column"><button onclick=topFunction() id=scrollTopBtn title="Go to top">
+<i class="fa-solid fa-arrow-up"></i></button><div id=header-top class=header-bar-wrap></div><div id=page class=site><a class="skip-link screen-reader-text" href=#content>Skip to content</a><header id=masthead class="site-header clearfix" role=banner><div class="header-main container clearfix"><div id=logo class="site-branding clearfix"><h1 class=site-title><a href=/ title="Devops Monk" rel=home>Devops Monk</a></h1><p class=site-description>My DevOps Learning Experience</p></div><button id=dark-mode-toggle title="Toggle dark mode" aria-label="Toggle dark mode">
+<i class="fa-solid fa-moon" id=dm-icon></i></button></div><div id=main-navigation-wrap class=primary-navigation-wrap><nav id=main-navigation class="primary-navigation navigation container clearfix" role=navigation><ul id=menu-home class=main-navigation-menu><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/>Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/personal-projects/>Personal Projects</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/kubernetes/>Kubernetes</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/terraform/>Terraform</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/claude/>Claude AI</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/categories/spring-boot/>Spring Boot</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Tutorials</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/claude-code/>Claude Code Tutorial</a></li><li class=menu-item><a href=/tutorials/liquibase/>Liquibase Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-boot/>Spring Boot Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-batch/>Spring Batch Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-data-jpa/>Spring Data JPA Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-security/>Spring Security Tutorial</a></li><li class=menu-item><a href=/tutorials/spring-kafka/>Spring Kafka Tutorial</a></li><li class=menu-item><a href=/tutorials/testcontainers/>Testcontainers Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href=#>Java</a><ul class=sub-menu><li class=menu-item><a href=/tutorials/java8/>Java 8 Tutorial</a></li><li class=menu-item><a href=/tutorials/java11/>Java 11 Tutorial</a></li><li class=menu-item><a href=/tutorials/java17/>Java 17 Tutorial</a></li><li class=menu-item><a href=/tutorials/java21/>Java 21 Tutorial</a></li><li class=menu-item><a href=/tutorials/java25/>Java 25 Tutorial</a></li></ul></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href=/about/>About Me</a></li><li class="menu-item nav-rss"><a href=/index.xml title="Subscribe via RSS" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></li></ul></nav></div></header><div id=content class="site-content container clearfix"><section id=primary class="content-area post-content-area"><main id=main class=site-main role=main><article class="post type-post"><div class=post-inner-content><header class=entry-header><div class=entry-meta><span class=meta-date><a href=https://blog.devops-monk.com/2026/06/claude-code-subagents-delegation/ rel=bookmark><time class="entry-date published" datetime=2026-06-05T00:00:00>June 05, 2026
+</time></a></span><span class=meta-author><span class="author vcard">Abhay</span>
+</span><span class=meta-reading-time>9 min read</span></div><h2 class=entry-title><a href=https://blog.devops-monk.com/2026/06/claude-code-subagents-delegation/ rel=bookmark>Claude Code Sub-Agents: Specialist Assistants and Delegation</a></h2><div><span class="tagcloud post-tags"><i class="fa fa-tags"></i>
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/>Claude</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sub-agents/>Sub-Agents</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/>Automation</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/delegation/>Delegation</a>
+&nbsp;
+<a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/>DevOps</a></span></div></header><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fblog.devops-monk.com%2f2026%2f06%2fclaude-code-subagents-delegation%2f&title=Claude&#43;Code+Sub-Agents%3A+Specialist+Assistants+and+Delegation" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fblog.devops-monk.com%2f2026%2f06%2fclaude-code-subagents-delegation%2f&text=Claude&#43;Code+Sub-Agents%3A+Specialist+Assistants+and+Delegation" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fblog.devops-monk.com%2f2026%2f06%2fclaude-code-subagents-delegation%2f&title=Claude&#43;Code+Sub-Agents%3A+Specialist+Assistants+and+Delegation" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div><nav class=toc-widget><h3 class=toc-title><i class="fa-solid fa-list"></i> Contents</h3><div class=toc-links><nav id=TableOfContents><ul><li><a href=#sub-agents-vs-skills-vs-hooks>Sub-Agents vs Skills vs Hooks</a></li><li><a href=#how-sub-agents-work>How Sub-Agents Work</a></li><li><a href=#creating-sub-agents>Creating Sub-Agents</a><ul><li><a href=#frontmatter-fields>Frontmatter Fields</a></li></ul></li><li><a href=#real-sub-agent-examples>Real Sub-Agent Examples</a><ul><li><a href=#agent-1-code-reviewer-for-developers>Agent 1: Code Reviewer (For Developers)</a></li></ul></li><li><a href=#report-format>Report format</a></li><li><a href=#code-review--commit_hash>Code Review — [COMMIT_HASH]</a><ul><li><a href=#critical-issues-must-fix-before-merge>Critical Issues (must fix before merge)</a></li><li><a href=#improvements-should-consider>Improvements (should consider)</a></li><li><a href=#passing-checks>Passing checks</a></li></ul></li><li><a href=#analysis>Analysis</a></li><li><a href=#report-format-1>Report format</a></li><li><a href=#test-report--date>Test Report — [DATE]</a><ul><li><a href=#summary>Summary</a></li><li><a href=#by-suite>By suite</a></li><li><a href=#failures>Failures</a></li><li><a href=#flaky-tests-detected>Flaky tests detected</a></li><li><a href=#coverage-gaps>Coverage gaps</a></li></ul></li><li><a href=#security-checks>Security checks</a></li><li><a href=#compliance-checks>Compliance checks</a></li><li><a href=#operational-health>Operational health</a></li><li><a href=#report-format-2>Report format</a></li><li><a href=#infrastructure-audit-report--date>Infrastructure Audit Report — [DATE]</a><ul><li><a href=#security-status--secure---warnings---critical>Security Status: [✓ Secure | ⚠ Warnings | ✗ Critical]</a></li></ul></li><li><a href=#sub-agent-memory>Sub-Agent Memory</a></li><li><a href=#worktree-isolation>Worktree Isolation</a></li><li><a href=#parallel-execution-patterns>Parallel Execution Patterns</a></li><li><a href=#when-to-use-sub-agents>When to Use Sub-Agents</a></li><li><a href=#tips-for-effective-sub-agents>Tips for Effective Sub-Agents</a></li><li><a href=#common-mistakes>Common Mistakes</a></li><li><a href=#sub-agents-in-teams>Sub-Agents in Teams</a></li><li><a href=#monitoring-agent-progress>Monitoring Agent Progress</a></li></ul></nav></div></nav><div id=tts-player class=tts-player role=region aria-label="Article audio player"><div class=tts-inner><div class=tts-meta><span class=tts-headphone aria-hidden=true><svg viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" width="22" height="22" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3z"/><path d="M3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg></span><div><div class=tts-title>Listen to this article</div><div class=tts-status id=tts-status>Click ▶ to start</div></div></div><div class=tts-controls><button class=tts-icon-btn id=tts-stop title="Stop & reset" aria-label=Stop>
+<svg viewBox="0 0 24 24" fill="currentcolor" width="16" height="16"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+</button>
+<button class=tts-play-btn id=tts-play title="Play / Pause" aria-label="Play article">
+<span id=tts-play-label><svg id="tts-play-icon" viewBox="0 0 24 24" fill="currentcolor" width="20" height="20"><path d="M6 4l14 8-14 8z"/></svg>
+<svg id="tts-pause-icon" viewBox="0 0 24 24" fill="currentcolor" width="20" height="20" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+</span><span class=tts-play-text id=tts-play-text>Play</span></button><div class=tts-speed><svg viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>
+<select id=tts-speed-select class=tts-speed-select aria-label="Playback speed"><option value=0.75>0.75×</option><option value=1 selected>1×</option><option value=1.25>1.25×</option><option value=1.5>1.5×</option><option value=2>2×</option></select></div></div><div class=tts-counter id=tts-counter aria-live=polite>0%</div></div><div class=tts-track><div class=tts-fill id=tts-progress-bar></div></div></div><style>.tts-player{position:sticky;top:0;z-index:200;background:#0f172a;border-bottom:2px solid #6366f1;box-shadow:0 2px 16px rgba(0,0,0,.4);margin-bottom:2rem;font-family:-apple-system,BlinkMacSystemFont,segoe ui,sans-serif}.tts-inner{display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}.tts-meta{display:flex;align-items:center;gap:10px;flex:1;min-width:160px}.tts-headphone{color:#818cf8;flex-shrink:0}.tts-title{font-size:13px;font-weight:700;color:#f1f5f9;letter-spacing:.02em;line-height:1.2}.tts-status{font-size:11px;color:#64748b;margin-top:2px;line-height:1}.tts-controls{display:flex;align-items:center;gap:10px}.tts-icon-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:none;background:#1e293b;color:#64748b;cursor:pointer;transition:background .15s,color .15s;flex-shrink:0}.tts-icon-btn:hover{background:#ef4444;color:#fff}.tts-play-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:999px;border:none;background:#6366f1;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;flex-shrink:0}.tts-play-btn:hover{background:#4f46e5;transform:scale(1.03)}.tts-play-btn.active{background:#10b981}.tts-play-text{white-space:nowrap}.tts-speed{display:flex;align-items:center;gap:5px;color:#475569}.tts-speed-select{background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:4px 6px;font-size:12px;cursor:pointer;outline:none}.tts-speed-select:focus{border-color:#6366f1}.tts-counter{font-size:12px;font-weight:600;color:#475569;min-width:36px;text-align:right;white-space:nowrap}.tts-track{height:3px;background:#1e293b;width:100%}.tts-fill{height:3px;width:0%;background:linear-gradient(90deg,#6366f1 0%,#10b981 100%);transition:width .35s linear}.tts-reading{background:rgba(99,102,241,7%)!important;border-left:3px solid #6366f1!important;padding-left:10px!important;border-radius:0 4px 4px 0!important;transition:background .3s!important}@media(max-width:520px){.tts-inner{gap:8px;padding:8px 12px}.tts-speed{display:none}.tts-counter{display:none}}</style><script>document.addEventListener("DOMContentLoaded",function(){var e,t,s,i,r,c,l,d,u,h,m,g,v,n=window.speechSynthesis,p=document.getElementById("tts-player");if(!n||!p)return;s=document.getElementById("tts-play"),r=document.getElementById("tts-play-text"),v=document.getElementById("tts-stop"),c=document.getElementById("tts-play-icon"),l=document.getElementById("tts-pause-icon"),g=document.getElementById("tts-status"),m=document.getElementById("tts-progress-bar"),h=document.getElementById("tts-counter"),d=document.getElementById("tts-speed-select"),u=document.querySelector(".entry-content")||document.querySelector(".post-content")||document.querySelector("article .content")||document.querySelector("article")||document.querySelector("main"),t=[],i=0,e=!1;function _(){if(!u){p.style.display="none";return}var e=u.querySelectorAll("p, h1, h2, h3, h4, li, blockquote");t=Array.from(e).filter(function(e){return e.textContent.trim().length>15&&!e.closest("#tts-player")}),t.length||(p.style.display="none")}function o(e){g.textContent=e}function b(e){if(!t.length)return;var n=Math.round(e/t.length*100);m.style.width=n+"%",h.textContent=n+"%"}function f(){document.querySelectorAll(".tts-reading").forEach(function(e){e.classList.remove("tts-reading")})}function a(s){if(n.cancel(),f(),s>=t.length){y(),o("Finished ✓"),b(t.length);return}i=s;var r,c=t[s],l=c.textContent.trim().replace(/\s+/g," ");c.classList.add("tts-reading"),c.scrollIntoView({behavior:"smooth",block:"center"}),r=new SpeechSynthesisUtterance(l),r.rate=parseFloat(d.value),r.pitch=1,r.lang="en-US",b(s+1),o(s+1+" of "+t.length+" sections"),r.onend=function(){c.classList.remove("tts-reading"),e&&a(s+1)},r.onerror=function(){c.classList.remove("tts-reading"),e&&a(s+1)},n.speak(r)}function w(){e=!0,s.classList.add("active"),c.style.display="none",l.style.display="block",r.textContent="Pause",o("Playing…"),a(i)}function j(){e=!1,s.classList.remove("active"),c.style.display="block",l.style.display="none",r.textContent="Play",n.cancel(),f(),o("Paused — click Play to resume")}function y(){e=!1,i=0,s.classList.remove("active"),c.style.display="block",l.style.display="none",r.textContent="Play",n.cancel(),f(),m.style.width="0%",h.textContent="0%",o("Click ▶ to start")}s.addEventListener("click",function(){e?j():w()}),v.addEventListener("click",y),d.addEventListener("change",function(){e&&a(i)}),window.addEventListener("beforeunload",function(){n.cancel()}),document.addEventListener("visibilitychange",function(){document.hidden&&e&&j()}),_()})</script><div class=entry-content><p>A sub-agent is a specialized Claude instance that runs in an isolated context window with its own allowed tools, memory, and instructions. While your main Claude session handles the conversation, a sub-agent spins up to handle a specific task — investigation, code review, security audit, testing — in parallel with your work.</p><p>Sub-agents excel at tasks that require:</p><ul><li>Reading many files without cluttering main context</li><li>Specialized expertise in one domain</li><li>Fresh perspective (the agent isn&rsquo;t biased by earlier conversation)</li><li>Parallel execution (multiple agents working simultaneously)</li></ul><hr><h2 id=sub-agents-vs-skills-vs-hooks>Sub-Agents vs Skills vs Hooks</h2><p>Before diving into sub-agents, understand the distinctions:</p><table><thead><tr><th>Tool</th><th>Purpose</th><th>Isolation</th><th>Context</th><th>Best for</th></tr></thead><tbody><tr><td><strong>Skills</strong></td><td>Complex workflows in your session</td><td>None — same context</td><td>Shared</td><td>Sequential tasks you invoke</td></tr><tr><td><strong>Sub-Agents</strong></td><td>Specialized tasks in separate context</td><td>Full isolation</td><td>Fresh window</td><td>Parallel work, fresh perspective</td></tr><tr><td><strong>Hooks</strong></td><td>Deterministic side effects</td><td>None — inline</td><td>Minimal</td><td>Automatic enforcement (no exceptions)</td></tr><tr><td><strong>CLAUDE.md</strong></td><td>Behavioral rules for main session</td><td>None — always loaded</td><td>Shared</td><td>Universal conventions</td></tr></tbody></table><p><strong>Sub-agents are for:</strong> &ldquo;I need a specialist to review this code while I continue coding.&rdquo;
+<strong>Skills are for:</strong> &ldquo;I need to run a complex workflow in my current session.&rdquo;
+<strong>Hooks are for:</strong> &ldquo;I need this to happen automatically every time.&rdquo;</p><hr><h2 id=how-sub-agents-work>How Sub-Agents Work</h2><p>When you delegate a task to a sub-agent:</p><ol><li><p><strong>Spin up</strong> — Claude Code creates a new isolated session with:</p><ul><li>Fresh context window (no conversation history pollution)</li><li>Specified allowed tools (restricted permissions)</li><li>Custom instructions (the agent.md frontmatter)</li><li>Optional: isolated git worktree (separate branch)</li></ul></li><li><p><strong>Run</strong> — The agent executes independently:</p><ul><li>Reads files, runs commands, analyzes code</li><li>Makes changes within its scope</li><li>Maintains its own memory (not shared with main session)</li><li>Reports progress and findings</li></ul></li><li><p><strong>Return</strong> — Agent reports back:</p><ul><li>Summary of what was found/done</li><li>Specific file:line references</li><li>Recommendations for the main session</li><li>Optional: opens a PR with proposed changes</li></ul></li><li><p><strong>Cleanup</strong> — Agent context is freed:</p><ul><li>Session ends, context released</li><li>Any git worktree is cleaned up (unless you keep it)</li><li>Main session continues with the agent&rsquo;s findings</li></ul></li></ol><hr><h2 id=creating-sub-agents>Creating Sub-Agents</h2><p>Sub-agents are defined in <code>.claude/agents/</code> directory:</p><pre tabindex=0><code>.claude/
+└── agents/
+    ├── code-reviewer.md
+    ├── security-auditor.md
+    └── test-orchestrator.md
+</code></pre><p>Each agent is a markdown file with frontmatter + instructions:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: code-reviewer
+</span></span><span style=display:flex><span>description: Reviews code changes for bugs, style, and best practices
+</span></span><span style=display:flex><span>tools: Read, Edit, Bash
+</span></span><span style=display:flex><span>model: claude-opus-4-7
+</span></span><span style=display:flex><span>disabled: false
+</span></span><span style=display:flex><span>isolation: none
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>You are a senior code reviewer. Your job is to:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>1.</span> Read the proposed code changes
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>2.</span> Identify bugs, edge cases, and improvements
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>3.</span> Check for adherence to project conventions
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>4.</span> Provide specific file:line feedback
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Focus on:
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Logic errors and potential runtime failures
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Security vulnerabilities
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Performance issues
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Test coverage gaps
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Style/convention violations
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Provide findings in this format:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Findings
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>### Critical Issues (must fix)
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span><span style=color:#81a1c1;font-weight:700>-</span> [file:line] — [Issue] — [Why it matters]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>### Improvements (should consider)
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span><span style=color:#81a1c1;font-weight:700>-</span> [file:line] — [Suggestion] — [Benefit]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>### Passing checks
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span><span style=color:#81a1c1;font-weight:700>-</span> Code follows all project conventions
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Error handling is consistent
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>-</span> Tests cover happy path and edge cases
+</span></span></code></pre></div><h3 id=frontmatter-fields>Frontmatter Fields</h3><table><thead><tr><th>Field</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>name</code></td><td>Agent identifier</td><td><code>code-reviewer</code></td></tr><tr><td><code>description</code></td><td>What the agent does</td><td><code>Reviews code for bugs and style</code></td></tr><tr><td><code>tools</code></td><td>Allowed tools (comma-separated)</td><td><code>Read, Edit, Bash, WebFetch</code></td></tr><tr><td><code>model</code></td><td>Claude model to use</td><td><code>claude-opus-4-7</code> (for complex tasks)</td></tr><tr><td><code>disabled</code></td><td>Is this agent disabled?</td><td><code>false</code></td></tr><tr><td><code>isolation</code></td><td>Worktree isolation?</td><td><code>none</code> or <code>worktree</code></td></tr></tbody></table><hr><h2 id=real-sub-agent-examples>Real Sub-Agent Examples</h2><h3 id=agent-1-code-reviewer-for-developers>Agent 1: Code Reviewer (For Developers)</h3><p>Developers benefit from fresh-perspective code review without blocking their own work.</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: code-reviewer
+</span></span><span style=display:flex><span>description: Reviews code changes for bugs, style, and best practices
+</span></span><span style=display:flex><span>tools: Read, Edit, Bash
+</span></span><span style=display:flex><span>model: claude-opus-4-7
+</span></span><span style=display:flex><span>isolation: none
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700># Code Reviewer Agent
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>You are a senior code reviewer conducting a thorough review of code changes.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## Your task
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>Read the current git diff and identify:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>1.</span> <span style=font-weight:700>**Logic errors**</span> — code that will fail at runtime or produce wrong results
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>2.</span> <span style=font-weight:700>**Security issues**</span> — injection, auth bypass, data exposure
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>3.</span> <span style=font-weight:700>**Edge cases**</span> — scenarios the code doesn&#39;t handle
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>4.</span> <span style=font-weight:700>**Style violations**</span> — deviations from project conventions
+</span></span><span style=display:flex><span><span style=color:#81a1c1;font-weight:700>5.</span> <span style=font-weight:700>**Test gaps**</span> — scenarios not covered by tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700>## How to proceed
+</span></span></span><span style=display:flex><span><span style=color:#88c0d0;font-weight:700></span>
+</span></span><span style=display:flex><span>```bash
+</span></span><span style=display:flex><span>git diff HEAD~1
+</span></span></code></pre></div><p>For each changed file, review:</p><ul><li>Function/method signatures (unchanged contract?)</li><li>Error handling (all failure paths covered?)</li><li>Resource cleanup (memory, file handles, connections?)</li><li>Concurrency (race conditions if async?)</li><li>Type safety (TypeScript types sound?)</li></ul><h2 id=report-format>Report format</h2><h2 id=code-review--commit_hash>Code Review — [COMMIT_HASH]</h2><h3 id=critical-issues-must-fix-before-merge>Critical Issues (must fix before merge)</h3><ul><li>[file:line] <code>functionName()</code> — [Issue] — [Why]</li></ul><h3 id=improvements-should-consider>Improvements (should consider)</h3><ul><li>[file:line] — [Suggestion] — [Benefit]</li></ul><h3 id=passing-checks>Passing checks</h3><p>✓ No logic errors detected
+✓ Error handling is comprehensive
+✓ No security vulnerabilities
+✓ All tests passing</p><pre tabindex=0><code>
+### Agent 2: Test Orchestrator (For Testers)
+
+Testers need to run parallel test suites, generate reports, and identify flaky tests.
+
+```markdown
+---
+name: test-orchestrator
+description: Runs parallel test suites, analyzes results, and identifies flaky tests
+tools: Bash, Read, Edit
+model: claude-sonnet-4-6
+isolation: none
+---
+
+# Test Orchestrator Agent
+
+You orchestrate test execution across multiple suites in parallel.
+
+## Your task
+
+Run all test suites and generate a comprehensive report:
+
+```bash
+npm test -- --coverage
+npm run test:e2e
+npm run test:integration
+</code></pre><h2 id=analysis>Analysis</h2><p>For each test run:</p><ol><li>Count passed/failed</li><li>Identify new failures vs previously failing</li><li>Check coverage trends</li><li>List flaky tests (tests that pass/fail inconsistently)</li></ol><h2 id=report-format-1>Report format</h2><h2 id=test-report--date>Test Report — [DATE]</h2><h3 id=summary>Summary</h3><ul><li>Total tests: XXX</li><li>Passing: XXX (XX%)</li><li>Failing: XXX</li><li>Skipped: XXX</li></ul><h3 id=by-suite>By suite</h3><ul><li><strong>Unit tests</strong>: XXX passed, XX% coverage</li><li><strong>E2E tests</strong>: XXX passed</li><li><strong>Integration</strong>: XXX passed</li></ul><h3 id=failures>Failures</h3><ul><li>[test name] — [reason] — [last 5 runs: pass/fail pattern]</li></ul><h3 id=flaky-tests-detected>Flaky tests detected</h3><ul><li>[test] — fails 20% of the time — investigate: [suggestion]</li></ul><h3 id=coverage-gaps>Coverage gaps</h3><ul><li>[file] — [uncovered lines] — [recommended tests]</li></ul><pre tabindex=0><code>
+### Agent 3: Infrastructure Auditor (For DevOps)
+
+DevOps teams benefit from continuous infrastructure audits without blocking deployments.
+
+```markdown
+---
+name: infra-auditor
+description: Audits infrastructure for security, compliance, and cost optimization
+tools: Bash, Read, WebFetch
+model: claude-opus-4-7
+isolation: none
+---
+
+# Infrastructure Auditor Agent
+
+You audit infrastructure configurations for security, compliance, and operational health.
+
+## Your task
+
+Scan all infrastructure code and live resources:
+
+```bash
+# Scan Terraform
+terraform plan -out=plan.json
+
+# Scan Kubernetes
+kubectl get all -A
+
+# Check logs
+kubectl logs -l app=myapp --tail=50
+</code></pre><h2 id=security-checks>Security checks</h2><ul><li><input disabled type=checkbox> No hardcoded secrets (passwords, API keys, tokens)</li><li><input disabled type=checkbox> All storage encrypted at rest</li><li><input disabled type=checkbox> All traffic encrypted in transit (TLS 1.2+)</li><li><input disabled type=checkbox> IAM policies follow least-privilege</li><li><input disabled type=checkbox> Logging enabled on all sensitive operations</li><li><input disabled type=checkbox> No public-facing databases</li><li><input disabled type=checkbox> Backups automated and tested</li></ul><h2 id=compliance-checks>Compliance checks</h2><ul><li><input disabled type=checkbox> Resources tagged appropriately</li><li><input disabled type=checkbox> Audit logging enabled</li><li><input disabled type=checkbox> Retention policies enforced</li><li><input disabled type=checkbox> Data residency compliant</li></ul><h2 id=operational-health>Operational health</h2><ul><li><input disabled type=checkbox> Multi-AZ/replicas for critical services</li><li><input disabled type=checkbox> Resource limits configured</li><li><input disabled type=checkbox> Monitoring/alerting active</li><li><input disabled type=checkbox> Disaster recovery tested recently</li></ul><h2 id=report-format-2>Report format</h2><h2 id=infrastructure-audit-report--date>Infrastructure Audit Report — [DATE]</h2><h3 id=security-status--secure---warnings---critical>Security Status: [✓ Secure | ⚠ Warnings | ✗ Critical]</h3><h4 id=critical-issues-fix-immediately>Critical Issues (fix immediately)</h4><ul><li>[Resource] — [Issue] — [Risk] — [Fix]</li></ul><h4 id=warnings-plan-fixes>Warnings (plan fixes)</h4><ul><li>[Resource] — [Issue] — [Recommendation]</li></ul><h4 id=passing-checks-1>Passing checks</h4><p>✓ All secrets managed via HashiCorp Vault
+✓ Multi-AZ on all critical services
+✓ Encryption enabled across storage and transit
+✓ Logging configured with 90-day retention</p><h4 id=cost-optimization-opportunities>Cost optimization opportunities</h4><ul><li>[Resource] — [Opportunity] — [Estimated savings]</li></ul><pre tabindex=0><code>
+---
+
+## Invoking Sub-Agents
+
+**Method 1: Simple delegation**
+
+```bash
+Use the code-reviewer agent to review the changes in this PR
+</code></pre><p>Claude automatically creates the agent, gives it context about the PR, and runs it.</p><p><strong>Method 2: Explicit task assignment</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Run the test-orchestrator agent to execute all <span style=color:#81a1c1>test</span> suites and report results
+</span></span></code></pre></div><p><strong>Method 3: Programmatic via Claude Code SDK</strong></p><p>For advanced workflows, spawn agents directly in code.</p><hr><h2 id=sub-agent-memory>Sub-Agent Memory</h2><p>Sub-agents maintain their own memory files separate from your main session:</p><pre tabindex=0><code>~/.claude/projects/my-project/agents/
+├── code-reviewer/
+│   └── memory/
+│       └── MEMORY.md
+├── test-orchestrator/
+│   └── memory/
+│       └── MEMORY.md
+└── infra-auditor/
+    └── memory/
+        └── MEMORY.md
+</code></pre><p>Each agent learns from its own sessions:</p><ul><li><strong>Code Reviewer</strong> learns project conventions, common mistakes</li><li><strong>Test Orchestrator</strong> learns test infrastructure, flaky patterns</li><li><strong>Infrastructure Auditor</strong> learns infrastructure decisions, compliance requirements</li></ul><p>This specialization means agents improve at their tasks over time without cluttering main session memory.</p><hr><h2 id=worktree-isolation>Worktree Isolation</h2><p>For agents that make code changes, use worktree isolation:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: automated-fixer
+</span></span><span style=display:flex><span>isolation: worktree
+</span></span><span style=display:flex><span>---
+</span></span></code></pre></div><p>This causes the agent to:</p><ol><li>Create a git worktree (separate branch + folder)</li><li>Run in that isolated environment</li><li>Make changes without affecting your main branch</li><li>Open a PR when done</li><li>Clean up the worktree</li></ol><p>Great for: automated fixes, refactoring, migrations.</p><hr><h2 id=parallel-execution-patterns>Parallel Execution Patterns</h2><p><strong>Pattern 1: Review While You Code</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Main session: implementing a feature</span>
+</span></span><span style=display:flex><span>You: <span style=color:#a3be8c>&#34;implement OAuth2 authentication&#34;</span>
+</span></span><span style=display:flex><span>Claude: <span style=color:#81a1c1>[</span>your session writes code<span style=color:#81a1c1>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#616e87;font-style:italic># Meanwhile, delegate review</span>
+</span></span><span style=display:flex><span>You: <span style=color:#a3be8c>&#34;have the code-reviewer agent review my changes as I go&#34;</span>
+</span></span><span style=display:flex><span>Agent: <span style=color:#81a1c1>[</span>runs in background, reports findings when <span style=color:#81a1c1;font-weight:700>done</span><span style=color:#81a1c1>]</span>
+</span></span></code></pre></div><p><strong>Pattern 2: Multi-Agent Audit</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Run security and compliance audits in parallel</span>
+</span></span><span style=display:flex><span>You: <span style=color:#a3be8c>&#34;run security-auditor and compliance-auditor agents on infrastructure&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Agent <span style=color:#b48ead>1</span> <span style=color:#81a1c1>(</span>Security<span style=color:#81a1c1>)</span>: scans <span style=color:#81a1c1;font-weight:700>for</span> vulnerabilities
+</span></span><span style=display:flex><span>Agent <span style=color:#b48ead>2</span> <span style=color:#81a1c1>(</span>Compliance<span style=color:#81a1c1>)</span>: checks regulatory requirements
+</span></span><span style=display:flex><span>Both: report findings simultaneously
+</span></span></code></pre></div><p><strong>Pattern 3: Test Orchestration</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Run different test suites in parallel</span>
+</span></span><span style=display:flex><span>You: <span style=color:#a3be8c>&#34;run test-orchestrator to execute unit, e2e, and integration tests&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Agent: 
+</span></span><span style=display:flex><span>  - Spins up <span style=color:#b48ead>3</span> parallel <span style=color:#81a1c1>test</span> runners
+</span></span><span style=display:flex><span>  - Aggregates results
+</span></span><span style=display:flex><span>  - Identifies flaky tests
+</span></span><span style=display:flex><span>  - Generates report
+</span></span></code></pre></div><hr><h2 id=when-to-use-sub-agents>When to Use Sub-Agents</h2><p><strong>Use a sub-agent when:</strong></p><ul><li>Task requires reading many files (would pollute main context)</li><li>You want a fresh perspective (not biased by main conversation)</li><li>Task can run in parallel with your work</li><li>Task needs specialized expertise (security audit, performance analysis)</li><li>Task needs to make changes in isolation (use worktree)</li></ul><p><strong>Don&rsquo;t use a sub-agent when:</strong></p><ul><li>The task is simple and fits in main context</li><li>You need immediate feedback (agent spin-up adds latency)</li><li>Task must read your real-time conversation context</li><li>Task is one-time-only and not worth specialization</li></ul><hr><h2 id=tips-for-effective-sub-agents>Tips for Effective Sub-Agents</h2><p><strong>1. Make agent scope clear and bounded</strong></p><p>Good: &ldquo;Review code for security vulnerabilities&rdquo;
+Bad: &ldquo;Do a general code review&rdquo;</p><p><strong>2. Specify exactly what tools they need</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>tools: Read, Bash(npm test), Bash(terraform plan)
+</span></span></code></pre></div><p>Don&rsquo;t give <code>Bash</code> without restrictions unless necessary.</p><p><strong>3. Use the right model for the task</strong></p><ul><li><code>claude-haiku-4-5</code> — quick checks, simple analysis</li><li><code>claude-sonnet-4-6</code> — standard tasks, good balance</li><li><code>claude-opus-4-7</code> — complex reasoning, security, architecture</li></ul><p><strong>4. Include output format in instructions</strong></p><p>Agents should produce output you can easily parse and act on. Structured format (markdown tables, JSON) beats prose.</p><p><strong>5. Test the agent profile first</strong></p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Use the code-reviewer agent to review src/auth.ts
+</span></span></code></pre></div><p>Verify it produces useful output before relying on it.</p><hr><h2 id=common-mistakes>Common Mistakes</h2><p><strong>1. Over-scoping agent responsibility</strong></p><p>Agent becomes &ldquo;do everything&rdquo; instead of &ldquo;do one thing well.&rdquo;</p><p><strong>2. Not specifying allowed tools</strong></p><p>Agent gets too much access. Always restrict to necessary tools.</p><p><strong>3. Agents with very different models</strong></p><p>Don&rsquo;t mix Haiku and Opus for the same type of task unless there&rsquo;s a reason. Keep consistency.</p><p><strong>4. Ignoring agent memory</strong></p><p>Agents improve over time. Check their memory files to see what they&rsquo;ve learned about your project.</p><p><strong>5. Not using worktree isolation for changes</strong></p><p>Agent makes code changes in your branch. Use <code>isolation: worktree</code> to prevent conflicts.</p><hr><h2 id=sub-agents-in-teams>Sub-Agents in Teams</h2><p>For team-wide specialists:</p><div class=highlight><pre tabindex=0 style=color:#d8dee9;background-color:#2e3440;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#616e87;font-style:italic># Store agents in version control</span>
+</span></span><span style=display:flex><span>.claude/agents/
+</span></span><span style=display:flex><span>├── security-reviewer.md     <span style=color:#616e87;font-style:italic># team standard</span>
+</span></span><span style=display:flex><span>├── performance-analyzer.md  <span style=color:#616e87;font-style:italic># team standard</span>
+</span></span><span style=display:flex><span>└── compliance-checker.md    <span style=color:#616e87;font-style:italic># team standard</span>
+</span></span></code></pre></div><p>All team members get the same agent definitions. Agents learn individually but apply team standards.</p><hr><h2 id=monitoring-agent-progress>Monitoring Agent Progress</h2><p>When an agent is running, Claude Code shows:</p><pre tabindex=0><code>[Sub-agent: code-reviewer] — Reading files...
+[Sub-agent: code-reviewer] — Analyzing patterns...
+[Sub-agent: code-reviewer] — Generating report...
+[Sub-agent: code-reviewer] — Complete
+</code></pre><p>Check <code>/agents</code> to see active and completed agents in current session.</p><hr><p>Sub-agents unlock parallel work, fresh perspective, and specialization. Invest in well-defined agents and your team&rsquo;s quality and speed both improve significantly.</p></div><div class=social-share-bar><span class=share-label>Share:</span>
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fblog.devops-monk.com%2f2026%2f06%2fclaude-code-subagents-delegation%2f&title=Claude&#43;Code+Sub-Agents%3A+Specialist+Assistants+and+Delegation" target=_blank rel=noopener class="share-btn share-linkedin" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn
+</a><a href="https://twitter.com/intent/tweet?url=https%3a%2f%2fblog.devops-monk.com%2f2026%2f06%2fclaude-code-subagents-delegation%2f&text=Claude&#43;Code+Sub-Agents%3A+Specialist+Assistants+and+Delegation" target=_blank rel=noopener class="share-btn share-twitter" title="Share on Twitter / X"><i class="fa-brands fa-x-twitter"></i> X
+</a><a href="https://www.reddit.com/submit?url=https%3a%2f%2fblog.devops-monk.com%2f2026%2f06%2fclaude-code-subagents-delegation%2f&title=Claude&#43;Code+Sub-Agents%3A+Specialist+Assistants+and+Delegation" target=_blank rel=noopener class="share-btn share-reddit" title="Share on Reddit"><i class="fa-brands fa-reddit-alien"></i> Reddit</a></div></div></article><div class=author-bio><img src=/images/abhay.jpeg alt=Abhay class=author-bio-avatar><div class=author-bio-content><h3 class=author-bio-name>Abhay Pratap Singh</h3><p class=author-bio-desc>DevOps Engineer passionate about automation, cloud infrastructure, and self-hosted tools. I write about Kubernetes, Terraform, DNS, and everything in between.</p><div class=author-bio-links><a href=https://github.com/devops-monk target=_blank rel=noopener><i class="fa-brands fa-github"></i> GitHub</a>
+<a href=https://www.linkedin.com/in/abhay-pratap-singh-831997b5/ target=_blank rel=noopener><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+<a href=/index.xml target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS</a></div></div></div><div class=newsletter-box><div class=newsletter-icon><i class="fa-solid fa-envelope-open-text"></i></div><h3 class=newsletter-title>Enjoyed this post?</h3><p class=newsletter-desc>Get new articles on DevOps, Kubernetes, Terraform, and self-hosted tools delivered straight to your inbox. No spam, unsubscribe any time.</p><a href="mailto:abhaypratap3536@gmail.com?subject=Subscribe to Devops Monk" class=newsletter-btn><i class="fa-solid fa-paper-plane"></i> Subscribe via Email</a></div><nav class="navigation post-navigation" role=navigation><h2 class=screen-reader-text>Post navigation</h2><div class=nav-links><div class=nav-previous><a href=/2026/06/claude-code-session-management/ rel=next><i class="fa fa-chevron-left"></i>
+<span class=post-title>Claude Code Session Management: Parallel Work and Persistent Context</span></a></div><div class=nav-next><a href=/2026/06/claude-code-skills-guide/ rel=prev><span class=post-title>Claude Code Skills: Building Specialized AI Workflows
+<i class="fa fa-chevron-right"></i></span></a></div></div></nav><div class=related-posts><h3 class=related-title><i class="fa-solid fa-layer-group"></i> You might also like</h3><div class=related-grid><a class=related-card href=/2026/06/claude-code-skills-guide/><span class=related-card-meta>Jun 2026 · 8 min read</span>
+<span class=related-card-title>Claude Code Skills: Building Specialized AI Workflows</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/05/claude-code-plugins-guide/><span class=related-card-meta>May 2026 · 15 min read</span>
+<span class=related-card-title>Claude Code Plugins: The Complete Guide to Building and Sharing Extensions</span>
+<span class=related-card-cat>Claude</span>
+</a><a class=related-card href=/2026/05/claude-managed-agents-guide/><span class=related-card-meta>May 2026 · 11 min read</span>
+<span class=related-card-title>Claude Managed Agents: Deploy AI Agents Without Managing Infrastructure</span>
+<span class=related-card-cat>Claude</span></a></div></div></main></section><section id=secondary class="sidebar widget-area clearfix" role=complementary><aside id=search class="widget clearfix"><div class=widget-header><h3 class=widget-title>Search</h3></div><form onsubmit=return!1><input id=search-query type=text placeholder="Search posts..." autocomplete=off>
+<button id=search-btn type=button><i class="fa-solid fa-magnifying-glass"></i></button></form><div id=search-results></div></aside><aside id=rss-subscribe class="widget clearfix"><div class=widget-header><h3 class=widget-title>Subscribe</h3></div><a href=/index.xml class=rss-subscribe-btn target=_blank rel=noopener><i class="fa-solid fa-rss"></i> Subscribe via RSS</a></aside><aside id=recent-posts class="widget clearfix"><div class=widget-header><h3 class=widget-title>Recent Posts</h3></div><ul><li class=widget__item><a class=widget__link href=/2026/06/claude-code-session-management/>Claude Code Session Management: Parallel Work and Persistent Context</a></li><li class=widget__item><a class=widget__link href=/2026/06/claude-code-subagents-delegation/>Claude Code Sub-Agents: Specialist Assistants and Delegation</a></li><li class=widget__item><a class=widget__link href=/2026/06/claude-code-skills-guide/>Claude Code Skills: Building Specialized AI Workflows</a></li><li class=widget__item><a class=widget__link href=/2026/05/monkkit-developer-tools/>MonkKit — 106 Free Developer Tools in One Place</a></li><li class=widget__item><a class=widget__link href=/2026/05/claude-code-plugins-guide/>Claude Code Plugins: The Complete Guide to Building and Sharing Extensions</a></li></ul></aside><aside id=categories class="widget clearfix"><div class=widget-header><h3 class=widget-title>Categories</h3></div><ul><li><a href=/categories/claude/ title=claude>claude</a></li><li><a href=/categories/java-11-tutorial/ title="java 11 tutorial">java 11 tutorial</a></li><li><a href=/categories/java-17-tutorial/ title="java 17 tutorial">java 17 tutorial</a></li><li><a href=/categories/java-21-tutorial/ title="java 21 tutorial">java 21 tutorial</a></li><li><a href=/categories/java-25-tutorial/ title="java 25 tutorial">java 25 tutorial</a></li><li><a href=/categories/java-8-tutorial/ title="java 8 tutorial">java 8 tutorial</a></li><li><a href=/categories/kubernetes/ title=kubernetes>kubernetes</a></li><li><a href=/categories/liquibase-tutorial/ title="liquibase tutorial">liquibase tutorial</a></li><li><a href=/categories/personal-projects/ title="personal projects">personal projects</a></li><li><a href=/categories/spring-batch-tutorial/ title="spring batch tutorial">spring batch tutorial</a></li><li><a href=/categories/spring-boot/ title="spring boot">spring boot</a></li><li><a href=/categories/spring-boot-tutorial/ title="spring boot tutorial">spring boot tutorial</a></li><li><a href=/categories/spring-data-jpa-tutorial/ title="spring data jpa tutorial">spring data jpa tutorial</a></li><li><a href=/categories/spring-kafka-tutorial/ title="spring kafka tutorial">spring kafka tutorial</a></li><li><a href=/categories/spring-security-tutorial/ title="spring security tutorial">spring security tutorial</a></li><li><a href=/categories/terraform/ title=terraform>terraform</a></li><li><a href=/categories/testcontainers-tutorial/ title="testcontainers tutorial">testcontainers tutorial</a></li></ul></aside><aside id=tag_cloud class="widget widget_tag_cloud clearfix"><div class=widget-header><h3 class=widget-title>Tags</h3></div><div class=tagcloud><div class=widget__content><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgment/ title=acknowledgment>acknowledgment
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acknowledgments/ title=acknowledgments>acknowledgments
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/acl/ title=acl>acl
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/actuator/ title=actuator>actuator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/admin/ title=admin>admin
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agent-sdk/ title="agent sdk">agent sdk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/agents/ title=agents>agents
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ai/ title=ai>ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/algebraic-data-types/ title=algebraic-data-types>algebraic-data-types
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/annotations/ title=annotations>annotations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/aot/ title=aot>aot
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api/ title=api>api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api-gateway/ title=api-gateway>api-gateway
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/api-versioning/ title=api-versioning>api-versioning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/appcds/ title=appcds>appcds
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/architecture/ title=architecture>architecture
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/argon2/ title=argon2>argon2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/async/ title=async>async
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authentication/ title=authentication>authentication
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authorization/ title=authorization>authorization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/authorization-server/ title=authorization-server>authorization-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/auto-configuration/ title=auto-configuration>auto-configuration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/automation/ title=automation>automation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/avro/ title=avro>avro
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/aws/ title=aws>aws
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/backend/ title=backend>backend
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/backwards-compatible/ title=backwards-compatible>backwards-compatible
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/base64/ title=base64>base64
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bcrypt/ title=bcrypt>bcrypt
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-lifecycle/ title=bean-lifecycle>bean-lifecycle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-scopes/ title=bean-scopes>bean-scopes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bean-validation/ title=bean-validation>bean-validation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/beginner/ title=beginner>beginner
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/best-practices/ title=best-practices>best-practices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/buildpacks/ title=buildpacks>buildpacks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/bun/ title=bun>bun
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caching/ title=caching>caching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/caffeine/ title=caffeine>caffeine
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/chacha20/ title=chacha20>chacha20
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/checklist/ title=checklist>checklist
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/checkpoints/ title=checkpoints>checkpoints
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ci-cd/ title=ci-cd>ci-cd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ci/cd/ title=ci/cd>ci/cd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/circuit-breaker/ title=circuit-breaker>circuit-breaker
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ckad/ title=ckad>ckad
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude/ title=claude>claude
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude-code/ title="claude code">claude code
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/claude.md/ title=claude.md>claude.md
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/clerk/ title=clerk>clerk
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cli/ title=cli>cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloud-native/ title=cloud-native>cloud-native
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cloudinary/ title=cloudinary>cloudinary
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cluster/ title=cluster>cluster
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/code-review/ title="code review">code review
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/code-safety/ title="code safety">code safety
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/collections/ title=collections>collections
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/collectors/ title=collectors>collectors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/comparator/ title=comparator>comparator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/comparison/ title=comparison>comparison
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/completablefuture/ title=completablefuture>completablefuture
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/compute/ title=compute>compute
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/computer-use/ title="computer use">computer use
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/concurrency/ title=concurrency>concurrency
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/config-server/ title=config-server>config-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/configuration/ title=configuration>configuration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/constructors/ title=constructors>constructors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer/ title=consumer>consumer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/consumer-groups/ title=consumer-groups>consumer-groups
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/container-reuse/ title=container-reuse>container-reuse
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/containers/ title=containers>containers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cors/ title=cors>cors
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cost-optimization/ title="cost optimization">cost optimization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/crud/ title=crud>crud
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/cryptography/ title=cryptography>cryptography
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/csp/ title=csp>csp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/csrf/ title=csrf>csrf
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/curve25519/ title=curve25519>curve25519
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/data-classes/ title=data-classes>data-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/data-jpa-test/ title=data-jpa-test>data-jpa-test
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/database/ title=database>database
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/database-migrations/ title=database-migrations>database-migrations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/datajpatest/ title=datajpatest>datajpatest
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/date-time/ title=date-time>date-time
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dead-letter/ title=dead-letter>dead-letter
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/default-methods/ title=default-methods>default-methods
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/delegation/ title=delegation>delegation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dependency-injection/ title=dependency-injection>dependency-injection
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/deployment/ title=deployment>deployment
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/deserialization/ title=deserialization>deserialization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/developer-tools/ title="developer tools">developer tools
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/developers/ title=developers>developers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/devops/ title=devops>devops
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dns/ title=dns>dns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/docker/ title=docker>docker
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dropwhile/ title=dropwhile>dropwhile
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dto/ title=dto>dto
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/durability/ title=durability>durability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/dynamic-listeners/ title=dynamic-listeners>dynamic-listeners
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/electron/ title=electron>electron
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/encapsulation/ title=encapsulation>encapsulation
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/entity-mapping/ title=entity-mapping>entity-mapping
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/epsilon/ title=epsilon>epsilon
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/error-handling/ title=error-handling>error-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/eureka/ title=eureka>eureka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-driven/ title=event-driven>event-driven
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/event-streaming/ title=event-streaming>event-streaming
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/exactly-once/ title=exactly-once>exactly-once
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/exception-handling/ title=exception-handling>exception-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/feign/ title=feign>feign
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ffm-api/ title=ffm-api>ffm-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/files/ title=files>files
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/files-lines/ title=files-lines>files-lines
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/filtering/ title=filtering>filtering
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flatmap/ title=flatmap>flatmap
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flight-recorder/ title=flight-recorder>flight-recorder
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/flyway/ title=flyway>flyway
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/foreach/ title=foreach>foreach
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/forkjoinpool/ title=forkjoinpool>forkjoinpool
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/function/ title=function>function
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional/ title=functional>functional
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional-interfaces/ title=functional-interfaces>functional-interfaces
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/functional-programming/ title=functional-programming>functional-programming
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/g1gc/ title=g1gc>g1gc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/garbage-collection/ title=garbage-collection>garbage-collection
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/gc/ title=gc>gc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github/ title=github>github
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/github-actions/ title=github-actions>github-actions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/google/ title=google>google
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/graalvm/ title=graalvm>graalvm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/gradle/ title=gradle>gradle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/grafana/ title=grafana>grafana
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/groupingby/ title=groupingby>groupingby
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/headers/ title=headers>headers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/helm/ title=helm>helm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hibernate/ title=hibernate>hibernate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hooks/ title=hooks>hooks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/hsts/ title=hsts>hsts
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/http/ title=http>http
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/http2/ title=http2>http2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/httpclient/ title=httpclient>httpclient
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/iac/ title=iac>iac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/idempotent/ title=idempotent>idempotent
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/immutable/ title=immutable>immutable
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/imports/ title=imports>imports
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instance-main/ title=instance-main>instance-main
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instanceof/ title=instanceof>instanceof
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/instant/ title=instant>instant
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/integration/ title=integration>integration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/integration-testing/ title=integration-testing>integration-testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/intellij/ title=intellij>intellij
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/interface/ title=interface>interface
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/interview/ title=interview>interview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/io/ title=io>io
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ioc/ title=ioc>ioc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/isblank/ title=isblank>isblank
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java/ title=java>java
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java-21/ title=java-21>java-21
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java10/ title=java10>java10
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java11/ title=java11>java11
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java17/ title=java17>java17
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java21/ title=java21>java21
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java25/ title=java25>java25
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java8/ title=java8>java8
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/java9/ title=java9>java9
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/javafx/ title=javafx>javafx
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jaxb/ title=jaxb>jaxb
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jdeps/ title=jdeps>jdeps
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep/ title=jep>jep
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep126/ title=jep126>jep126
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep222/ title=jep222>jep222
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep269/ title=jep269>jep269
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep282/ title=jep282>jep282
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep286/ title=jep286>jep286
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep320/ title=jep320>jep320
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep321/ title=jep321>jep321
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep323/ title=jep323>jep323
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep324/ title=jep324>jep324
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep328/ title=jep328>jep328
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep329/ title=jep329>jep329
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep330/ title=jep330>jep330
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep332/ title=jep332>jep332
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep335/ title=jep335>jep335
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep356/ title=jep356>jep356
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep361/ title=jep361>jep361
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep378/ title=jep378>jep378
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep394/ title=jep394>jep394
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep395/ title=jep395>jep395
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep403/ title=jep403>jep403
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep406/ title=jep406>jep406
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep409/ title=jep409>jep409
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep412/ title=jep412>jep412
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep415/ title=jep415>jep415
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep431/ title=jep431>jep431
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep439/ title=jep439>jep439
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep440/ title=jep440>jep440
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep441/ title=jep441>jep441
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep442/ title=jep442>jep442
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep443/ title=jep443>jep443
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep444/ title=jep444>jep444
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep445/ title=jep445>jep445
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep446/ title=jep446>jep446
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep448/ title=jep448>jep448
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep452/ title=jep452>jep452
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep453/ title=jep453>jep453
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep470/ title=jep470>jep470
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep505/ title=jep505>jep505
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep506/ title=jep506>jep506
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep507/ title=jep507>jep507
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep510/ title=jep510>jep510
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep511/ title=jep511>jep511
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep512/ title=jep512>jep512
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep513/ title=jep513>jep513
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep514/ title=jep514>jep514
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep515/ title=jep515>jep515
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep516/ title=jep516>jep516
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jep519/ title=jep519>jep519
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jfr/ title=jfr>jfr
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jigsaw/ title=jigsaw>jigsaw
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jlink/ title=jlink>jlink
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jni/ title=jni>jni
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpa/ title=jpa>jpa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jpms/ title=jpms>jpms
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jshell/ title=jshell>jshell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/json/ title=json>json
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jspecify/ title=jspecify>jspecify
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jsr310/ title=jsr310>jsr310
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/junit5/ title=junit5>junit5
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jvm/ title=jvm>jvm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/jwt/ title=jwt>jwt
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/k8s/ title=k8s>k8s
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka/ title=kafka>kafka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-cli/ title=kafka-cli>kafka-cli
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafka-streams/ title=kafka-streams>kafka-streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkahandler/ title=kafkahandler>kafkahandler
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkalistener/ title=kafkalistener>kafkalistener
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kafkatemplate/ title=kafkatemplate>kafkatemplate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kem/ title=kem>kem
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/keycloak/ title=keycloak>keycloak
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kraft/ title=kraft>kraft
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/kubernetes/ title=kubernetes>kubernetes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lambda/ title=lambda>lambda
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lambdas/ title=lambdas>lambdas
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/ldap/ title=ldap>ldap
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lifecycle/ title=lifecycle>lifecycle
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lines/ title=lines>lines
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/liquibase/ title=liquibase>liquibase
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/list-of/ title=list-of>list-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/llm/ title=llm>llm
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/localdatetime/ title=localdatetime>localdatetime
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/localstack/ title=localstack>localstack
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/logback/ title=logback>logback
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/logging/ title=logging>logging
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/loki/ title=loki>loki
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/longadder/ title=longadder>longadder
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/lts/ title=lts>lts
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/map/ title=map>map
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/map-of/ title=map-of>map-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/maven/ title=maven>maven
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mcp/ title=mcp>mcp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/memory/ title=memory>memory
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/merge/ title=merge>merge
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/messaging/ title=messaging>messaging
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/metaspace/ title=metaspace>metaspace
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/method-references/ title=method-references>method-references
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/method-security/ title=method-security>method-security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mfa/ title=mfa>mfa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/micrometer/ title=micrometer>micrometer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/microservices/ title=microservices>microservices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migration/ title=migration>migration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/migrations/ title=migrations>migrations
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mockito/ title=mockito>mockito
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mockmvc/ title=mockmvc>mockmvc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modular-monolith/ title=modular-monolith>modular-monolith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modules/ title=modules>modules
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/modulith/ title=modulith>modulith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mongodb/ title=mongodb>mongodb
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/monitoring/ title=monitoring>monitoring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mtls/ title=mtls>mtls
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/mysql/ title=mysql>mysql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nashorn/ title=nashorn>nashorn
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/native/ title=native>native
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/native-image/ title=native-image>native-image
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/next.js/ title=next.js>next.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nio/ title=nio>nio
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/node.js/ title=node.js>node.js
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/non-blocking/ title=non-blocking>non-blocking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/non-blocking-retry/ title=non-blocking-retry>non-blocking-retry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nosql/ title=nosql>nosql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/null-safety/ title=null-safety>null-safety
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/nullpointerexception/ title=nullpointerexception>nullpointerexception
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2/ title=oauth2>oauth2
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oauth2-authorization-server/ title=oauth2-authorization-server>oauth2-authorization-server
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/observability/ title=observability>observability
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/offsets/ title=offsets>offsets
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/oidc/ title=oidc>oidc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/open-banking/ title="open banking">open banking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/open-source/ title="open source">open source
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openai/ title=openai>openai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/openapi/ title=openapi>openapi
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/opentelemetry/ title=opentelemetry>opentelemetry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/optional/ title=optional>optional
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/orchestration/ title=orchestration>orchestration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/outbox-pattern/ title=outbox-pattern>outbox-pattern
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/overview/ title=overview>overview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/owasp/ title=owasp>owasp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/pagination/ title=pagination>pagination
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/parallel-streams/ title=parallel-streams>parallel-streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/parallel-testing/ title=parallel-testing>parallel-testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/partitioning/ title=partitioning>partitioning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/password/ title=password>password
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/password-reset/ title=password-reset>password-reset
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/path/ title=path>path
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/pattern-matching/ title=pattern-matching>pattern-matching
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/performance/ title=performance>performance
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/permgen/ title=permgen>permgen
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/plugins/ title=plugins>plugins
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/post-quantum/ title=post-quantum>post-quantum
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/postgresql/ title=postgresql>postgresql
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/predicate/ title=predicate>predicate
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/preview/ title=preview>preview
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/primitives/ title=primitives>primitives
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prisma/ title=prisma>prisma
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prng/ title=prng>prng
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/producer/ title=producer>producer
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/production/ title=production>production
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/productivity/ title=productivity>productivity
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/profiles/ title=profiles>profiles
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/profiling/ title=profiling>profiling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/project-loom/ title=project-loom>project-loom
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/project-panama/ title=project-panama>project-panama
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/prometheus/ title=prometheus>prometheus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quarkus/ title=quarkus>quarkus
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/quartz/ title=quartz>quartz
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/queries/ title=queries>queries
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rabbitmq/ title=rabbitmq>rabbitmq
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rag/ title=rag>rag
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/random/ title=random>random
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rbac/ title=rbac>rbac
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/react/ title=react>react
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/reactive/ title=reactive>reactive
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/readstring/ title=readstring>readstring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/records/ title=records>records
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/redis/ title=redis>redis
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/registration/ title=registration>registration
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/relationships/ title=relationships>relationships
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/removed-apis/ title=removed-apis>removed-apis
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/repeat/ title=repeat>repeat
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/repl/ title=repl>repl
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/replay/ title=replay>replay
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/request-handling/ title=request-handling>request-handling
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/request-reply/ title=request-reply>request-reply
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/resilience4j/ title=resilience4j>resilience4j
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/response-shaping/ title=response-shaping>response-shaping
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest/ title=rest>rest
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest-api/ title=rest-api>rest-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/rest-client/ title=rest-client>rest-client
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/restclient/ title=restclient>restclient
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/retries/ title=retries>retries
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/retry/ title=retry>retry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/s3/ title=s3>s3
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/schema-registry/ title=schema-registry>schema-registry
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/scoped-values/ title=scoped-values>scoped-values
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/scripting/ title=scripting>scripting
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sdkman/ title=sdkman>sdkman
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sealed-classes/ title=sealed-classes>sealed-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security/ title=security>security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security-headers/ title=security-headers>security-headers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/security-manager/ title=security-manager>security-manager
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/seeking/ title=seeking>seeking
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/self-hosted/ title=self-hosted>self-hosted
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sendto/ title=sendto>sendto
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/serialization/ title=serialization>serialization
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/service-discovery/ title=service-discovery>service-discovery
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/session/ title=session>session
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sessions/ title=sessions>sessions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/set-of/ title=set-of>set-of
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/setup/ title=setup>setup
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sha3/ title=sha3>sha3
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shell/ title=shell>shell
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/shenandoah/ title=shenandoah>shenandoah
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/simd/ title=simd>simd
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/single-file/ title=single-file>single-file
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/singleton-containers/ title=singleton-containers>singleton-containers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/skills/ title=skills>skills
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sns/ title=sns>sns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sorting/ title=sorting>sorting
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spliterator/ title=spliterator>spliterator
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-ai/ title=spring-ai>spring-ai
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-amqp/ title=spring-amqp>spring-amqp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-batch/ title=spring-batch>spring-batch
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot/ title=spring-boot>spring-boot
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-boot-4/ title=spring-boot-4>spring-boot-4
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-cache/ title=spring-cache>spring-cache
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-cloud/ title=spring-cloud>spring-cloud
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-data-jpa/ title=spring-data-jpa>spring-data-jpa
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-data-mongodb/ title=spring-data-mongodb>spring-data-mongodb
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-kafka/ title=spring-kafka>spring-kafka
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-modulith/ title=spring-modulith>spring-modulith
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-security/ title=spring-security>spring-security
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/spring-session/ title=spring-session>spring-session
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/springboottest/ title=springboottest>springboottest
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/springdoc/ title=springdoc>springdoc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sqs/ title=sqs>sqs
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stampedlock/ title=stampedlock>stampedlock
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/startup/ title=startup>startup
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stock-market/ title="stock market">stock market
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stream/ title=stream>stream
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/streams/ title=streams>streams
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/string/ title=string>string
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stringjoiner/ title=stringjoiner>stringjoiner
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/strings/ title=strings>strings
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/strip/ title=strip>strip
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/stripe/ title=stripe>stripe
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/structured-concurrency/ title=structured-concurrency>structured-concurrency
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/sub-agents/ title=sub-agents>sub-agents
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/supplier/ title=supplier>supplier
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/switch/ title=switch>switch
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/switch-expressions/ title=switch-expressions>switch-expressions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/system-testing/ title=system-testing>system-testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tailwind-css/ title="tailwind css">tailwind css
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/takewhile/ title=takewhile>takewhile
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/terraform/ title=terraform>terraform
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testcontainers/ title=testcontainers>testcontainers
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testing/ title=testing>testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testing-slices/ title=testing-slices>testing-slices
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/testing-strategy/ title=testing-strategy>testing-strategy
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/text-blocks/ title=text-blocks>text-blocks
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tls13/ title=tls13>tls13
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/topics/ title=topics>topics
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/totp/ title=totp>totp
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tracing/ title=tracing>tracing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/transactions/ title=transactions>transactions
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tuning/ title=tuning>tuning
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/tutorial/ title=tutorial>tutorial
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/type-inference/ title=type-inference>type-inference
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/typescript/ title=typescript>typescript
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unit-testing/ title=unit-testing>unit-testing
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unnamed-classes/ title=unnamed-classes>unnamed-classes
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/unnamed-patterns/ title=unnamed-patterns>unnamed-patterns
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/upgrade/ title=upgrade>upgrade
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/var/ title=var>var
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vector-api/ title=vector-api>vector-api
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/virtual-threads/ title=virtual-threads>virtual-threads
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/voice/ title=voice>voice
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vps/ title=vps>vps
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/vulnerabilities/ title=vulnerabilities>vulnerabilities
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/wait-strategy/ title=wait-strategy>wait-strategy
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webauthn/ title=webauthn>webauthn
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webflux/ title=webflux>webflux
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/webmvctest/ title=webmvctest>webmvctest
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/wiremock/ title=wiremock>wiremock
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/workflow/ title=workflow>workflow
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/workflows/ title=workflows>workflows
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/writestring/ title=writestring>writestring
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zgc/ title=zgc>zgc
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zoneddatetime/ title=zoneddatetime>zoneddatetime
+</a><a class="tag-cloud-link widget__link widget__link--taglist" href=/tags/zookeeper/ title=zookeeper>zookeeper</a></div></div></aside></section></div><div id=footer class=footer-wrap><footer id=colophon class="site-footer container clearfix" role=contentinfo><div id=footer-text class=site-info><span class=credit-link><a href=/>Devops Monk</a>
+Copyright © 2026
+</span><span class=footer-rss><a href=/index.xml title="RSS Feed" target=_blank rel=noopener><i class="fa-solid fa-rss"></i> RSS Feed</a></span></div></footer></div></div><script type=text/javascript src=/assets/js/custom.js></script></body></html>
